@@ -40,6 +40,32 @@
         header h1 { font-size: 2.5em; margin-bottom: 10px; }
         header p { font-size: 1.2em; opacity: 0.9; }
 
+        .header-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+        .header-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: background 0.2s;
+        }
+        .header-links a:hover { background: rgba(255,255,255,0.25); }
+
+        .quiz-cta {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 28px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, #42d392 0%, #27ae60 100%);
+            color: white;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .quiz-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+
         /* --- MAIN LAYOUT --- */
         .main-content {
             display: grid;
@@ -367,6 +393,7 @@
         .sources ul { padding-left: 20px; }
         .sources li { margin-bottom: 4px; }
         .sources a { color: #2a5298; overflow-wrap: anywhere; }
+        .site-footer a { color: inherit; }
         .copyright { margin-top: 8px; font-size: 0.85em; opacity: 0.8; }
         .copyright a { color: inherit; }
 
@@ -390,6 +417,10 @@
         <header>
             <h1>💎 Hidden Treasure in Your Pocket 💎</h1>
             <p>Interactive Guide to Critical Minerals in Smartphones</p>
+            <nav class="header-links">
+                <a href="quiz.html">🧠 Take the quiz</a>
+                <a href="teachers.html">📘 For teachers</a>
+            </nav>
         </header>
 
         <div class="main-content">
@@ -445,6 +476,8 @@
                         <div class="fact-block" style="margin-top: 25px;">
                             💡 <strong>Did you know?</strong> Copper is more than half of all the metal in a phone. But gold, silver, platinum and palladium – less than 1.5% of the metal – make up 93% of its value!
                         </div>
+                        <p style="margin-top: 25px; color: #666;"><strong>Step 3:</strong> Explored every part? Test yourself!</p>
+                        <a class="quiz-cta" href="quiz.html">🧠 Take the quiz</a>
                     </div>
                 </div>
 
@@ -512,8 +545,8 @@
             </details>
         </section>
 
-        <div style="background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px;">
-            <p><strong>Science Festival Interactive Display</strong> | Main data source: Gómez et al. (2023), <em>Journal of Cleaner Production</em> 419, 138099</p>
+        <div class="site-footer" style="background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px;">
+            <p><strong>Hidden Treasure in Your Pocket</strong> | <a href="quiz.html">Quiz</a> | <a href="teachers.html">Teacher guide</a> | Main data source: Gómez et al. (2023), <em>Journal of Cleaner Production</em> 419, 138099</p>
             <p class="copyright">© 2025–2026 Prof. Peter Nockemann. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, except element photos, which keep their own licences (see credits above).</p>
         </div>
     </div>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phone Elements Quiz</title>
+    <meta name="author" content="Prof. Peter Nockemann">
+    <meta name="description" content="Test what you know about the critical elements inside a smartphone.">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        header h1 { font-size: 2em; margin-bottom: 6px; }
+        header p { opacity: 0.9; }
+
+        main { padding: 30px; }
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.3s ease; }
+
+        .intro { text-align: center; }
+        .intro .big-icon { font-size: 4em; margin-bottom: 10px; }
+        .intro h2 { color: #2c3e50; margin-bottom: 12px; }
+        .intro p { line-height: 1.6; color: #555; margin-bottom: 12px; }
+        .best { color: #27ae60; font-weight: 700; }
+
+        .btn {
+            display: inline-block;
+            font: inherit;
+            font-weight: 700;
+            font-size: 1.05em;
+            padding: 12px 28px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 6px;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+        .btn:focus-visible { outline: 3px solid #2a5298; outline-offset: 3px; }
+        .btn-primary { background: linear-gradient(135deg, #42d392 0%, #27ae60 100%); color: white; }
+        .btn-secondary { background: #eef2f7; color: #2c3e50; }
+
+        /* Progress */
+        .progress-row { display: flex; justify-content: space-between; font-weight: 700; color: #2c3e50; margin-bottom: 8px; }
+        .progress-bar { height: 10px; background: #eef2f7; border-radius: 5px; overflow: hidden; margin-bottom: 25px; }
+        .progress-fill { height: 100%; width: 0; background: linear-gradient(90deg, #2a5298, #42d392); transition: width 0.4s ease; }
+
+        /* Question */
+        .question-text { font-size: 1.3em; color: #2c3e50; line-height: 1.4; margin-bottom: 20px; }
+        .question-img { text-align: center; margin-bottom: 20px; }
+        .question-img img { width: 160px; height: 160px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(0,0,0,0.1); }
+        .question-img .credit { font-size: 0.75em; color: #888; margin-top: 4px; }
+        .question-img .credit a { color: inherit; }
+
+        .options { display: grid; gap: 12px; }
+        .option {
+            font: inherit;
+            text-align: left;
+            padding: 14px 18px;
+            border-radius: 12px;
+            border: 2px solid #dde3ea;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            color: #333;
+        }
+        .option:hover:not(:disabled) { border-color: #2a5298; background: #f5f8fc; }
+        .option:focus-visible { outline: 3px solid #2a5298; outline-offset: 2px; }
+        .option:disabled { cursor: default; }
+        .option .letter {
+            flex-shrink: 0;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #eef2f7;
+            color: #2c3e50;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .option.correct { border-color: #27ae60; background: #e8f8ef; }
+        .option.correct .letter { background: #27ae60; color: white; }
+        .option.wrong { border-color: #e74c3c; background: #fdecea; }
+        .option.wrong .letter { background: #e74c3c; color: white; }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px 18px;
+            border-radius: 10px;
+            line-height: 1.5;
+            display: none;
+        }
+        .feedback.show { display: block; animation: fadeIn 0.3s ease; }
+        .feedback.good { background: #e8f8ef; border-left: 6px solid #27ae60; }
+        .feedback.bad { background: #fdf2f2; border-left: 6px solid #e74c3c; }
+        .feedback strong { display: block; margin-bottom: 4px; }
+
+        .next-row { text-align: right; margin-top: 20px; }
+
+        /* Results */
+        .results { text-align: center; }
+        .score-circle {
+            width: 160px; height: 160px;
+            margin: 10px auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .score-circle .num { font-size: 2.8em; font-weight: 800; line-height: 1; }
+        .score-circle .of { opacity: 0.85; }
+        .results h2 { color: #2c3e50; margin-bottom: 8px; }
+        .results .message { color: #555; line-height: 1.6; margin-bottom: 20px; }
+
+        .review { text-align: left; margin-top: 25px; }
+        .review summary { cursor: pointer; font-weight: 700; color: #2c3e50; margin-bottom: 10px; }
+        .review ol { padding-left: 22px; }
+        .review li { margin-bottom: 12px; line-height: 1.5; }
+        .review .yours-wrong { color: #c0392b; }
+        .review .right { color: #27ae60; font-weight: 700; }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+        footer a { color: inherit; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            main { padding: 20px 16px; }
+            header h1 { font-size: 1.6em; }
+            .question-text { font-size: 1.15em; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🧠 Phone Elements Quiz</h1>
+            <p>Hidden Treasure in Your Pocket</p>
+        </header>
+
+        <main>
+            <!-- START -->
+            <section class="screen active" id="screen-start">
+                <div class="intro">
+                    <div class="big-icon">📱💎</div>
+                    <h2>How much do you know about your phone?</h2>
+                    <p>Answer <strong id="q-count">10</strong> multiple-choice questions about the elements hidden inside a smartphone. After each answer you'll find out why.</p>
+                    <p>Haven't explored the phone yet? Do that first – every answer can be found there!</p>
+                    <p class="best" id="best-score" hidden></p>
+                    <div>
+                        <button type="button" class="btn btn-primary" id="start-btn">Start the quiz ▶</button>
+                        <a class="btn btn-secondary" href="index.html">🔍 Explore the phone first</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUESTION -->
+            <section class="screen" id="screen-question" aria-live="polite">
+                <div class="progress-row">
+                    <span id="progress-text">Question 1 of 10</span>
+                    <span>Score: <span id="score-text">0</span></span>
+                </div>
+                <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+                <h2 class="question-text" id="question-text"></h2>
+                <div class="question-img" id="question-img" hidden></div>
+                <div class="options" id="options"></div>
+                <div class="feedback" id="feedback" role="status"></div>
+                <div class="next-row"><button type="button" class="btn btn-primary" id="next-btn" hidden>Next ▶</button></div>
+            </section>
+
+            <!-- RESULTS -->
+            <section class="screen" id="screen-results">
+                <div class="results">
+                    <div class="score-circle"><span class="num" id="final-score">0</span><span class="of" id="final-of">out of 10</span></div>
+                    <h2 id="result-title"></h2>
+                    <p class="message" id="result-message"></p>
+                    <div>
+                        <button type="button" class="btn btn-primary" id="again-btn">🔄 Play again</button>
+                        <a class="btn btn-secondary" href="index.html">🔍 Back to the phone</a>
+                    </div>
+                    <details class="review">
+                        <summary>Review your answers</summary>
+                        <ol id="review-list"></ol>
+                    </details>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025–2026 Prof. Peter Nockemann · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="index.html">Explore the phone</a> · <a href="teachers.html">Teacher guide</a></p>
+        </footer>
+    </div>
+
+    <script src="quiz-questions.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            const ALL = window.QUIZ_QUESTIONS;
+            const LETTERS = ['A', 'B', 'C', 'D', 'E', 'F'];
+            const BEST_KEY = 'phoneQuizBest';
+
+            // Number of questions per round: ?n=15 or ?n=all (default 10)
+            const nParam = new URLSearchParams(location.search).get('n');
+            const ROUND = nParam === 'all' ? ALL.length : Math.min(Math.max(parseInt(nParam, 10) || 10, 1), ALL.length);
+
+            const $ = id => document.getElementById(id);
+            let round = [], index = 0, score = 0, answers = [];
+
+            function shuffle(arr) {
+                const a = arr.slice();
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [a[i], a[j]] = [a[j], a[i]];
+                }
+                return a;
+            }
+
+            function showScreen(id) {
+                document.querySelectorAll('.screen').forEach(s => s.classList.toggle('active', s.id === id));
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function readBest() {
+                try { return JSON.parse(localStorage.getItem(BEST_KEY)); } catch (e) { return null; }
+            }
+
+            function saveBest(pct, text) {
+                try {
+                    const best = readBest();
+                    if (!best || pct > best.pct) localStorage.setItem(BEST_KEY, JSON.stringify({ pct, text }));
+                } catch (e) { /* storage unavailable: ignore */ }
+            }
+
+            function showBest() {
+                const best = readBest();
+                const el = $('best-score');
+                if (best && best.text) { el.textContent = '⭐ Your best score on this device: ' + best.text; el.hidden = false; }
+            }
+
+            function start() {
+                round = shuffle(ALL).slice(0, ROUND).map(q => ({
+                    ...q,
+                    // options[0] is correct in the data; remember it before shuffling
+                    shuffled: shuffle(q.options.map((text, i) => ({ text, correct: i === 0 })))
+                }));
+                index = 0; score = 0; answers = [];
+                showScreen('screen-question');
+                renderQuestion();
+            }
+
+            function renderQuestion() {
+                const q = round[index];
+                $('progress-text').textContent = `Question ${index + 1} of ${round.length}`;
+                $('score-text').textContent = score;
+                $('progress-fill').style.width = (index / round.length * 100) + '%';
+                $('question-text').textContent = q.q;
+
+                const imgBox = $('question-img');
+                if (q.img) {
+                    imgBox.innerHTML = `<img src="${q.img[0]}" alt="${q.img[1]}"><p class="credit">${q.img[2]}</p>`;
+                    imgBox.hidden = false;
+                } else {
+                    imgBox.hidden = true;
+                    imgBox.innerHTML = '';
+                }
+
+                const opts = $('options');
+                opts.innerHTML = '';
+                q.shuffled.forEach((opt, i) => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'option';
+                    b.innerHTML = `<span class="letter">${LETTERS[i]}</span><span></span>`;
+                    b.lastChild.textContent = opt.text;
+                    b.addEventListener('click', () => answer(i));
+                    opts.appendChild(b);
+                });
+
+                $('feedback').className = 'feedback';
+                $('next-btn').hidden = true;
+                opts.firstChild.focus({ preventScroll: true });
+            }
+
+            function answer(choice) {
+                const q = round[index];
+                const buttons = $('options').querySelectorAll('.option');
+                const isRight = q.shuffled[choice].correct;
+                buttons.forEach((b, i) => {
+                    b.disabled = true;
+                    if (q.shuffled[i].correct) b.classList.add('correct');
+                    else if (i === choice) b.classList.add('wrong');
+                });
+                if (isRight) score++;
+                answers.push({ q: q.q, yours: q.shuffled[choice].text, right: q.options[0], ok: isRight });
+
+                $('score-text').textContent = score;
+                const fb = $('feedback');
+                fb.className = 'feedback show ' + (isRight ? 'good' : 'bad');
+                fb.innerHTML = `<strong>${isRight ? '✅ Correct!' : '❌ Not quite – the answer is: ' + q.options[0]}</strong>`;
+                fb.appendChild(document.createTextNode(q.explain));
+
+                const next = $('next-btn');
+                next.textContent = index + 1 < round.length ? 'Next ▶' : 'See my score 🏁';
+                next.hidden = false;
+                next.focus({ preventScroll: true });
+            }
+
+            function next() {
+                index++;
+                if (index < round.length) renderQuestion();
+                else finish();
+            }
+
+            function finish() {
+                const total = round.length, pct = score / total;
+                $('progress-fill').style.width = '100%';
+                $('final-score').textContent = score;
+                $('final-of').textContent = 'out of ' + total;
+
+                const [title, msg] =
+                    pct === 1   ? ['🏆 Perfect score!', 'You are a true critical-elements expert. Could you explain to a friend why recycling phones matters?'] :
+                    pct >= 0.8  ? ['🌟 Excellent!', 'You really know what is hidden inside a phone. Check the review below to see what you missed.'] :
+                    pct >= 0.5  ? ['👍 Good effort!', 'You know quite a lot already. Explore the phone layers again and see if you can beat your score.'] :
+                                  ['🔍 Keep exploring!', 'Tap through the phone layers and elements again – all the answers are there. Then have another go!'];
+                $('result-title').textContent = title;
+                $('result-message').textContent = msg;
+
+                const list = $('review-list');
+                list.innerHTML = '';
+                answers.forEach(a => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span></span><br>${a.ok ? '✅ <span class="right"></span>' : '❌ <span class="yours-wrong"></span> → <span class="right"></span>'}`;
+                    li.firstChild.textContent = a.q;
+                    if (a.ok) li.querySelector('.right').textContent = a.right;
+                    else { li.querySelector('.yours-wrong').textContent = a.yours; li.querySelector('.right').textContent = a.right; }
+                    list.appendChild(li);
+                });
+
+                saveBest(pct, `${score} / ${total}`);
+                showScreen('screen-results');
+                $('again-btn').focus({ preventScroll: true });
+            }
+
+            $('q-count').textContent = ROUND;
+            showBest();
+            $('start-btn').addEventListener('click', start);
+            $('next-btn').addEventListener('click', next);
+            $('again-btn').addEventListener('click', start);
+        })();
+    </script>
+</body>
+</html>

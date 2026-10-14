@@ -1,6 +1,6 @@
 # Hidden Treasure in Your Pocket
 
-An interactive science-festival display about the critical and strategic elements inside a smartphone.
+An interactive educational resource about the critical and strategic elements inside a smartphone, for classrooms, outreach events and self-guided learning.
 Tap a layer of the exploded phone (screen, camera, speaker, circuit board, battery, casing) to see which elements it contains, then tap an element for a photo and short explanation.
 
 It is a single static page (`index.html`) with no build step. Open it in a browser or serve the folder with any static host (e.g. GitHub Pages).
@@ -9,7 +9,16 @@ It is a single static page (`index.html`) with no build step. Open it in a brows
 
 The clickable areas are SVG polygons traced over `phone_parts_exploded_view.jpg`, using the photo's original 1696×2528 pixel grid as the `viewBox`. If the photo is replaced, the polygon `points` need re-tracing.
 
+## Pages
+
+- `index.html` – the interactive phone (start here)
+- `quiz.html` – a scored multiple-choice quiz (10 random questions per round; `quiz.html?n=all` asks all of them)
+- `teachers.html` – teacher guide: learning objectives, lesson plan, discussion questions, extension tasks, printable worksheet and quiz answer key
+
 ## Editing the content
+
+Quiz questions live in `quiz-questions.js` (the first option of each question is the correct one). The quiz and the teacher guide's answer key both read from this file.
+
 
 All layer and element text, statistics and photo credits live in the `ELEMENTS` and `LAYERS` objects at the top of the script in `index.html`. The info cards and the credits list are built from that data.
 

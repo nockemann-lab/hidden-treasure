@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Guide</title>
+    <meta name="author" content="Prof. Peter Nockemann">
+    <meta name="description" content="Teacher guide for Hidden Treasure in Your Pocket – an interactive resource on critical elements in smartphones.">
+    <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        header h1 { font-size: 2.2em; margin-bottom: 6px; line-height: 1.2; }
+        header p { opacity: 0.9; font-size: 1.1em; }
+
+        .top-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+        .top-links a {
+            color: white; text-decoration: none; font-weight: 700;
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px; border-radius: 20px;
+        }
+        .top-links a:hover { background: rgba(255,255,255,0.25); }
+
+        main { padding: 30px 40px; }
+
+        nav.toc { background: #f7f9fb; border: 1px solid #e3e8ee; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; }
+        nav.toc h2 { font-size: 1em; margin: 0 0 6px; border: none; padding: 0; }
+        nav.toc ol { padding-left: 22px; columns: 2; column-gap: 30px; }
+        nav.toc a { color: #2a5298; }
+
+        h2 {
+            color: #2c3e50;
+            font-size: 1.5em;
+            margin: 35px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+        h3 { color: #2c3e50; font-size: 1.1em; margin: 20px 0 8px; }
+        p { margin-bottom: 12px; }
+        ul, ol { padding-left: 24px; margin-bottom: 12px; }
+        li { margin-bottom: 6px; }
+        a { color: #2a5298; overflow-wrap: anywhere; }
+
+        table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.95em; }
+        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e3e8ee; vertical-align: top; }
+        th { background: #f7f9fb; color: #2c3e50; }
+        .table-wrap { overflow-x: auto; }
+
+        .callout { background: #e3f2fd; border-left: 6px solid #2196f3; border-radius: 8px; padding: 12px 16px; margin-bottom: 15px; }
+        .callout.warn { background: #fdf2f2; border-left-color: #e74c3c; }
+        .callout.tip { background: #e8f8ef; border-left-color: #27ae60; }
+
+        details { background: #f7f9fb; border: 1px solid #e3e8ee; border-radius: 10px; padding: 10px 15px; margin-bottom: 12px; }
+        summary { cursor: pointer; font-weight: 700; color: #2c3e50; }
+        details[open] summary { margin-bottom: 10px; }
+
+        #answer-key li { margin-bottom: 10px; }
+        #answer-key .ans { color: #27ae60; font-weight: 700; }
+        #answer-key .why { color: #555; font-size: 0.92em; }
+
+        .btn {
+            display: inline-block; font: inherit; font-weight: 700;
+            padding: 10px 22px; border-radius: 25px; border: none; cursor: pointer;
+            background: linear-gradient(135deg, #42d392 0%, #27ae60 100%); color: white; text-decoration: none;
+        }
+
+        /* Worksheet */
+        .worksheet { border: 2px dashed #c3cfe2; border-radius: 12px; padding: 20px; }
+        .worksheet h3 { margin-top: 0; }
+        .worksheet td { height: 48px; }
+        .worksheet .lines { border-bottom: 1px solid #aaa; height: 32px; margin-bottom: 6px; }
+        .name-line { display: flex; gap: 20px; margin-bottom: 15px; }
+        .name-line span { flex: 1; border-bottom: 1px solid #aaa; padding-bottom: 4px; }
+
+        footer { background: #2c3e50; color: white; padding: 18px 20px; text-align: center; font-size: 0.9em; }
+        footer a { color: inherit; }
+
+        @media (max-width: 700px) {
+            body { padding: 10px; }
+            main { padding: 20px 16px; }
+            header h1 { font-size: 1.7em; }
+            nav.toc ol { columns: 1; }
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; border-radius: 0; max-width: none; }
+            .top-links, nav.toc, .no-print { display: none !important; }
+            header { background: none; color: #2c3e50; padding: 10px 0; }
+            details { border: none; padding: 0; }
+            details > summary { list-style: none; }
+            h2 { break-after: avoid; }
+            table, li { break-inside: avoid; }
+            /* "Print worksheet" button: print only the worksheet */
+            body.print-worksheet .container > *:not(main),
+            body.print-worksheet main > *:not(#worksheet-section) { display: none !important; }
+            body.print-worksheet .worksheet { border: none; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📘 Teacher Guide</h1>
+            <p>Hidden Treasure in Your Pocket – an interactive guide to critical elements in smartphones</p>
+            <div class="top-links">
+                <a href="index.html">🔍 Open the interactive phone</a>
+                <a href="quiz.html">🧠 Open the quiz</a>
+            </div>
+        </header>
+
+        <main>
+            <nav class="toc">
+                <h2>Contents</h2>
+                <ol>
+                    <li><a href="#overview">Overview</a></li>
+                    <li><a href="#objectives">Learning objectives</a></li>
+                    <li><a href="#background">Background for teachers</a></li>
+                    <li><a href="#curriculum">Curriculum links</a></li>
+                    <li><a href="#lesson">Suggested lesson plan</a></li>
+                    <li><a href="#discussion">Discussion questions</a></li>
+                    <li><a href="#extension">Extension activities</a></li>
+                    <li><a href="#events">Using it at events</a></li>
+                    <li><a href="#data">About the data</a></li>
+                    <li><a href="#quiz">The quiz &amp; answer key</a></li>
+                    <li><a href="#worksheet-section">Student worksheet</a></li>
+                    <li><a href="#cite">Licence &amp; how to cite</a></li>
+                </ol>
+            </nav>
+
+            <section id="overview">
+                <h2>1. Overview</h2>
+                <p>Every smartphone contains dozens of chemical elements, many of which are classed as <strong>critical raw materials</strong>: they are essential for modern technology, but their supply is at risk. This resource lets learners take a phone apart virtually, find out which elements are inside each part, what they do, where they come from, and why recycling matters.</p>
+                <div class="table-wrap">
+                    <table>
+                        <tr><th>Age range</th><td>Designed for ages 11–16. Works with younger pupils with support, and as a discussion starter for post-16 and adult audiences.</td></tr>
+                        <tr><th>Time</th><td>15 minutes (explore + quiz) up to a full 50–60 minute lesson.</td></tr>
+                        <tr><th>Equipment</th><td>Any device with a web browser: computer, tablet, phone or interactive whiteboard. Touch-friendly. Nothing to install.</td></tr>
+                        <tr><th>Subjects</th><td>Chemistry / science, geography, sustainability and citizenship, design &amp; technology.</td></tr>
+                        <tr><th>Contents</th><td><strong>Interactive phone:</strong> six parts (display, camera, circuit board, speaker &amp; magnets, battery, casing) with 20 elements and materials, each with its role, facts, origin and critical-list status.<br>
+                            <strong>Quiz:</strong> 10 random questions from a bank of 22, with instant feedback, explanations and a score.<br>
+                            <strong>Sources:</strong> all data is referenced on the main page.</td></tr>
+                    </table>
+                </div>
+                <h3>How it works</h3>
+                <ol>
+                    <li><strong>Select a phone part</strong> by tapping it in the exploded view of the phone.</li>
+                    <li><strong>Tap an element tile</strong> to see a photo of the element and read what it does, a fun fact and where it comes from.</li>
+                    <li>A <strong>red corner</strong> on a tile (and a red info box) means the element is on the EU or US critical-materials list.</li>
+                    <li>Each part also shows <strong>statistics</strong> from a scientific study of old mobile phones, e.g. the value of the metals per tonne.</li>
+                    <li>When pupils feel ready, they <strong>take the quiz</strong>.</li>
+                </ol>
+            </section>
+
+            <section id="objectives">
+                <h2>2. Learning objectives</h2>
+                <p>By the end of the activity, learners should be able to:</p>
+                <ul>
+                    <li>name the main parts of a smartphone and some of the elements each part contains;</li>
+                    <li>link the <strong>properties</strong> of an element to its use (e.g. gold does not corrode, copper conducts electricity, neodymium makes strong magnets, lithium is very light);</li>
+                    <li>explain what makes a raw material <strong>"critical"</strong> and give examples of supply being concentrated in a few countries;</li>
+                    <li>describe environmental, social and ethical issues linked to mining (e.g. cobalt mining, conflict minerals);</li>
+                    <li>explain why old phones are a valuable "urban mine" and why <strong>reuse, repair and recycling</strong> matter;</li>
+                    <li>(extension) interpret and compare data, e.g. metal concentrations in phones versus ores.</li>
+                </ul>
+            </section>
+
+            <section id="background">
+                <h2>3. Background for teachers</h2>
+                <h3>What is a "critical" raw material?</h3>
+                <p>Governments publish lists of materials that are both <strong>important to the economy</strong> and have a <strong>supply that is at risk</strong>, for example because production is concentrated in one or a few countries, or because they are hard to substitute or recycle.</p>
+                <ul>
+                    <li><strong>EU:</strong> the Critical Raw Materials Act (Regulation (EU) 2024/1252) lists 34 critical raw materials, 17 of which are also "strategic" (key for green and digital technologies, defence and space).</li>
+                    <li><strong>USA:</strong> the US Geological Survey's 2025 list contains 60 critical minerals, defined as essential to economic or national security and with a supply chain vulnerable to disruption.</li>
+                </ul>
+                <p>The lists are reviewed every few years, so an element's status can change. For example, indium was on the EU's 2020 list but not the 2023 list, and copper and silver were added to the US list in 2025.</p>
+
+                <h3>Key messages</h3>
+                <ul>
+                    <li><strong>Small amounts, big value:</strong> gold, silver, platinum and palladium make up less than 1.5% of the metal in a phone, but 93% of its metal value. Copper is more than half of the metal by weight.</li>
+                    <li><strong>Urban mining:</strong> old phones are richer in many metals than natural ores. A tonne of phone circuit boards can contain hundreds of times more gold than a tonne of gold ore.</li>
+                    <li><strong>Concentrated supply:</strong> e.g. DR Congo mined 73% of the world's cobalt in 2025; China produced 99% of primary gallium and mined about 69% of rare earths.</li>
+                    <li><strong>Ethics:</strong> tin, tantalum, tungsten and gold are "conflict minerals" (3TG) – companies in the US and EU must check their supply chains don't fund armed groups. Some cobalt is mined by hand in dangerous conditions, sometimes by children.</li>
+                    <li><strong>Recycling gap:</strong> in 2022 only about 22% of the world's e-waste was documented as properly collected and recycled.</li>
+                </ul>
+            </section>
+
+            <section id="curriculum">
+                <h2>4. Curriculum links</h2>
+                <p>The resource supports topics commonly taught at ages 11–16 (e.g. Key Stages 3 and 4, GCSE and equivalent courses):</p>
+                <div class="table-wrap">
+                    <table>
+                        <tr><th>Topic</th><th>How the resource helps</th></tr>
+                        <tr><td>The periodic table, elements and compounds</td><td>Atomic numbers and symbols for 19 elements; compounds such as indium tin oxide, lithium cobalt oxide, silica, gallium arsenide.</td></tr>
+                        <tr><td>Properties of metals and materials</td><td>Conductivity (copper, silver), corrosion resistance (gold), density (lithium, magnesium, tungsten), melting point (gallium, tungsten), magnetism (neodymium, dysprosium).</td></tr>
+                        <tr><td>Earth's resources and extraction of metals</td><td>Ores and ore grades; by-products (indium from zinc, gallium from aluminium ore); energy needed to extract aluminium.</td></tr>
+                        <tr><td>Sustainability, life cycle and recycling</td><td>Urban mining, recycling rates, energy saved by recycling aluminium, reuse and repair.</td></tr>
+                        <tr><td>Electricity and batteries</td><td>How lithium-ion batteries work: lithium ions moving between graphite and cobalt oxide.</td></tr>
+                        <tr><td>Geography and global citizenship</td><td>Where materials are mined and refined; supply risk; conflict minerals; working conditions.</td></tr>
+                    </table>
+                </div>
+            </section>
+
+            <section id="lesson">
+                <h2>5. Suggested lesson plan (50 minutes)</h2>
+                <div class="table-wrap">
+                    <table>
+                        <tr><th>Time</th><th>Activity</th></tr>
+                        <tr><td>5 min</td><td><strong>Starter:</strong> "How many different elements do you think are in your phone?" Collect guesses. (Answer: 60–70 – most of the stable elements in the periodic table!)</td></tr>
+                        <tr><td>20 min</td><td><strong>Explore:</strong> in pairs, pupils explore all six phone parts and fill in the <a href="#worksheet-section">student worksheet</a> – one element per part: what it does, a fact, and whether it is critical. Alternatively, give each pair one part and have them report back.</td></tr>
+                        <tr><td>10 min</td><td><strong>Quiz:</strong> pupils take the quiz individually or in pairs and note their score. They can play again for a new set of questions.</td></tr>
+                        <tr><td>10 min</td><td><strong>Discussion:</strong> choose two or three of the <a href="#discussion">discussion questions</a>.</td></tr>
+                        <tr><td>5 min</td><td><strong>Plenary:</strong> "What will you do with your next old phone?" Each pupil writes one action.</td></tr>
+                    </table>
+                </div>
+                <div class="callout tip">💡 <strong>Short on time?</strong> Use it as a 15-minute starter or homework: explore for 10 minutes, then take the quiz.</div>
+            </section>
+
+            <section id="discussion">
+                <h2>6. Discussion questions</h2>
+                <details>
+                    <summary>Why might a pile of old phones be called an "urban mine"?</summary>
+                    <p>Old phones contain far higher concentrations of some metals than natural ores – e.g. a tonne of phone circuit boards can contain up to 678 g of gold, against 1–3 g in a tonne of typical gold ore. Recovering them can reduce the need for new mining.</p>
+                </details>
+                <details>
+                    <summary>Copper is more than half of the metal in a phone, but gold is about three-quarters of its value. Why?</summary>
+                    <p>Value depends on both the amount and the price. Gold is several thousand times more expensive than copper per kilogram, so even tiny amounts add up. This also explains why recyclers focus on circuit boards and cameras.</p>
+                </details>
+                <details>
+                    <summary>What could happen if one country produces almost all of an element?</summary>
+                    <p>Prices can rise sharply, and supply can be interrupted by export restrictions, conflict, natural disasters or trade disputes. Countries respond by diversifying supply, stockpiling, finding substitutes and recycling more.</p>
+                </details>
+                <details>
+                    <summary>Who should be responsible for recycling phones – users, manufacturers or governments?</summary>
+                    <p>There is no single right answer. Points to raise: take-back schemes and "producer responsibility" rules; deposit schemes; making collection easy; designing phones that are easier to take apart.</p>
+                </details>
+                <details>
+                    <summary>Should phones be easier to repair?</summary>
+                    <p>Repair keeps phones in use for longer, so fewer new materials need to be mined. In the EU, new rules (the Batteries Regulation, Regulation (EU) 2023/1542) will require batteries in many portable devices to be removable and replaceable by users from 2027.</p>
+                </details>
+                <details>
+                    <summary>Is it fair that some of the materials in our phones are mined in dangerous conditions?</summary>
+                    <p>Discuss artisanal cobalt mining and conflict minerals. What can consumers, companies and governments do? (Supply-chain checks, certification, buying second-hand, keeping phones longer.)</p>
+                </details>
+            </section>
+
+            <section id="extension">
+                <h2>7. Extension activities</h2>
+                <h3>Data task: how many phones for 1 g of gold?</h3>
+                <p>Old mobile phones can contain up to 141 g of gold per tonne (Gómez et al., 2023). A phone weighs about 100 g. How many old phones would contain 1 g of gold?</p>
+                <details>
+                    <summary>Show worked answer</summary>
+                    <p>1 tonne = 1,000,000 g, so 1 tonne ≈ 10,000 phones of 100 g each.<br>
+                    141 g of gold ÷ 10,000 phones ≈ 0.014 g of gold per phone.<br>
+                    1 g ÷ 0.014 g ≈ <strong>about 70 phones</strong> (at best – many phones contain less).</p>
+                </details>
+
+                <h3>Data task: richer than ore</h3>
+                <p>Phone circuit boards contain about 28% copper. Copper ore contains about 0.5–3% copper. How many times richer in copper are circuit boards?</p>
+                <details>
+                    <summary>Show worked answer</summary>
+                    <p>28 ÷ 3 ≈ 9 and 28 ÷ 0.5 = 56, so circuit boards are roughly <strong>10 to 50 times</strong> richer in copper than copper ore.</p>
+                </details>
+
+                <h3>More ideas</h3>
+                <ul>
+                    <li><strong>Periodic table hunt:</strong> colour in all the elements from the resource on a blank periodic table. Where are they? What do the rare earths and the platinum-group metals have in common?</li>
+                    <li><strong>Supply-chain research:</strong> pick one critical element and create a poster: where it is mined, how it is refined, what it is used for, and the risks.</li>
+                    <li><strong>Drawer phones survey:</strong> how many unused phones do pupils' households have? Estimate the gold in all of them using the data task above.</li>
+                    <li><strong>Design challenge:</strong> design a phone that is easy to repair and recycle.</li>
+                </ul>
+                <div class="callout warn">⚠️ <strong>Safety:</strong> do not take real phones or lithium-ion batteries apart in class. Damaged batteries can catch fire. Never put phones or batteries in the household bin.</div>
+            </section>
+
+            <section id="events">
+                <h2>8. Using it at events and exhibitions</h2>
+                <ul>
+                    <li>Open <code>index.html</code> in a web browser and switch to full screen (F11 on Windows, Ctrl + Cmd + F on Mac).</li>
+                    <li>It works well on a touchscreen or tablet. Reload the page to reset it for the next visitor.</li>
+                    <li>All files can be downloaded and run <strong>without an internet connection</strong> (only the links to external sources need one).</li>
+                    <li>Place a second device next to it running the quiz, so visitors can explore first and then test themselves.</li>
+                </ul>
+            </section>
+
+            <section id="data">
+                <h2>9. About the data</h2>
+                <ul>
+                    <li>The component values, weights and metal contents come from a peer-reviewed study of <strong>15 old mobile phones made between 2002 and 2015</strong> (Gómez et al., 2023). Modern phones may differ – e.g. most new phones now use OLED rather than LCD screens.</li>
+                    <li>Values are the <strong>gross value of the metals</strong> contained, at 2021 prices. The real value recovered is lower, because collection, dismantling and refining cost money and not everything can be recovered.</li>
+                    <li>Batteries were not analysed in that study; battery facts come from other sources.</li>
+                    <li>Production shares (e.g. "China produced 99% of primary gallium") are for 2025, from the US Geological Survey's <em>Mineral Commodity Summaries 2026</em>.</li>
+                    <li>Critical-list status uses the EU list (2023/2024) and the US list (2025).</li>
+                </ul>
+                <p>A full list of sources and image credits is at the bottom of the <a href="index.html">main page</a>.</p>
+            </section>
+
+            <section id="quiz">
+                <h2>10. The quiz &amp; answer key</h2>
+                <p>Each round of the <a href="quiz.html">quiz</a> asks 10 questions chosen at random from the bank below, with the answers in a random order, so pupils can play several times. Pupils see an explanation after every answer and can review all answers at the end. The best score is remembered on each device.</p>
+                <div class="callout tip">💡 <strong>Teacher options:</strong> <a href="quiz.html?n=all">quiz.html?n=all</a> asks all questions; <a href="quiz.html?n=5">quiz.html?n=5</a> asks five (any number works).</div>
+                <details>
+                    <summary>Show the full answer key (<span id="key-count"></span> questions)</summary>
+                    <ol id="answer-key"></ol>
+                </details>
+            </section>
+
+            <section id="worksheet-section">
+                <h2>11. Student worksheet</h2>
+                <p class="no-print"><button type="button" class="btn" id="print-worksheet">🖨️ Print worksheet</button></p>
+                <div class="worksheet">
+                    <h3>Hidden Treasure in Your Pocket – Worksheet</h3>
+                    <div class="name-line"><span>Name:</span><span>Date:</span></div>
+                    <p>Explore each part of the phone. For each part, choose <strong>one element</strong> and fill in the table.</p>
+                    <div class="table-wrap">
+                        <table>
+                            <tr><th style="width: 18%">Phone part</th><th style="width: 16%">Element (name &amp; symbol)</th><th>What does it do in the phone?</th><th>One interesting fact or where it comes from</th><th style="width: 11%">Critical? (EU / US)</th></tr>
+                            <tr><td>Display</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>Camera</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>Circuit board</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>Speaker &amp; magnets</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>Battery</td><td></td><td></td><td></td><td></td></tr>
+                            <tr><td>Casing &amp; frame</td><td></td><td></td><td></td><td></td></tr>
+                        </table>
+                    </div>
+                    <p><strong>1.</strong> Which part of the phone has the most valuable metals per tonne? Why?</p>
+                    <div class="lines"></div>
+                    <p><strong>2.</strong> Name one element whose supply comes mostly from one country. Why could that be a problem?</p>
+                    <div class="lines"></div><div class="lines"></div>
+                    <p><strong>3.</strong> What will you do with your next old phone? Why?</p>
+                    <div class="lines"></div>
+                    <p><strong>My quiz score:</strong> ______ / ______</p>
+                </div>
+            </section>
+
+            <section id="cite">
+                <h2>12. Licence &amp; how to cite</h2>
+                <p>© 2025–2026 Prof. Peter Nockemann, Queen's University Belfast (<a href="https://orcid.org/0000-0001-9864-9702">ORCID 0000-0001-9864-9702</a>).</p>
+                <p>This resource is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 (CC BY 4.0)</a>: you may use, share and adapt it, including in teaching materials, as long as you credit the author. The element photos are third-party images under their own licences (see credits on the main page). The exploded-view phone illustration was created by the author using Google Gemini.</p>
+                <p><strong>Suggested citation:</strong><br>
+                Nockemann, P. (2026). <em>Hidden Treasure in Your Pocket: An Interactive Guide to Critical Elements in Smartphones</em>. Queen's University Belfast.</p>
+                <p><strong>Main data source:</strong> Gómez, M., Grimes, S., Qian, Y., Feng, Y. &amp; Fowler, G. (2023). Critical and strategic metals in mobile phones. <em>Journal of Cleaner Production</em> 419, 138099. <a href="https://doi.org/10.1016/j.jclepro.2023.138099">doi:10.1016/j.jclepro.2023.138099</a></p>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2025–2026 Prof. Peter Nockemann · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> · <a href="index.html">Explore the phone</a> · <a href="quiz.html">Quiz</a></p>
+        </footer>
+    </div>
+
+    <script src="quiz-questions.js"></script>
+    <script>
+        (function() {
+            'use strict';
+
+            // Answer key, built from the same questions the quiz uses (first option = correct)
+            const key = document.getElementById('answer-key');
+            window.QUIZ_QUESTIONS.forEach(q => {
+                const li = document.createElement('li');
+                li.innerHTML = '<span class="q"></span><br>Answer: <span class="ans"></span><br><span class="why"></span>';
+                li.querySelector('.q').textContent = q.q;
+                li.querySelector('.ans').textContent = q.options[0];
+                li.querySelector('.why').textContent = q.explain;
+                key.appendChild(li);
+            });
+            document.getElementById('key-count').textContent = window.QUIZ_QUESTIONS.length;
+
+            // Print only the worksheet
+            document.getElementById('print-worksheet').addEventListener('click', () => {
+                document.body.classList.add('print-worksheet');
+                window.print();
+            });
+            window.addEventListener('afterprint', () => document.body.classList.remove('print-worksheet'));
+        })();
+    </script>
+</body>
+</html>

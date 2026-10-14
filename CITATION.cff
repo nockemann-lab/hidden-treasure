@@ -5,14 +5,15 @@ type: software
 authors:
   - given-names: Peter
     family-names: Nockemann
-    # affiliation: ""
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Queen's University Belfast, UK"
+    orcid: "https://orcid.org/0000-0001-9864-9702"
 abstract: >-
-  An interactive science-festival display about the critical and strategic
+  An interactive educational resource about the critical and strategic
   elements inside a smartphone. Visitors select a layer of an exploded phone
   (display, camera, circuit board, speaker, battery, casing) to explore which
   elements it contains, what they do, where they come from, and whether they
-  are on the EU and US critical raw materials lists.
+  are on the EU and US critical raw materials lists. Includes a scored quiz
+  and a guide for teachers.
 keywords:
   - critical raw materials
   - smartphones
