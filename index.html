@@ -399,20 +399,23 @@
                 </h2>
                 
                 <div class="interactive-container">
-                    <img src="phone-exploded-white.jpg" alt="Exploded View of Smartphone" class="main-phone-img" width="1200" height="1789">
+                    <img src="phone_parts_exploded_view.jpg" alt="Exploded view of a smartphone: display, camera, circuit board, casing and battery" class="main-phone-img" width="1200" height="1789">
 
-                    <!-- Back-to-front order: later polygons win where layers overlap. data-anchor = label position (viewBox units). -->
+                    <!-- Back-to-front order: later polygons win where layers overlap. data-anchor = label position (viewBox units).
+                         Several polygons may share a data-layer (e.g. front and rear camera). -->
                     <svg class="hotspot-map" viewBox="0 0 1696 2528" preserveAspectRatio="none">
-                        <polygon class="hotspot" data-layer="casing" data-label="Casing" data-anchor="1420,1475"
-                            points="488,2044 504,2023 622,1916 1149,1502 1191,1481 1600,1475 1643,1502 1632,1550 1191,1889 944,2044 622,2141 515,2120 483,2087"/>
+                        <polygon class="hotspot" data-layer="casing" data-label="Casing" data-anchor="1420,1440"
+                            points="485,2070 530,1990 600,1930 1120,1470 1190,1435 1600,1440 1645,1485 1640,1540 1170,1895 944,2044 650,2150 520,2125 490,2110"/>
                         <polygon class="hotspot" data-layer="battery" data-label="Li-Ion Battery" data-anchor="1200,1890"
                             points="558,2170 987,1905 1116,1885 1360,1960 1396,1905 1460,1890 1550,1912 1546,1940 1440,1975 1450,2015 1440,2040 905,2398 878,2392 555,2205"/>
                         <polygon class="hotspot" data-layer="pcb" data-label="Circuit Board (PCB)" data-anchor="1440,1030"
-                            points="1320,1032 1500,1030 1520,1060 1640,1050 1640,1080 1560,1100 1440,1320 1360,1340 1300,1560 1220,1760 1160,1830 1080,1930 1000,1940 920,1900 620,1920 500,1910 495,1820 560,1760 1110,1730 1180,1560 1230,1340 1180,1330 1230,1150"/>
+                            points="1335,1030 1500,1028 1515,1050 1590,1050 1590,1080 1560,1095 1450,1320 1355,1335 1325,1450 1295,1580 1250,1650 1185,1740 1110,1830 1050,1890 1000,1935 970,1925 510,1910 500,1820 540,1765 1100,1735 1150,1650 1195,1510 1230,1350 1210,1320 1250,1150"/>
                         <polygon class="hotspot" data-layer="screen" data-label="Display (Screen)" data-anchor="530,330"
                             points="248,330 275,285 735,45 775,50 800,90 805,410 1220,300 1245,325 1240,380 1180,650 1500,650 1520,670 1505,700 1020,1720 990,1745 540,1760 500,1740 495,1680 540,1610 440,1610 420,1590 440,1470 300,1500 258,1470"/>
-                        <polygon class="hotspot" data-layer="camera" data-label="Camera Module" data-anchor="1040,440"
+                        <polygon class="hotspot" data-layer="camera" data-label="Front Camera" data-anchor="1040,440"
                             points="830,500 1100,435 1110,470 1255,455 1260,520 1100,600 1060,640 980,650 820,590"/>
+                        <polygon class="hotspot" data-layer="camera" data-label="Rear Camera" data-anchor="1380,1495"
+                            points="1290,1525 1325,1495 1410,1500 1475,1560 1470,1600 1395,1605 1330,1585"/>
                         <polygon class="hotspot" data-layer="speaker" data-label="Speaker &amp; Magnets" data-anchor="1230,655"
                             points="1120,668 1335,652 1340,738 1125,752"/>
                     </svg>
@@ -724,14 +727,16 @@
             }
 
             // When nothing is hovered/focused, keep the selected layer labelled (helps on touch screens)
+            let selectedHotspot = null;
             function restoreLabel() {
-                showLabel(container.querySelector('.hotspot.active'));
+                showLabel(selectedHotspot);
             }
 
             function showLayer(component, hotspot) {
                 try {
-                    hotspots.forEach(h => h.classList.remove('active'));
-                    if (hotspot) hotspot.classList.add('active');
+                    // Highlight every area of the layer (e.g. front and rear camera)
+                    hotspots.forEach(h => h.classList.toggle('active', h.dataset.layer === component));
+                    selectedHotspot = hotspot;
                     showLabel(hotspot);
 
                     document.querySelectorAll('.info-card').forEach(c => c.classList.remove('active'));

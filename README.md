@@ -7,7 +7,7 @@ It is a single static page (`index.html`) with no build step. Open it in a brows
 
 ## Hotspots
 
-The clickable areas are SVG polygons traced over `phone-exploded-white.jpg`, using the photo's original 1696×2528 pixel grid as the `viewBox`. If the photo is replaced, the polygon `points` need re-tracing.
+The clickable areas are SVG polygons traced over `phone_parts_exploded_view.jpg`, using the photo's original 1696×2528 pixel grid as the `viewBox`. If the photo is replaced, the polygon `points` need re-tracing.
 
 ## Editing the content
 
@@ -23,7 +23,7 @@ Other sources (USGS Mineral Commodity Summaries 2026, EU Critical Raw Materials 
 
 Element photos are from Wikimedia Commons under CC BY, CC BY-SA, Free Art License or public domain; each is credited on the page with author, licence and a link to the original file. They have been resized and cropped.
 
-The exploded-view phone illustration (`phone-exploded-white.jpg`) was created by Peter Nockemann using Google Gemini (AI image generation).
+The exploded-view phone illustration (`phone_parts_exploded_view.jpg`) was created by Peter Nockemann using Google Gemini (AI image generation).
 
 ## Licence and citation
 
