@@ -99,16 +99,50 @@ window.SITE_CONTENT.en = (function () {
 
             // What can you do?
             'action.title': 'What Can YOU Do?',
-            'action.recycle.title': 'Recycle Your Old Phones',
-            'action.recycle.desc': 'Take them to a certified e-waste collection point. Never put phones or batteries in the household bin, because damaged lithium-ion batteries can start fires.',
-            'action.repair.title': "Repair, Don't Replace",
-            'action.repair.desc': 'Keep phones longer by repairing instead of buying new.',
-            'action.donate.title': 'Donate or Resell',
-            'action.donate.desc': 'Working phones can have a second life with someone else.',
-            'action.spread.title': 'Spread Awareness',
-            'action.spread.desc': 'Tell others about the value hidden in electronic waste!',
-            'action.value': 'The 5 billion phones expected to be thrown away in 2022 contained metals worth an estimated £6.7 billion (US$9.25 billion). We only get that value back if phones are collected and recycled.',
-            'action.recycled': "Yet in 2022 only 22% of the world's electronic waste was documented as properly collected and recycled.",
+            'action.intro': "The treasure in your phone can only be recovered if the phone comes back. Here's what you can do, best first:",
+            'action.keep.title': 'Keep it longer',
+            'action.keep.desc': 'Use a case and a screen protector, and look after the battery. For the Fairphone 5, about three-quarters of its carbon footprint comes from making it, so every extra year of use counts.',
+            'action.repair.title': 'Repair it',
+            'action.repair.desc': 'A cracked screen or a tired battery can usually be replaced. Since June 2025, new phones sold in the EU and Northern Ireland must have spare parts for 7 years and show a repair score from A to E on their label.',
+            'action.reuse.title': 'Pass it on',
+            'action.reuse.desc': 'Sell, donate or hand down a phone that still works, or buy a refurbished one. Before passing a phone on, back it up, sign out, do a factory reset, and remove the SIM and memory card.',
+            'action.recycle.title': 'Recycle it',
+            'action.recycle.desc': "Shops that sell electricals must take back your old phone when you buy a new one. Large electrical shops must take small electricals for free, even if you don't buy anything. Council recycling centres take them too.",
+            'action.recycle.link': 'Find your nearest drop-off point',
+            'action.bin.title': 'Never bin it',
+            'action.bin.desc': 'Phones, vapes and batteries in the bin can start fires. In the year to March 2026, UK waste companies recorded 1,518 fires at their sites, and more than 700 were caused by lithium-ion batteries.',
+            'action.share.title': 'Spread the word',
+            'action.share.desc': 'Check the drawers at home, try the drawer challenge below, and tell friends and family what is hidden inside old phones.',
+
+            // Drawer challenge
+            'drawer.title': 'Drawer challenge',
+            'drawer.question': 'How many unused phones are hiding in your home?',
+            'drawer.less': 'One phone fewer',
+            'drawer.more': 'One phone more',
+            'drawer.one': 'One old phone could contain up to:',
+            'drawer.many': 'Together, {n} old phones could contain up to:',
+            'drawer.cu': 'copper',
+            'drawer.ag': 'silver',
+            'drawer.au': 'gold',
+            'drawer.pd': 'palladium',
+            'drawer.ree': 'rare earth elements',
+            'drawer.gold': 'You would need about 70 old phones to collect just 1 g of gold, so every phone counts!',
+            'drawer.note': 'Estimate based on up to 53 kg of copper, 270 g of silver, 141 g of gold, 18 g of palladium and 3.3 kg of rare earth elements per tonne of old phones (Gómez et al., 2023), with about 100 g per phone. Never take phones or batteries apart yourself!',
+
+            // The bigger picture
+            'big.title': 'The bigger picture',
+            'big.homes.num': '880 million',
+            'big.homes': 'unused electrical items are kept in UK homes, about 30 per home',
+            'big.homes.src': 'Material Focus, 2025',
+            'big.value.num': '£1 billion',
+            'big.value': 'of materials are hidden in the electricals UK households throw away or hold onto',
+            'big.value.src': 'Material Focus, 2025',
+            'big.uk.num': '24.5 kg',
+            'big.uk': 'of e-waste per person in the UK, the second highest in the world after Norway',
+            'big.uk.src': 'Global E-waste Monitor 2024 (2022 data)',
+            'big.world.num': '22%',
+            'big.world': "of the world's e-waste was properly collected and recycled. Without action, this could fall to 20% by 2030",
+            'big.world.src': 'Global E-waste Monitor 2024 (2022 data)',
 
             // Sources
             'sources.summary': 'Sources & image credits',
@@ -355,6 +389,16 @@ window.SITE_CONTENT.en = (function () {
                 img: ['element-C-graphite.jpg', 'A shiny grey mineral specimen', 'Photo: <a href="https://commons.wikimedia.org/wiki/File:Graphite-233436.jpg" target="_blank" rel="noopener">Robert M. Lavinsky</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>'],
                 options: ['The battery', 'The camera', 'The speaker', 'The cover glass'],
                 explain: 'Graphite forms the negative side of the battery. Lithium ions park between its flat layers of carbon atoms when you charge.'
+            },
+            {
+                q: 'In 2022 the UK produced the second most e-waste per person in the world. Which country produced the most?',
+                options: ['Norway', 'China', 'USA', 'India'],
+                explain: 'Norway produced 26.8 kg of e-waste per person and the UK 24.5 kg (Global E-waste Monitor 2024).'
+            },
+            {
+                q: 'What should you do before passing on an old phone?',
+                options: ['Back it up, do a factory reset and remove the SIM and memory card', 'Nothing: the next owner will delete your data', 'Take the battery out with a screwdriver', 'Put it in the freezer for a day'],
+                explain: 'A factory reset wipes your personal data. Never open a phone or its battery yourself.'
             },
             {
                 q: 'About how many tiny ceramic capacitors are on the circuit board of a high-end smartphone?',
