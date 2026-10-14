@@ -7,12 +7,13 @@
     <meta name="author" content="Prof. Peter Nockemann">
     <meta name="description" content="Interactive guide to the critical and strategic elements inside a smartphone.">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='12' fill='%231e3c72'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-weight='700' font-size='28' text-anchor='middle' fill='%23ffd76a'%3EAu%3C/text%3E%3C/svg%3E">
     <style>
         /* --- RESET & BASIC SETUP --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -31,16 +32,57 @@
 
         /* --- HEADER --- */
         header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background:
+                radial-gradient(circle at 12% 15%, rgba(255, 215, 106, 0.18), transparent 35%),
+                radial-gradient(circle at 88% 90%, rgba(66, 211, 146, 0.15), transparent 35%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='68'%3E%3Crect x='6' y='6' width='52' height='56' rx='8' fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='2'/%3E%3C/svg%3E"),
+                linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 30px;
+            padding: 40px 30px 32px;
             text-align: center;
         }
 
-        header h1 { font-size: 2.5em; margin-bottom: 10px; }
-        header p { font-size: 1.2em; opacity: 0.9; }
+        .eyebrow {
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.8em;
+            font-weight: 700;
+            opacity: 0.85;
+            margin-bottom: 10px;
+        }
+        header h1 {
+            font-size: clamp(2em, 5vw, 3.3em);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.01em;
+            margin-bottom: 14px;
+        }
+        header h1 .gold { color: #ffd76a; }
+        @supports ((-webkit-background-clip: text) or (background-clip: text)) {
+            header h1 .gold {
+                background: linear-gradient(180deg, #fff1b8 0%, #ffd76a 45%, #f0a92e 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            }
+        }
+        .hero-sub { font-size: 1.15em; opacity: 0.92; max-width: 640px; margin: 0 auto; line-height: 1.5; }
 
-        .header-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 18px; }
+        /* Decorative element tiles in the header */
+        .hero-tiles { display: flex; justify-content: center; gap: 10px; margin: 24px 0 6px; flex-wrap: wrap; }
+        .hero-tiles span {
+            width: 48px; height: 52px;
+            border-radius: 8px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #2c3e50; font-weight: 800; font-size: 1.15em; line-height: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+            transform: rotate(var(--r, 0deg));
+        }
+        .hero-tiles small { font-size: 0.55em; font-weight: 700; color: #455a64; margin-bottom: 3px; }
+        .hero-tiles span:nth-child(odd) { --r: -4deg; }
+        .hero-tiles span:nth-child(3n) { --r: 3deg; }
+
+        .header-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
         .header-links a {
             color: white;
             text-decoration: none;
@@ -58,7 +100,7 @@
             margin-top: 20px;
             padding: 12px 28px;
             border-radius: 30px;
-            background: linear-gradient(135deg, #42d392 0%, #27ae60 100%);
+            background: linear-gradient(135deg, #1e8449 0%, #166534 100%);
             color: white;
             font-weight: 700;
             text-decoration: none;
@@ -204,7 +246,7 @@
         .element-tile:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.15); z-index: 2; }
         .element-tile.selected { transform: scale(1.1); box-shadow: 0 0 0 3px #333; z-index: 5; }
 
-        .atomic-number { font-size: 0.75em; text-align: left; margin-bottom: 2px; opacity: 0.6; font-weight: 700; }
+        .atomic-number { font-size: 0.75em; text-align: left; margin-bottom: 2px; color: #455a64; font-weight: 700; }
         .symbol { font-size: 1.5em; font-weight: 800; color: #2c3e50; margin-bottom: 2px; }
         .element-name { font-size: 0.65em; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #455a64; }
 
@@ -258,7 +300,7 @@
         .element-detail.safe-metal h4 { color: #1565c0; }
         .element-detail p { color: #444; line-height: 1.5; font-size: 0.95em; }
 
-        .instruction-text { color: #888; text-align: center; font-style: italic; margin-top: 40px; }
+        .instruction-text { color: #5f6b76; text-align: center; font-style: italic; margin-top: 40px; }
 
         /* --- STATS & FACTS --- */
         .stats-container {
@@ -291,7 +333,7 @@
             margin-bottom: 5px;
         }
 
-        .stat-label { font-size: 0.9em; color: #7f8c8d; }
+        .stat-label { font-size: 0.9em; color: #5f6b76; }
 
         .fact-block {
             margin-bottom: 15px;
@@ -310,7 +352,7 @@
 
         /* --- ACTION SECTION --- */
         .action-section {
-            background: linear-gradient(135deg, #42d392 0%, #27ae60 100%);
+            background: linear-gradient(135deg, #1e8449 0%, #166534 100%);
             color: white;
             padding: 40px;
             text-align: center;
@@ -380,10 +422,58 @@
         .crm-yes, .crm-no { display: inline-block; border-radius: 10px; padding: 1px 8px; font-weight: 700; margin-left: 4px; }
         .crm-yes { background: #fdecea; color: #c0392b; }
         .crm-no { background: #eceff1; color: #607d8b; }
-        .element-detail .photo-credit { margin-top: 6px; font-size: 0.75em; color: #888; }
+        .element-detail .photo-credit { margin-top: 6px; font-size: 0.75em; color: #5f6b76; }
         .element-detail .photo-credit a { color: inherit; }
 
-        .stat-note { font-size: 0.8em; color: #888; margin: -8px 0 15px; line-height: 1.4; }
+        .stat-note { font-size: 0.8em; color: #5f6b76; margin: -8px 0 15px; line-height: 1.4; }
+
+        /* --- STEP HEADINGS & WELCOME CARD --- */
+        .step-title { display: flex; align-items: center; justify-content: center; gap: 10px; color: #2c3e50; margin-bottom: 20px; font-size: 1.4em; }
+        .info-card h3.step-title { justify-content: flex-start; font-size: 1.05em; margin: 15px 0 12px; }
+        .step-num {
+            flex-shrink: 0;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #2a5298;
+            color: white;
+            font-size: 0.8em;
+            font-weight: 800;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .info-card h3.step-title .step-num { width: 26px; height: 26px; }
+
+        .welcome { text-align: center; padding: 15px 10px; }
+        .info-card .welcome-title { justify-content: center; border: none; font-size: 1.7em; margin-bottom: 10px; }
+        .welcome-lead { color: #555; line-height: 1.6; font-size: 1.05em; max-width: 520px; margin: 0 auto 22px; }
+        .big-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+        .big-stat {
+            background: #f7f9fb;
+            border: 1px solid #e3e8ee;
+            border-radius: 12px;
+            padding: 15px 10px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #555;
+        }
+        .big-num { display: block; font-size: 2em; font-weight: 800; color: #1e3c72; margin-bottom: 4px; letter-spacing: -0.02em; }
+        .how-steps { list-style: none; display: grid; gap: 10px; max-width: 360px; margin: 0 auto 5px; text-align: left; }
+        .how-steps li { display: flex; align-items: center; gap: 12px; color: #2c3e50; }
+
+        /* Before the first selection, outline the clickable parts so visitors know where to tap */
+        .interactive-container.hint .hotspot {
+            fill: rgba(42, 82, 152, 0.07);
+            stroke: #2a5298;
+            stroke-width: 2.5px;
+            stroke-dasharray: 7 5;
+            animation: hint-pulse 2.2s ease-in-out infinite;
+        }
+        .interactive-container.hint .hotspot:hover,
+        .interactive-container.hint .hotspot:focus-visible { fill: rgba(255, 215, 0, 0.18); stroke: #ffd700; stroke-dasharray: none; animation: none; }
+        @keyframes hint-pulse { 0%, 100% { stroke-opacity: 0.9; } 50% { stroke-opacity: 0.4; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
 
         /* --- SOURCES & CREDITS --- */
         .sources { padding: 20px 30px; background: #f7f9fb; border-top: 1px solid #e3e8ee; }
@@ -407,6 +497,16 @@
         }
         
         @media (max-width: 600px) {
+            body { padding: 10px; }
+            header { padding: 24px 16px 22px; }
+            .eyebrow { letter-spacing: 0.1em; font-size: 0.72em; }
+            .hero-sub { font-size: 1em; }
+            .hero-tiles { gap: 8px; margin: 16px 0 4px; }
+            .hero-tiles span { width: 40px; height: 44px; font-size: 1em; }
+            .header-links { margin-top: 14px; }
+            .main-content { padding: 20px 16px; }
+            .big-stats { grid-template-columns: 1fr; }
+            .hero-tiles span:nth-child(n+7) { display: none; }
             .detail-layout { flex-direction: column; align-items: center; text-align: center; }
             .element-detail h4 { justify-content: center; }
         }
@@ -415,21 +515,31 @@
 <body>
     <div class="container">
         <header>
-            <h1>💎 Hidden Treasure in Your Pocket 💎</h1>
-            <p>Interactive Guide to Critical Minerals in Smartphones</p>
+            <p class="eyebrow">An interactive guide to critical elements</p>
+            <h1>Hidden <span class="gold">Treasure</span> in Your Pocket</h1>
+            <p class="hero-sub">Discover the elements hidden inside a smartphone – what they do, where they come from, and why they matter.</p>
+            <div class="hero-tiles" aria-hidden="true">
+                <span class="tile-precious"><small>79</small>Au</span>
+                <span class="tile-critical"><small>49</small>In</span>
+                <span class="tile-critical"><small>27</small>Co</span>
+                <span class="tile-critical"><small>3</small>Li</span>
+                <span class="tile-rare"><small>60</small>Nd</span>
+                <span class="tile-critical"><small>31</small>Ga</span>
+                <span class="tile-base"><small>29</small>Cu</span>
+                <span class="tile-precious"><small>46</small>Pd</span>
+            </div>
             <nav class="header-links">
                 <a href="quiz.html">🧠 Take the quiz</a>
                 <a href="teachers.html">📘 For teachers</a>
             </nav>
         </header>
 
+        <main>
         <div class="main-content">
             <div class="phone-section">
-                <h2 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">
-                    1. Select a Phone Layer
-                </h2>
-                
-                <div class="interactive-container">
+                <h2 class="step-title"><span class="step-num" aria-hidden="true">1</span> Tap a part of the phone</h2>
+
+                <div class="interactive-container hint">
                     <img src="phone_parts_exploded_view.jpg" alt="Exploded view of a smartphone: display, camera, circuit board, casing and battery" class="main-phone-img" width="1200" height="1789">
 
                     <!-- Back-to-front order: later polygons win where layers overlap. data-anchor = label position (viewBox units).
@@ -465,26 +575,30 @@
             <div class="info-section">
 
                 <div class="info-card active" id="default-info">
-                    <div style="text-align: center; padding: 40px 20px;">
-                        <div style="font-size: 4em; margin-bottom: 20px;">📱</div>
-                        <h2>Unlock the Science</h2>
-                        <p style="font-size: 1.1em; line-height: 1.6; color: #666;">
-                            A smartphone can contain <strong>60 to 70 different chemical elements</strong> – about 30 of them are used in most phones.<br><br>
-                            <strong>Step 1:</strong> Tap a phone layer on the left.<br>
-                            <strong>Step 2:</strong> Tap the chemical symbols to reveal their secrets!
-                        </p>
-                        <div class="fact-block" style="margin-top: 25px;">
-                            💡 <strong>Did you know?</strong> Copper is more than half of all the metal in a phone. But gold, silver, platinum and palladium – less than 1.5% of the metal – make up 93% of its value!
+                    <div class="welcome">
+                        <h2 class="welcome-title">What's hidden inside your phone?</h2>
+                        <p class="welcome-lead">Your phone is a treasure chest of chemistry. Many of its elements are <strong>critical raw materials</strong> – vital for modern technology, but with supplies at risk.</p>
+                        <div class="big-stats">
+                            <div class="big-stat"><span class="big-num">60–70</span><span>chemical elements can be found in a smartphone</span></div>
+                            <div class="big-stat"><span class="big-num">93%</span><span>of the metal value comes from gold, silver, platinum and palladium – under 1.5% of the metal</span></div>
+                            <div class="big-stat"><span class="big-num">22%</span><span>of the world's e-waste was properly recycled in 2022</span></div>
                         </div>
-                        <p style="margin-top: 25px; color: #666;"><strong>Step 3:</strong> Explored every part? Test yourself!</p>
-                        <a class="quiz-cta" href="quiz.html">🧠 Take the quiz</a>
+                        <ol class="how-steps">
+                            <li><span class="step-num" aria-hidden="true">1</span><span><strong>Tap a part</strong> of the phone</span></li>
+                            <li><span class="step-num" aria-hidden="true">2</span><span><strong>Tap an element</strong> to reveal its secrets</span></li>
+                            <li><span class="step-num" aria-hidden="true">3</span><span><strong>Take the quiz</strong> to test yourself</span></li>
+                        </ol>
+                        <a class="quiz-cta" href="quiz.html"><span aria-hidden="true">🧠</span> Take the quiz</a>
                     </div>
                 </div>
 
                 <!-- Layer cards are built from the LAYERS data in the script below -->
 
-            </div> </div> <div class="action-section">
-            <h2>📱 What Can YOU Do?</h2>
+            </div>
+        </div>
+
+        <div class="action-section">
+            <h2><span aria-hidden="true">📱</span> What Can YOU Do?</h2>
             <div class="action-grid">
                 <div class="action-card">
                     <span class="action-icon">♻️</span>
@@ -544,11 +658,12 @@
                 <ul id="photo-credits"></ul>
             </details>
         </section>
+        </main>
 
-        <div class="site-footer" style="background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px;">
+        <footer class="site-footer" style="background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px;">
             <p><strong>Hidden Treasure in Your Pocket</strong> | <a href="quiz.html">Quiz</a> | <a href="teachers.html">Teacher guide</a> | Main data source: Gómez et al. (2023), <em>Journal of Cleaner Production</em> 419, 138099</p>
             <p class="copyright">© 2025–2026 Prof. Peter Nockemann. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, except element photos, which keep their own licences (see credits above).</p>
-        </div>
+        </footer>
     </div>
 
     <script>
@@ -685,6 +800,12 @@
                 return `<a href="${commonsUrl(title)}" target="_blank" rel="noopener">${author}</a>, ${lic}`;
             }
 
+            // "🔋 Title" -> decorative emoji hidden from screen readers
+            function withIcon(text) {
+                const i = text.indexOf(' ');
+                return `<span aria-hidden="true">${text.slice(0, i)}</span>${text.slice(i)}`;
+            }
+
             function critLine(el) {
                 if (el.eu === null) return '';
                 const tag = (on, label) => `<span class="${on ? 'crm-yes' : 'crm-no'}">${label} ${on ? '✔' : '✘'}</span>`;
@@ -705,7 +826,7 @@
                             <div class="detail-layout">
                                 <img src="${el.photo[0]}" alt="${el.name}" class="element-img" width="100" height="100">
                                 <div class="detail-text">
-                                    <h4>${heading}</h4>
+                                    <h4>${withIcon(heading)}</h4>
                                     <p>${text}</p>
                                     ${critLine(el)}
                                     <p class="photo-credit">Photo: ${photoCredit(el)}</p>
@@ -717,9 +838,9 @@
                 const stats = layer.stats.map(([num, lbl]) => `<div class="stat-box"><span class="stat-number">${num}</span><span class="stat-label">${lbl}</span></div>`).join('');
 
                 return `<div class="info-card" id="${layer.id}-info">
-                        <h2>${layer.title}</h2>
+                        <h2>${withIcon(layer.title)}</h2>
                         ${layer.intro ? `<p class="card-intro">${layer.intro}</p>` : ''}
-                        <h3>2. Tap an element to inspect:</h3>
+                        <h3 class="step-title"><span class="step-num" aria-hidden="true">2</span> Tap an element to inspect</h3>
                         <div class="element-grid">${tiles}</div>
                         <div class="criticality-box">
                             <div class="instruction-text">👆 Tap a tile above to see image &amp; details</div>
@@ -768,6 +889,7 @@
             function showLayer(component, hotspot) {
                 try {
                     // Highlight every area of the layer (e.g. front and rear camera)
+                    container.classList.remove('hint');
                     hotspots.forEach(h => h.classList.toggle('active', h.dataset.layer === component));
                     selectedHotspot = hotspot;
                     showLabel(hotspot);
