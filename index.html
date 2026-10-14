@@ -3,35 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile Phone Critical Materials - Interactive Display</title>
+    <title>Hidden Treasure in Your Pocket – critical elements in smartphones</title>
     <meta name="author" content="Prof. Peter Nockemann">
-    <meta name="description" content="Interactive guide to the critical and strategic elements inside a smartphone.">
+    <meta name="description" content="Interactive guide to the critical and strategic elements inside a smartphone: what they do, where they come from and why recycling matters.">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+    <!-- Link previews. After publishing, change og:image to the full address, e.g. https://<user>.github.io/<repo>/og-image.jpg -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Hidden Treasure in Your Pocket">
+    <meta property="og:description" content="Discover the elements hidden inside a smartphone – what they do, where they come from, and why they matter.">
+    <meta property="og:image" content="og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- Installable app -->
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1e3c72">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='12' fill='%231e3c72'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-weight='700' font-size='28' text-anchor='middle' fill='%23ffd76a'%3EAu%3C/text%3E%3C/svg%3E">
+    <script>try { var th = localStorage.getItem('theme'); if (th === 'dark' || th === 'light') document.documentElement.setAttribute('data-theme', th); } catch (e) {}</script>
+    <link rel="stylesheet" href="site.css">
     <style>
         /* --- RESET & BASIC SETUP --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--page-bg);
             min-height: 100vh;
             padding: 20px;
             overflow-x: hidden;
-            color: #333;
+            color: var(--text);
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 60px var(--shadow);
             overflow: hidden;
         }
 
+        a { color: var(--accent); }
+
         /* --- HEADER --- */
         header {
+            position: relative;
             background:
                 radial-gradient(circle at 12% 15%, rgba(255, 215, 106, 0.18), transparent 35%),
                 radial-gradient(circle at 88% 90%, rgba(66, 211, 146, 0.15), transparent 35%),
@@ -107,6 +124,7 @@
             transition: transform 0.2s, box-shadow 0.2s;
         }
         .quiz-cta:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,0.15); }
+        .quiz-cta.small { margin-top: 8px; padding: 8px 20px; }
 
         /* --- MAIN LAYOUT --- */
         .main-content {
@@ -134,6 +152,7 @@
             width: 100%;
             height: auto;
             display: block;
+            border-radius: 12px;
             filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
         }
 
@@ -191,13 +210,50 @@
 
         .hotspot-label.visible { opacity: 1; }
 
+        /* Before the first selection, outline the clickable parts so visitors know where to tap */
+        .interactive-container.hint .hotspot {
+            fill: rgba(42, 82, 152, 0.07);
+            stroke: #2a5298;
+            stroke-width: 2.5px;
+            stroke-dasharray: 7 5;
+            animation: hint-pulse 2.2s ease-in-out infinite;
+        }
+        .interactive-container.hint .hotspot:hover,
+        .interactive-container.hint .hotspot:focus-visible { fill: rgba(255, 215, 0, 0.18); stroke: #ffd700; stroke-dasharray: none; animation: none; }
+
+        /* --- EXPLORATION PROGRESS --- */
+        .progress {
+            width: 100%;
+            max-width: 500px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .progress-head { color: var(--heading); margin-bottom: 10px; }
+        .progress-chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+        .chip {
+            font: inherit;
+            font-size: 0.85em;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--chip);
+            color: var(--text);
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .chip:hover { border-color: var(--accent); }
+        .chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .chip.done { background: var(--good-bg); border-color: var(--good-text); color: var(--good-text); font-weight: 700; }
+        .chip.current { box-shadow: 0 0 0 2px var(--accent); }
+        .progress-done { margin-top: 12px; color: var(--good-text); font-weight: 700; }
+        .progress-done[hidden] { display: none; }
 
         /* --- INFO CARD STYLES --- */
         .info-section { display: flex; flex-direction: column; gap: 20px; }
 
         .info-card {
-            background: #ffffff;
-            border: 1px solid #eee;
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 15px;
             padding: 25px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.05);
@@ -207,17 +263,18 @@
         .info-card.active { display: block; animation: slideIn 0.4s ease; }
 
         .info-card h2 {
-            color: #2c3e50;
+            color: var(--heading);
             margin-bottom: 15px;
             font-size: 1.8em;
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 2px solid #f0f2f5;
+            border-bottom: 2px solid var(--border);
             padding-bottom: 10px;
         }
 
-        .info-card h3 { margin-top: 15px; color: #2c3e50; font-size: 1.1em; margin-bottom: 10px; }
+        .info-card h3 { margin-top: 15px; color: var(--heading); font-size: 1.1em; margin-bottom: 10px; }
+        .card-intro { color: var(--text-2); line-height: 1.5; margin-bottom: 10px; }
 
         /* --- ELEMENT TILES --- */
         .element-grid {
@@ -241,10 +298,15 @@
             transition: all 0.2s;
             text-align: center;
             cursor: pointer;
+            font: inherit;
+            color: inherit;
+            appearance: none;
+            overflow: hidden;
         }
 
         .element-tile:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.15); z-index: 2; }
-        .element-tile.selected { transform: scale(1.1); box-shadow: 0 0 0 3px #333; z-index: 5; }
+        .element-tile.selected { transform: scale(1.1); box-shadow: 0 0 0 3px var(--text); z-index: 5; }
+        .element-tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 
         .atomic-number { font-size: 0.75em; text-align: left; margin-bottom: 2px; color: #455a64; font-weight: 700; }
         .symbol { font-size: 1.5em; font-weight: 800; color: #2c3e50; margin-bottom: 2px; }
@@ -255,34 +317,42 @@
         .tile-rare { background: #c8e6c9; border-bottom: 4px solid #388e3c; }
         .tile-base { background: #bbdefb; border-bottom: 4px solid #1976d2; }
 
-        /* --- DYNAMIC CRITICALITY BOX --- */
+        /* Red corner = on the EU or US critical list */
+        .is-critical::after,
+        .legend .legend-crm::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-top: 14px solid #c0392b;
+            border-left: 14px solid transparent;
+        }
+
+        /* --- DETAIL BOX --- */
         .criticality-box {
-            background: #fff;
-            border: 2px dashed #ccc;
+            background: var(--surface);
+            border: 2px dashed var(--border);
             border-radius: 8px;
             padding: 15px;
             margin-top: 15px;
             min-height: 140px;
             transition: all 0.3s ease;
+            touch-action: pan-y; /* lets horizontal swipes reach the page */
         }
 
         .criticality-box.has-content {
-            background: #fdf2f2;
+            background: var(--crit-bg);
             border: 2px solid #e74c3c;
             border-left: 8px solid #e74c3c;
         }
-        
+
         .criticality-box.has-content.safe-metal {
-            background: #e3f2fd;
+            background: var(--safe-bg);
             border: 2px solid #2196f3;
             border-left: 8px solid #2196f3;
         }
 
-        .element-detail {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-        
+        .element-detail { display: none; animation: fadeIn 0.3s ease; }
         .element-detail.active { display: block; }
 
         .detail-layout { display: flex; gap: 20px; align-items: flex-start; }
@@ -294,19 +364,43 @@
         .detail-text { flex: 1; }
 
         .element-detail h4 {
-            color: #c0392b; margin-bottom: 8px; font-size: 1.2em;
+            color: var(--crit-text); margin-bottom: 8px; font-size: 1.2em;
             display: flex; align-items: center; gap: 10px; margin-top: 0;
         }
-        .element-detail.safe-metal h4 { color: #1565c0; }
-        .element-detail p { color: #444; line-height: 1.5; font-size: 0.95em; }
+        .element-detail.safe-metal h4 { color: var(--safe-text); }
+        .element-detail p { color: var(--text-2); line-height: 1.5; font-size: 0.95em; }
 
-        .instruction-text { color: #5f6b76; text-align: center; font-style: italic; margin-top: 40px; }
+        .element-detail .crit-line { margin-top: 10px; font-size: 0.85em; }
+        .crm-yes, .crm-no { display: inline-block; border-radius: 10px; padding: 1px 8px; font-weight: 700; margin-left: 4px; }
+        .crm-yes { background: var(--surface); color: var(--crit-text); border: 1px solid var(--crit-text); }
+        .crm-no { background: var(--chip); color: var(--muted); }
+        .element-detail .photo-credit { margin-top: 6px; font-size: 0.75em; color: var(--muted); }
+        .element-detail .photo-credit a { color: inherit; }
+
+        .instruction-text { color: var(--muted); text-align: center; font-style: italic; margin-top: 40px; }
+
+        .detail-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 15px; padding-top: 12px; border-top: 1px solid rgba(127,127,127,0.25); }
+        .detail-nav[hidden] { display: none; }
+        .detail-nav button {
+            font: inherit;
+            font-size: 0.9em;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--heading);
+            cursor: pointer;
+        }
+        .detail-nav button:hover { border-color: var(--accent); }
+        .detail-nav button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .nav-pos { color: var(--muted); font-size: 0.85em; }
 
         /* --- STATS & FACTS --- */
         .stats-container {
             margin-top: 25px;
             padding-top: 20px;
-            border-top: 2px solid #f0f2f5;
+            border-top: 2px solid var(--border);
         }
 
         .stats-grid {
@@ -317,38 +411,132 @@
         }
 
         .stat-box {
-            background: white;
+            background: var(--surface);
             padding: 15px;
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid #eee;
+            border: 1px solid var(--border);
         }
 
-        .stat-number {
-            font-size: 2em;
+        .stat-number { font-size: 2em; font-weight: 800; color: var(--heading); display: block; margin-bottom: 5px; }
+        .stat-label { font-size: 0.9em; color: var(--muted); }
+        .stat-note { font-size: 0.8em; color: var(--muted); margin: -8px 0 15px; line-height: 1.4; }
+
+        .fact-block { margin-bottom: 15px; line-height: 1.6; color: var(--text); }
+        .fact-block strong { color: var(--heading); font-weight: 700; }
+
+        .trend-fact { margin-top: 15px; color: var(--crit-text); font-weight: bold; font-size: 0.95em; }
+
+        /* --- STEP HEADINGS & WELCOME CARD --- */
+        .step-title { display: flex; align-items: center; justify-content: center; gap: 10px; color: var(--heading); margin-bottom: 20px; font-size: 1.4em; }
+        .info-card h3.step-title { justify-content: flex-start; font-size: 1.05em; margin: 15px 0 12px; }
+        .step-num {
+            flex-shrink: 0;
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: #2a5298;
+            color: white;
+            font-size: 0.8em;
             font-weight: 800;
+            display: inline-flex; align-items: center; justify-content: center;
+        }
+        .info-card h3.step-title .step-num { width: 26px; height: 26px; }
+
+        .welcome { text-align: center; padding: 15px 10px; }
+        .info-card .welcome-title { justify-content: center; border: none; font-size: 1.7em; margin-bottom: 10px; }
+        .welcome-lead { color: var(--text-2); line-height: 1.6; font-size: 1.05em; max-width: 520px; margin: 0 auto 22px; }
+        .big-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
+        .big-stat {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px 10px;
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: var(--text-2);
+        }
+        .big-num { display: block; font-size: 2em; font-weight: 800; color: var(--accent-strong); margin-bottom: 4px; letter-spacing: -0.02em; }
+        .how-steps { list-style: none; display: grid; gap: 10px; max-width: 360px; margin: 0 auto 5px; text-align: left; }
+        .how-steps li { display: flex; align-items: center; gap: 12px; color: var(--heading); }
+
+        /* --- LEGEND --- */
+        .legend {
+            display: flex; flex-wrap: wrap; gap: 15px; margin-top: 20px;
+            padding: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+            justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.9em; }
+        .legend-color { width: 20px; height: 20px; border-radius: 4px; }
+        .legend .precious { background: #fff59d; border: 1px solid #fbc02d; }
+        .legend .critical { background: #ffccbc; border: 1px solid #e64a19; }
+        .legend .base { background: #bbdefb; border: 1px solid #1976d2; }
+        .legend .rare-earth { background: #c8e6c9; border: 1px solid #388e3c; }
+        .legend .legend-crm { position: relative; overflow: hidden; background: #fff; border: 1px solid #ccc; }
+        .legend .legend-crm::after { border-top-width: 10px; border-left-width: 10px; }
+
+        /* --- PERIODIC TABLE --- */
+        .ptable-section { padding: 10px 30px 35px; }
+        .ptable-section h2 { color: var(--heading); text-align: center; font-size: 1.5em; margin-bottom: 8px; }
+        .pt-intro { color: var(--text-2); text-align: center; max-width: 720px; margin: 0 auto 20px; line-height: 1.5; }
+        .ptable-scroll { overflow-x: auto; padding: 4px 2px 10px; }
+        .ptable {
+            display: grid;
+            grid-template-columns: repeat(18, minmax(30px, 1fr));
+            grid-template-rows: repeat(7, auto) 12px repeat(2, auto);
+            gap: 3px;
+            min-width: 600px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .pt-cell {
+            aspect-ratio: 1 / 1.1;
+            border-radius: 5px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            line-height: 1;
+            font-size: clamp(0.6em, 1.1vw, 0.95em);
+            background: var(--chip);
+            color: var(--muted);
+            position: relative;
+            overflow: hidden;
+        }
+        .pt-cell .pt-z { font-size: 0.6em; margin-bottom: 2px; }
+        .pt-cell .pt-sym { font-weight: 700; }
+        .pt-cell.featured {
+            font: inherit;
+            font-size: clamp(0.6em, 1.1vw, 0.95em);
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
             color: #2c3e50;
-            display: block;
-            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: transform 0.15s;
         }
-
-        .stat-label { font-size: 0.9em; color: #5f6b76; }
-
-        .fact-block {
-            margin-bottom: 15px;
-            line-height: 1.6;
-            color: #333;
+        .pt-cell.featured.tile-precious { background: #fff59d; border-bottom-color: #fbc02d; }
+        .pt-cell.featured.tile-critical { background: #ffccbc; border-bottom-color: #e64a19; }
+        .pt-cell.featured.tile-rare { background: #c8e6c9; border-bottom-color: #388e3c; }
+        .pt-cell.featured.tile-base { background: #bbdefb; border-bottom-color: #1976d2; }
+        .pt-cell.featured .pt-sym { font-weight: 800; font-size: 1.15em; }
+        .pt-cell.featured .pt-z { color: #455a64; font-weight: 700; }
+        .pt-cell.featured:hover { transform: scale(1.12); z-index: 2; }
+        .pt-cell.featured:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .pt-cell.featured.selected { box-shadow: 0 0 0 3px var(--text); transform: scale(1.12); z-index: 3; }
+        .pt-cell.featured.is-critical::after { border-top-width: 9px; border-left-width: 9px; }
+        .pt-cell.placeholder { background: transparent; border: 1px dashed var(--border); font-size: 0.55em; }
+        .pt-row-label { font-size: 0.7em; color: var(--muted); display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; text-align: right; line-height: 1.1; }
+        .pt-scroll-hint { display: none; text-align: center; font-size: 0.85em; color: var(--muted); margin-bottom: 6px; }
+        .pt-panel {
+            max-width: 720px;
+            margin: 15px auto 0;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-2);
         }
-
-        .fact-block strong { color: #000; font-weight: 700; }
-        
-        .trend-fact {
-            margin-top: 15px;
-            color: #c0392b;
-            font-weight: bold;
-            font-size: 0.95em;
-        }
+        .pt-panel h3 { color: var(--heading); margin-bottom: 8px; }
+        .pt-panel .chip { margin: 4px; }
 
         /* --- ACTION SECTION --- */
         .action-section {
@@ -362,11 +550,8 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
-            margin-top: 30px;
-            margin-bottom: 30px;
+            margin: 30px auto;
             max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
         }
 
         .action-card {
@@ -387,126 +572,51 @@
         .action-icon { font-size: 3em; margin-bottom: 15px; display: block; text-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .action-title { font-weight: bold; font-size: 1.2em; margin-bottom: 10px; display: block; }
         .action-desc { font-size: 0.95em; opacity: 0.95; line-height: 1.4; }
-
-        /* --- LEGEND --- */
-        .legend {
-            display: flex; flex-wrap: wrap; gap: 15px; margin-top: 25px;
-            padding: 15px; background: white; border-radius: 10px;
-            justify-content: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.9em; }
-        .legend-color { width: 20px; height: 20px; border-radius: 4px; }
-        .legend .precious { background: #fff59d; border: 1px solid #fbc02d; }
-        .legend .critical { background: #ffccbc; border: 1px solid #e64a19; }
-        .legend .base { background: #bbdefb; border: 1px solid #1976d2; }
-        .legend .rare-earth { background: #c8e6c9; border: 1px solid #388e3c; }
-
-        /* --- ELEMENT TILES AS BUTTONS + CRITICAL MARKER --- */
-        .element-tile { font: inherit; color: inherit; appearance: none; overflow: hidden; }
-        .element-tile:focus-visible { outline: 3px solid #2a5298; outline-offset: 2px; }
-        .element-tile.is-critical::after,
-        .legend .legend-crm::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            border-top: 14px solid #c0392b;
-            border-left: 14px solid transparent;
-        }
-        .legend .legend-crm { position: relative; overflow: hidden; background: #fff; border: 1px solid #ccc; }
-        .legend .legend-crm::after { border-top-width: 10px; border-left-width: 10px; }
-
-        .card-intro { color: #555; line-height: 1.5; margin-bottom: 10px; }
-
-        .element-detail .crit-line { margin-top: 10px; font-size: 0.85em; }
-        .crm-yes, .crm-no { display: inline-block; border-radius: 10px; padding: 1px 8px; font-weight: 700; margin-left: 4px; }
-        .crm-yes { background: #fdecea; color: #c0392b; }
-        .crm-no { background: #eceff1; color: #607d8b; }
-        .element-detail .photo-credit { margin-top: 6px; font-size: 0.75em; color: #5f6b76; }
-        .element-detail .photo-credit a { color: inherit; }
-
-        .stat-note { font-size: 0.8em; color: #5f6b76; margin: -8px 0 15px; line-height: 1.4; }
-
-        /* --- STEP HEADINGS & WELCOME CARD --- */
-        .step-title { display: flex; align-items: center; justify-content: center; gap: 10px; color: #2c3e50; margin-bottom: 20px; font-size: 1.4em; }
-        .info-card h3.step-title { justify-content: flex-start; font-size: 1.05em; margin: 15px 0 12px; }
-        .step-num {
-            flex-shrink: 0;
-            width: 30px; height: 30px;
-            border-radius: 50%;
-            background: #2a5298;
-            color: white;
-            font-size: 0.8em;
-            font-weight: 800;
-            display: inline-flex; align-items: center; justify-content: center;
-        }
-        .info-card h3.step-title .step-num { width: 26px; height: 26px; }
-
-        .welcome { text-align: center; padding: 15px 10px; }
-        .info-card .welcome-title { justify-content: center; border: none; font-size: 1.7em; margin-bottom: 10px; }
-        .welcome-lead { color: #555; line-height: 1.6; font-size: 1.05em; max-width: 520px; margin: 0 auto 22px; }
-        .big-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 25px; }
-        .big-stat {
-            background: #f7f9fb;
-            border: 1px solid #e3e8ee;
-            border-radius: 12px;
-            padding: 15px 10px;
-            font-size: 0.85em;
-            line-height: 1.4;
-            color: #555;
-        }
-        .big-num { display: block; font-size: 2em; font-weight: 800; color: #1e3c72; margin-bottom: 4px; letter-spacing: -0.02em; }
-        .how-steps { list-style: none; display: grid; gap: 10px; max-width: 360px; margin: 0 auto 5px; text-align: left; }
-        .how-steps li { display: flex; align-items: center; gap: 12px; color: #2c3e50; }
-
-        /* Before the first selection, outline the clickable parts so visitors know where to tap */
-        .interactive-container.hint .hotspot {
-            fill: rgba(42, 82, 152, 0.07);
-            stroke: #2a5298;
-            stroke-width: 2.5px;
-            stroke-dasharray: 7 5;
-            animation: hint-pulse 2.2s ease-in-out infinite;
-        }
-        .interactive-container.hint .hotspot:hover,
-        .interactive-container.hint .hotspot:focus-visible { fill: rgba(255, 215, 0, 0.18); stroke: #ffd700; stroke-dasharray: none; animation: none; }
-        @keyframes hint-pulse { 0%, 100% { stroke-opacity: 0.9; } 50% { stroke-opacity: 0.4; } }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation: none !important; transition: none !important; }
-        }
+        .action-value { font-size: 1.1em; font-weight: bold; opacity: 0.95; }
+        .action-recycled { opacity: 0.95; margin-top: 10px; }
 
         /* --- SOURCES & CREDITS --- */
-        .sources { padding: 20px 30px; background: #f7f9fb; border-top: 1px solid #e3e8ee; }
-        .sources summary { cursor: pointer; font-weight: 700; color: #2c3e50; font-size: 1.1em; }
-        .sources h3 { margin: 20px 0 8px; color: #2c3e50; font-size: 1em; }
-        .sources p, .sources li { font-size: 0.9em; line-height: 1.5; color: #444; }
+        .sources { padding: 20px 30px; background: var(--surface-2); border-top: 1px solid var(--border); }
+        .sources summary { cursor: pointer; font-weight: 700; color: var(--heading); font-size: 1.1em; }
+        .sources h3 { margin: 20px 0 8px; color: var(--heading); font-size: 1em; }
+        .sources p, .sources li { font-size: 0.9em; line-height: 1.5; color: var(--text-2); }
         .sources ul { padding-left: 20px; }
         .sources li { margin-bottom: 4px; }
-        .sources a { color: #2a5298; overflow-wrap: anywhere; }
+        .sources a { overflow-wrap: anywhere; }
+
+        .site-footer { background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
         .site-footer a { color: inherit; }
-        .copyright { margin-top: 8px; font-size: 0.85em; opacity: 0.8; }
-        .copyright a { color: inherit; }
+        .copyright { margin-top: 8px; font-size: 0.85em; opacity: 0.85; }
 
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes pulse-stroke { 0%, 100% { stroke-opacity: 1; } 50% { stroke-opacity: 0.35; } }
+        @keyframes hint-pulse { 0%, 100% { stroke-opacity: 0.9; } 50% { stroke-opacity: 0.4; } }
+
+        @media (max-width: 700px) {
+            .pt-scroll-hint { display: block; }
+        }
 
         @media (max-width: 900px) {
             .main-content { grid-template-columns: 1fr; }
-            .phone-section { margin-bottom: 40px; }
+            .phone-section { margin-bottom: 20px; }
         }
-        
+
         @media (max-width: 600px) {
             body { padding: 10px; }
-            header { padding: 24px 16px 22px; }
+            header { padding: 58px 16px 22px; }
             .eyebrow { letter-spacing: 0.1em; font-size: 0.72em; }
             .hero-sub { font-size: 1em; }
             .hero-tiles { gap: 8px; margin: 16px 0 4px; }
             .hero-tiles span { width: 40px; height: 44px; font-size: 1em; }
+            .hero-tiles span:nth-child(n+7) { display: none; }
             .header-links { margin-top: 14px; }
             .main-content { padding: 20px 16px; }
+            .ptable-section { padding: 10px 16px 30px; }
+            .pt-row-label { font-size: 0.55em; padding-right: 3px; }
+            .action-section { padding: 30px 16px; }
+            .sources { padding: 20px 16px; }
             .big-stats { grid-template-columns: 1fr; }
-            .hero-tiles span:nth-child(n+7) { display: none; }
             .detail-layout { flex-direction: column; align-items: center; text-align: center; }
             .element-detail h4 { justify-content: center; }
         }
@@ -515,9 +625,12 @@
 <body>
     <div class="container">
         <header>
-            <p class="eyebrow">An interactive guide to critical elements</p>
-            <h1>Hidden <span class="gold">Treasure</span> in Your Pocket</h1>
-            <p class="hero-sub">Discover the elements hidden inside a smartphone – what they do, where they come from, and why they matter.</p>
+            <div class="site-controls">
+                <button type="button" class="theme-toggle" aria-label="Switch to dark mode">🌙</button>
+            </div>
+            <p class="eyebrow" data-i18n="header.eyebrow">An interactive guide to critical elements</p>
+            <h1 data-i18n-html="header.title">Hidden <span class="gold">Treasure</span> in Your Pocket</h1>
+            <p class="hero-sub" data-i18n="header.sub">Discover the elements hidden inside a smartphone – what they do, where they come from, and why they matter.</p>
             <div class="hero-tiles" aria-hidden="true">
                 <span class="tile-precious"><small>79</small>Au</span>
                 <span class="tile-critical"><small>49</small>In</span>
@@ -529,46 +642,55 @@
                 <span class="tile-precious"><small>46</small>Pd</span>
             </div>
             <nav class="header-links">
-                <a href="quiz.html">🧠 Take the quiz</a>
-                <a href="teachers.html">📘 For teachers</a>
+                <a href="quiz.html"><span aria-hidden="true">🧠</span> <span data-i18n="nav.quiz">Take the quiz</span></a>
+                <a href="teachers.html" class="hide-in-kiosk"><span aria-hidden="true">📘</span> <span data-i18n="nav.teachers">For teachers</span></a>
             </nav>
         </header>
 
         <main>
         <div class="main-content">
             <div class="phone-section">
-                <h2 class="step-title"><span class="step-num" aria-hidden="true">1</span> Tap a part of the phone</h2>
+                <h2 class="step-title"><span class="step-num" aria-hidden="true">1</span> <span data-i18n="step1">Tap a part of the phone</span></h2>
 
                 <div class="interactive-container hint">
-                    <img src="phone_parts_exploded_view.jpg" alt="Exploded view of a smartphone: display, camera, circuit board, casing and battery" class="main-phone-img" width="1200" height="1789">
+                    <img src="phone_parts_exploded_view.jpg" data-i18n-alt="img.alt" alt="Exploded view of a smartphone: display, camera, circuit board, casing and battery" class="main-phone-img" width="1200" height="1789">
 
                     <!-- Back-to-front order: later polygons win where layers overlap. data-anchor = label position (viewBox units).
                          Several polygons may share a data-layer (e.g. front and rear camera). -->
                     <svg class="hotspot-map" viewBox="0 0 1696 2528" preserveAspectRatio="none">
-                        <polygon class="hotspot" data-layer="casing" data-label="Casing" data-anchor="1420,1440"
+                        <polygon class="hotspot" data-layer="casing" data-i18n-label="part.casing" data-label="Casing" data-anchor="1420,1440"
                             points="485,2070 530,1990 600,1930 1120,1470 1190,1435 1600,1440 1645,1485 1640,1540 1170,1895 944,2044 650,2150 520,2125 490,2110"/>
-                        <polygon class="hotspot" data-layer="battery" data-label="Li-Ion Battery" data-anchor="1200,1890"
+                        <polygon class="hotspot" data-layer="battery" data-i18n-label="part.battery" data-label="Li-Ion Battery" data-anchor="1200,1890"
                             points="558,2170 987,1905 1116,1885 1360,1960 1396,1905 1460,1890 1550,1912 1546,1940 1440,1975 1450,2015 1440,2040 905,2398 878,2392 555,2205"/>
-                        <polygon class="hotspot" data-layer="pcb" data-label="Circuit Board (PCB)" data-anchor="1440,1030"
+                        <polygon class="hotspot" data-layer="pcb" data-i18n-label="part.pcb" data-label="Circuit Board (PCB)" data-anchor="1440,1030"
                             points="1335,1030 1500,1028 1515,1050 1590,1050 1590,1080 1560,1095 1450,1320 1355,1335 1325,1450 1295,1580 1250,1650 1185,1740 1110,1830 1050,1890 1000,1935 970,1925 510,1910 500,1820 540,1765 1100,1735 1150,1650 1195,1510 1230,1350 1210,1320 1250,1150"/>
-                        <polygon class="hotspot" data-layer="screen" data-label="Display (Screen)" data-anchor="530,330"
+                        <polygon class="hotspot" data-layer="screen" data-i18n-label="part.screen" data-label="Display (Screen)" data-anchor="530,330"
                             points="248,330 275,285 735,45 775,50 800,90 805,410 1220,300 1245,325 1240,380 1180,650 1500,650 1520,670 1505,700 1020,1720 990,1745 540,1760 500,1740 495,1680 540,1610 440,1610 420,1590 440,1470 300,1500 258,1470"/>
-                        <polygon class="hotspot" data-layer="camera" data-label="Front Camera" data-anchor="1040,440"
+                        <polygon class="hotspot" data-layer="camera" data-i18n-label="part.cameraFront" data-label="Front Camera" data-anchor="1040,440"
                             points="830,500 1100,435 1110,470 1255,455 1260,520 1100,600 1060,640 980,650 820,590"/>
-                        <polygon class="hotspot" data-layer="camera" data-label="Rear Camera" data-anchor="1380,1495"
+                        <polygon class="hotspot" data-layer="camera" data-i18n-label="part.cameraRear" data-label="Rear Camera" data-anchor="1380,1495"
                             points="1290,1525 1325,1495 1410,1500 1475,1560 1470,1600 1395,1605 1330,1585"/>
-                        <polygon class="hotspot" data-layer="speaker" data-label="Speaker &amp; Magnets" data-anchor="1230,655"
+                        <polygon class="hotspot" data-layer="speaker" data-i18n-label="part.speaker" data-label="Speaker &amp; Magnets" data-anchor="1230,655"
                             points="1120,668 1335,652 1340,738 1125,752"/>
                     </svg>
                     <div class="hotspot-label" aria-hidden="true"></div>
                 </div>
 
+                <div class="progress">
+                    <p class="progress-head"><span data-i18n="progress.title">Parts explored:</span> <strong class="progress-count" aria-live="polite"></strong></p>
+                    <div class="progress-chips"></div>
+                    <p class="progress-done" hidden>
+                        <span data-i18n="progress.done">You have explored every part – ready for the quiz?</span><br>
+                        <a class="quiz-cta small" href="quiz.html"><span aria-hidden="true">🧠</span> <span data-i18n="nav.quiz">Take the quiz</span></a>
+                    </p>
+                </div>
+
                 <div class="legend">
-                    <div class="legend-item"><div class="legend-color precious"></div> Precious metals</div>
-                    <div class="legend-item"><div class="legend-color critical"></div> Technology metals</div>
-                    <div class="legend-item"><div class="legend-color rare-earth"></div> Rare earth elements</div>
-                    <div class="legend-item"><div class="legend-color base"></div> Common metals &amp; materials</div>
-                    <div class="legend-item"><div class="legend-color legend-crm"></div> On EU or US critical list</div>
+                    <div class="legend-item"><div class="legend-color precious"></div> <span data-i18n="legend.precious">Precious metals</span></div>
+                    <div class="legend-item"><div class="legend-color critical"></div> <span data-i18n="legend.tech">Technology metals</span></div>
+                    <div class="legend-item"><div class="legend-color rare-earth"></div> <span data-i18n="legend.rare">Rare earth elements</span></div>
+                    <div class="legend-item"><div class="legend-color base"></div> <span data-i18n="legend.base">Common metals &amp; materials</span></div>
+                    <div class="legend-item"><div class="legend-color legend-crm"></div> <span data-i18n="legend.crm">On EU or US critical list</span></div>
                 </div>
             </div>
 
@@ -576,68 +698,74 @@
 
                 <div class="info-card active" id="default-info">
                     <div class="welcome">
-                        <h2 class="welcome-title">What's hidden inside your phone?</h2>
-                        <p class="welcome-lead">Your phone is a treasure chest of chemistry. Many of its elements are <strong>critical raw materials</strong> – vital for modern technology, but with supplies at risk.</p>
+                        <h2 class="welcome-title" data-i18n="welcome.title">What's hidden inside your phone?</h2>
+                        <p class="welcome-lead" data-i18n-html="welcome.lead">Your phone is a treasure chest of chemistry. Many of its elements are <strong>critical raw materials</strong> – vital for modern technology, but with supplies at risk.</p>
                         <div class="big-stats">
-                            <div class="big-stat"><span class="big-num">60–70</span><span>chemical elements can be found in a smartphone</span></div>
-                            <div class="big-stat"><span class="big-num">93%</span><span>of the metal value comes from gold, silver, platinum and palladium – under 1.5% of the metal</span></div>
-                            <div class="big-stat"><span class="big-num">22%</span><span>of the world's e-waste was properly recycled in 2022</span></div>
+                            <div class="big-stat"><span class="big-num" data-i18n="welcome.stat1.num">60–70</span><span data-i18n="welcome.stat1">chemical elements can be found in a smartphone</span></div>
+                            <div class="big-stat"><span class="big-num" data-i18n="welcome.stat2.num">93%</span><span data-i18n="welcome.stat2">of the metal value comes from gold, silver, platinum and palladium – under 1.5% of the metal</span></div>
+                            <div class="big-stat"><span class="big-num" data-i18n="welcome.stat3.num">22%</span><span data-i18n="welcome.stat3">of the world's e-waste was properly recycled in 2022</span></div>
                         </div>
                         <ol class="how-steps">
-                            <li><span class="step-num" aria-hidden="true">1</span><span><strong>Tap a part</strong> of the phone</span></li>
-                            <li><span class="step-num" aria-hidden="true">2</span><span><strong>Tap an element</strong> to reveal its secrets</span></li>
-                            <li><span class="step-num" aria-hidden="true">3</span><span><strong>Take the quiz</strong> to test yourself</span></li>
+                            <li><span class="step-num" aria-hidden="true">1</span><span data-i18n-html="welcome.step1"><strong>Tap a part</strong> of the phone</span></li>
+                            <li><span class="step-num" aria-hidden="true">2</span><span data-i18n-html="welcome.step2"><strong>Tap an element</strong> to reveal its secrets</span></li>
+                            <li><span class="step-num" aria-hidden="true">3</span><span data-i18n-html="welcome.step3"><strong>Take the quiz</strong> to test yourself</span></li>
                         </ol>
-                        <a class="quiz-cta" href="quiz.html"><span aria-hidden="true">🧠</span> Take the quiz</a>
+                        <a class="quiz-cta" href="quiz.html"><span aria-hidden="true">🧠</span> <span data-i18n="nav.quiz">Take the quiz</span></a>
                     </div>
                 </div>
 
-                <!-- Layer cards are built from the LAYERS data in the script below -->
+                <!-- Layer cards are built from the content file (content/en.js) by the script below -->
 
             </div>
         </div>
 
+        <section class="ptable-section" aria-labelledby="pt-title">
+            <h2 id="pt-title"><span aria-hidden="true">🧪</span> <span data-i18n="pt.title">Your phone on the periodic table</span></h2>
+            <p class="pt-intro" id="pt-intro"></p>
+            <p class="pt-scroll-hint"><span aria-hidden="true">↔</span> <span data-i18n="pt.scroll">Scroll sideways to see the whole table</span></p>
+            <div class="ptable-scroll">
+                <div class="ptable" role="group" data-i18n-aria="pt.label" aria-label="Periodic table of the elements"></div>
+            </div>
+            <div class="pt-panel" aria-live="polite"><p data-i18n="pt.pick">Tap a highlighted element above to see where it is in the phone.</p></div>
+        </section>
+
         <div class="action-section">
-            <h2><span aria-hidden="true">📱</span> What Can YOU Do?</h2>
+            <h2><span aria-hidden="true">📱</span> <span data-i18n="action.title">What Can YOU Do?</span></h2>
             <div class="action-grid">
                 <div class="action-card">
-                    <span class="action-icon">♻️</span>
-                    <span class="action-title">Recycle Your Old Phones</span>
-                    <span class="action-desc">Take them to a certified e-waste collection point. Never put phones or batteries in the household bin – damaged lithium-ion batteries can start fires.</span>
+                    <span class="action-icon" aria-hidden="true">♻️</span>
+                    <span class="action-title" data-i18n="action.recycle.title">Recycle Your Old Phones</span>
+                    <span class="action-desc" data-i18n="action.recycle.desc">Take them to a certified e-waste collection point. Never put phones or batteries in the household bin – damaged lithium-ion batteries can start fires.</span>
                 </div>
                 <div class="action-card">
-                    <span class="action-icon">🔧</span>
-                    <span class="action-title">Repair, Don't Replace</span>
-                    <span class="action-desc">Keep phones longer by repairing instead of buying new.</span>
+                    <span class="action-icon" aria-hidden="true">🔧</span>
+                    <span class="action-title" data-i18n="action.repair.title">Repair, Don't Replace</span>
+                    <span class="action-desc" data-i18n="action.repair.desc">Keep phones longer by repairing instead of buying new.</span>
                 </div>
                 <div class="action-card">
-                    <span class="action-icon">🤝</span>
-                    <span class="action-title">Donate or Resell</span>
-                    <span class="action-desc">Working phones can have a second life with someone else.</span>
+                    <span class="action-icon" aria-hidden="true">🤝</span>
+                    <span class="action-title" data-i18n="action.donate.title">Donate or Resell</span>
+                    <span class="action-desc" data-i18n="action.donate.desc">Working phones can have a second life with someone else.</span>
                 </div>
                 <div class="action-card">
-                    <span class="action-icon">📚</span>
-                    <span class="action-title">Spread Awareness</span>
-                    <span class="action-desc">Tell others about the value hidden in electronic waste!</span>
+                    <span class="action-icon" aria-hidden="true">📚</span>
+                    <span class="action-title" data-i18n="action.spread.title">Spread Awareness</span>
+                    <span class="action-desc" data-i18n="action.spread.desc">Tell others about the value hidden in electronic waste!</span>
                 </div>
             </div>
-            <p style="font-size: 1.1em; font-weight: bold; opacity: 0.9;">
-                The 5 billion phones expected to be thrown away in 2022 contained metals worth an estimated US$9.25 billion – value we only get back if phones are collected and recycled. 🌍
-            </p>
-            <p style="opacity: 0.9; margin-top: 10px;">
-                Yet in 2022 only 22% of the world's electronic waste was documented as properly collected and recycled.
-            </p>
+            <p class="action-value"><span data-i18n="action.value">The 5 billion phones expected to be thrown away in 2022 contained metals worth an estimated US$9.25 billion – value we only get back if phones are collected and recycled.</span> <span aria-hidden="true">🌍</span></p>
+            <p class="action-recycled" data-i18n="action.recycled">Yet in 2022 only 22% of the world's electronic waste was documented as properly collected and recycled.</p>
         </div>
 
         <section class="sources">
             <details>
-                <summary>📖 Sources &amp; image credits</summary>
+                <summary><span aria-hidden="true">📖</span> <span data-i18n="sources.summary">Sources &amp; image credits</span></summary>
 
-                <h3>Main data source</h3>
-                <p>Gómez, M., Grimes, S., Qian, Y., Feng, Y. &amp; Fowler, G. (2023). Critical and strategic metals in mobile phones: A detailed characterisation of multigenerational waste mobile phones and the economic drivers for recovery of metal value. <em>Journal of Cleaner Production</em>, 419, 138099. <a href="https://doi.org/10.1016/j.jclepro.2023.138099">doi:10.1016/j.jclepro.2023.138099</a> (open access, CC BY 4.0).<br>
-                Component values, weights and metal contents on this page come from this study: 15 phones made between 2002 and 2015, with metal prices from 2021. Batteries were not analysed in the study.</p>
+                <h3 data-i18n="sources.main">Main data source</h3>
+                <p>Gómez, M., Grimes, S., Qian, Y., Feng, Y. &amp; Fowler, G. (2023). Critical and strategic metals in mobile phones: A detailed characterisation of multigenerational waste mobile phones and the economic drivers for recovery of metal value. <em>Journal of Cleaner Production</em>, 419, 138099. <a href="https://doi.org/10.1016/j.jclepro.2023.138099">doi:10.1016/j.jclepro.2023.138099</a> (open access, CC BY 4.0).</p>
+                <p data-i18n="sources.mainNote">Component values, weights and metal contents on this page come from this study: 15 phones made between 2002 and 2015, with metal prices from 2021. Batteries were not analysed in the study.</p>
 
-                <h3>Other sources</h3>
+                <h3 data-i18n="sources.other">Other sources</h3>
                 <ul>
                     <li>U.S. Geological Survey (2026). <em>Mineral Commodity Summaries 2026</em> – production shares for 2025. <a href="https://pubs.usgs.gov/periodicals/mcs2026/">pubs.usgs.gov/periodicals/mcs2026</a></li>
                     <li>U.S. Geological Survey (2025). Final 2025 List of Critical Minerals. <em>Federal Register</em> 90 FR 50494.</li>
@@ -650,30 +778,34 @@
                     <li>EuChemS (2019). Element Scarcity – EuChemS Periodic Table. <a href="https://www.euchems.eu/euchems-periodic-table/">euchems.eu</a></li>
                 </ul>
 
-                <h3>Phone illustration</h3>
-                <p>Exploded-view phone illustration created by Peter Nockemann using Google Gemini (AI image generation).</p>
+                <h3 data-i18n="sources.illustration">Phone illustration</h3>
+                <p data-i18n="sources.illustrationText">Exploded-view phone illustration created by Peter Nockemann using Google Gemini (AI image generation).</p>
 
-                <h3>Element photos</h3>
-                <p>From Wikimedia Commons, resized and cropped for display. Click a name to see the original file and its licence.</p>
+                <h3 data-i18n="sources.photos">Element photos</h3>
+                <p data-i18n="sources.photosText">From Wikimedia Commons, resized and cropped for display. Click a name to see the original file and its licence.</p>
                 <ul id="photo-credits"></ul>
             </details>
         </section>
         </main>
 
-        <footer class="site-footer" style="background: #2c3e50; color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px;">
-            <p><strong>Hidden Treasure in Your Pocket</strong> | <a href="quiz.html">Quiz</a> | <a href="teachers.html">Teacher guide</a> | Main data source: Gómez et al. (2023), <em>Journal of Cleaner Production</em> 419, 138099</p>
-            <p class="copyright">© 2025–2026 Prof. Peter Nockemann. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, except element photos, which keep their own licences (see credits above).</p>
+        <footer class="site-footer">
+            <p><strong>Hidden Treasure in Your Pocket</strong> | <a href="quiz.html" data-i18n="nav.quiz">Take the quiz</a> | <a href="teachers.html" class="hide-in-kiosk" data-i18n="nav.teachers">For teachers</a> | <span data-i18n="footer.source">Main data source:</span> Gómez et al. (2023), <em>Journal of Cleaner Production</em> 419, 138099</p>
+            <p class="copyright" data-i18n-html="footer.copyright">© 2025–2026 Prof. Peter Nockemann. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, except element photos, which keep their own licences (see credits).</p>
         </footer>
     </div>
 
+    <script src="content/languages.js"></script>
+    <script src="content/en.js"></script>
+    <script src="site.js"></script>
     <script>
         (function() {
             'use strict';
 
             // ---------------------------------------------------------------
-            // CONTENT
+            // ELEMENT DATA (language-independent; names and texts are in content/<lang>.js)
             // type: precious | tech | rare | base   (tile colour)
             // eu / us: on the EU Critical Raw Materials list (2023/2024) and the US critical minerals list (2025)
+            // photo: [file, Wikimedia Commons file title, author, licence]
             // ---------------------------------------------------------------
             const LIC = {
                 'CC BY 2.0': 'https://creativecommons.org/licenses/by/2.0/',
@@ -687,267 +819,394 @@
             const ALCH = 'Alchemist-hp (www.pse-mendelejew.de)';
 
             const ELEMENTS = {
-                In: { z: 49, name: 'Indium',     type: 'tech',     eu: false, us: true,  photo: ['element-In.jpg', 'Ingot of 40 grams of indium.jpg', HIRES, 'CC BY 3.0'] },
-                Sn: { z: 50, name: 'Tin',        type: 'base',     eu: false, us: true,  photo: ['element-Sn.jpg', 'Tin-2.jpg', 'Jurii', 'CC BY 3.0'] },
-                Si: { z: 14, name: 'Silicon',    type: 'base',     eu: true,  us: true,  photo: ['element-Si.jpg', 'Silicon (14 Si).jpg', HIRES, 'CC BY 3.0'] },
-                Ir: { z: 77, name: 'Iridium',    type: 'precious', eu: true,  us: true,  photo: ['element-Ir.jpg', 'Iridium (77 Ir).jpg', HIRES, 'CC BY 3.0'] },
-                Au: { z: 79, name: 'Gold',       type: 'precious', eu: false, us: false, photo: ['element-Au.jpg', 'Gold nugget (placer gold) 1 (17001285916).jpg', 'James St. John', 'CC BY 2.0'] },
-                Cu: { z: 29, name: 'Copper',     type: 'base',     eu: true,  us: true,  photo: ['element-Cu.jpg', 'Copper (29 Cu).jpg', HIRES, 'CC BY 3.0'] },
-                Ag: { z: 47, name: 'Silver',     type: 'precious', eu: false, us: true,  photo: ['element-Ag.jpg', 'Pieces of silver, 3 grams, the biggest piece is 1 cm long.jpg', HIRES, 'CC BY 3.0'] },
-                Pd: { z: 46, name: 'Palladium',  type: 'precious', eu: true,  us: true,  photo: ['element-Pd.jpg', 'Palladium (46 Pd).jpg', HIRES, 'CC BY 3.0'] },
-                Ta: { z: 73, name: 'Tantalum',   type: 'tech',     eu: true,  us: true,  photo: ['element-Ta.jpg', 'Tantalum.jpg', 'Jurii', 'CC BY 3.0'] },
-                Ga: { z: 31, name: 'Gallium',    type: 'tech',     eu: true,  us: true,  photo: ['element-Ga.jpg', 'Gallium crystals.jpg', 'foobar (English Wikipedia)', 'CC BY-SA 3.0'] },
-                Nd: { z: 60, name: 'Neodymium',  type: 'rare',     eu: true,  us: true,  photo: ['element-Nd.jpg', 'Neodymium (60 Nd).jpg', HIRES, 'CC BY 3.0'] },
-                Dy: { z: 66, name: 'Dysprosium', type: 'rare',     eu: true,  us: true,  photo: ['element-Dy.jpg', 'Dysprosium (66 Dy).jpg', HIRES, 'CC BY 3.0'] },
-                Fe: { z: 26, name: 'Iron',       type: 'base',     eu: false, us: false, photo: ['element-Fe.jpg', 'Iron electrolytic and 1cm3 cube.jpg', ALCH, 'Free Art License 1.3'] },
-                W:  { z: 74, name: 'Tungsten',   type: 'tech',     eu: true,  us: true,  photo: ['element-W.jpg', 'Wolfram evaporated crystals and 1cm3 cube.jpg', ALCH, 'Free Art License 1.3'] },
-                Li: { z: 3,  name: 'Lithium',    type: 'tech',     eu: true,  us: true,  photo: ['element-Li.jpg', 'Lithium paraffin.jpg', 'Tomihahndorf (German Wikipedia)', 'Public domain'] },
-                Co: { z: 27, name: 'Cobalt',     type: 'tech',     eu: true,  us: true,  photo: ['element-Co.jpg', 'Cobalt (27 Co).jpg', HIRES, 'CC BY 3.0'] },
-                C:  { z: 6,  name: 'Graphite',   type: 'tech',     eu: true,  us: true,  photo: ['element-C-graphite.jpg', 'Graphite-233436.jpg', 'Robert M. Lavinsky', 'CC BY-SA 3.0'] },
-                Al: { z: 13, name: 'Aluminium',  type: 'base',     eu: true,  us: true,  photo: ['element-Al.jpg', 'Aluminium.jpg', 'Jurii', 'CC BY 3.0'] },
-                Mg: { z: 12, name: 'Magnesium',  type: 'base',     eu: true,  us: true,  photo: ['element-Mg.jpg', 'Magnesium crystals.jpg', 'Warut Roonguthai', 'CC BY-SA 3.0'] },
+                In: { z: 49, type: 'tech',     eu: false, us: true,  photo: ['element-In.jpg', 'Ingot of 40 grams of indium.jpg', HIRES, 'CC BY 3.0'] },
+                Sn: { z: 50, type: 'base',     eu: false, us: true,  photo: ['element-Sn.jpg', 'Tin-2.jpg', 'Jurii', 'CC BY 3.0'] },
+                Si: { z: 14, type: 'base',     eu: true,  us: true,  photo: ['element-Si.jpg', 'Silicon (14 Si).jpg', HIRES, 'CC BY 3.0'] },
+                Ir: { z: 77, type: 'precious', eu: true,  us: true,  photo: ['element-Ir.jpg', 'Iridium (77 Ir).jpg', HIRES, 'CC BY 3.0'] },
+                Au: { z: 79, type: 'precious', eu: false, us: false, photo: ['element-Au.jpg', 'Gold nugget (placer gold) 1 (17001285916).jpg', 'James St. John', 'CC BY 2.0'] },
+                Cu: { z: 29, type: 'base',     eu: true,  us: true,  photo: ['element-Cu.jpg', 'Copper (29 Cu).jpg', HIRES, 'CC BY 3.0'] },
+                Ag: { z: 47, type: 'precious', eu: false, us: true,  photo: ['element-Ag.jpg', 'Pieces of silver, 3 grams, the biggest piece is 1 cm long.jpg', HIRES, 'CC BY 3.0'] },
+                Pd: { z: 46, type: 'precious', eu: true,  us: true,  photo: ['element-Pd.jpg', 'Palladium (46 Pd).jpg', HIRES, 'CC BY 3.0'] },
+                Ta: { z: 73, type: 'tech',     eu: true,  us: true,  photo: ['element-Ta.jpg', 'Tantalum.jpg', 'Jurii', 'CC BY 3.0'] },
+                Ga: { z: 31, type: 'tech',     eu: true,  us: true,  photo: ['element-Ga.jpg', 'Gallium crystals.jpg', 'foobar (English Wikipedia)', 'CC BY-SA 3.0'] },
+                Nd: { z: 60, type: 'rare',     eu: true,  us: true,  photo: ['element-Nd.jpg', 'Neodymium (60 Nd).jpg', HIRES, 'CC BY 3.0'] },
+                Dy: { z: 66, type: 'rare',     eu: true,  us: true,  photo: ['element-Dy.jpg', 'Dysprosium (66 Dy).jpg', HIRES, 'CC BY 3.0'] },
+                Fe: { z: 26, type: 'base',     eu: false, us: false, photo: ['element-Fe.jpg', 'Iron electrolytic and 1cm3 cube.jpg', ALCH, 'Free Art License 1.3'] },
+                W:  { z: 74, type: 'tech',     eu: true,  us: true,  photo: ['element-W.jpg', 'Wolfram evaporated crystals and 1cm3 cube.jpg', ALCH, 'Free Art License 1.3'] },
+                Li: { z: 3,  type: 'tech',     eu: true,  us: true,  photo: ['element-Li.jpg', 'Lithium paraffin.jpg', 'Tomihahndorf (German Wikipedia)', 'Public domain'] },
+                Co: { z: 27, type: 'tech',     eu: true,  us: true,  photo: ['element-Co.jpg', 'Cobalt (27 Co).jpg', HIRES, 'CC BY 3.0'] },
+                C:  { z: 6,  type: 'tech',     eu: true,  us: true,  photo: ['element-C-graphite.jpg', 'Graphite-233436.jpg', 'Robert M. Lavinsky', 'CC BY-SA 3.0'] },
+                Al: { z: 13, type: 'base',     eu: true,  us: true,  photo: ['element-Al.jpg', 'Aluminium.jpg', 'Jurii', 'CC BY 3.0'] },
+                Mg: { z: 12, type: 'base',     eu: true,  us: true,  photo: ['element-Mg.jpg', 'Magnesium crystals.jpg', 'Warut Roonguthai', 'CC BY-SA 3.0'] },
                 // Not an element: plastics are carbon + hydrogen polymers
-                Plastic: { z: '', symbol: 'C·H', name: 'Plastics', type: 'base', eu: null, us: null, photo: ['material-plastic.jpg', 'Pellets of reclycle ABS.jpg', 'Amandaprc', 'CC BY-SA 4.0'] }
+                Plastic: { z: '', symbol: 'C·H', type: 'base', eu: null, us: null, photo: ['material-plastic.jpg', 'Pellets of reclycle ABS.jpg', 'Amandaprc', 'CC BY-SA 4.0'] }
             };
 
-            const VALUE_NOTE = 'Value = metals contained, at 2021 prices, averaged over 15 phones made 2002–2015 (Gómez et al., 2023). Recycling costs not included.';
+            // Periodic table symbols in atomic-number order
+            const SYMBOLS = ('H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr ' +
+                'Rb Sr Y Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I Xe Cs Ba La Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb Lu ' +
+                'Hf Ta W Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn Fr Ra Ac Th Pa U Np Pu Am Cm Bk Cf Es Fm Md No Lr ' +
+                'Rf Db Sg Bh Hs Mt Ds Rg Cn Nh Fl Mc Lv Ts Og').split(' ');
 
-            const LAYERS = [
-                {
-                    id: 'screen', title: '🖥️ Display (Screen)',
-                    intro: 'Older and cheaper phones use LCD screens lit from behind by LEDs. About 6 in 10 new smartphones now have OLED screens, where every pixel makes its own light.',
-                    elements: [
-                        ['In', '🔍 The Invisible Wires', `<strong>Indium</strong> is combined with tin and oxygen to make <strong>indium tin oxide (ITO)</strong>: a see-through material that conducts electricity. Thin ITO layers act as invisible wires that switch the pixels and, in many phones, help detect your finger.<br><br><strong>Fun fact:</strong> Indium is so soft you can scratch it with a fingernail, and a bent bar of it makes a faint crackling "cry".<br><br><strong>Where from?</strong> Indium is a by-product of zinc mining. China refined about 70% of the world's indium in 2025.`],
-                        ['Sn', '🤝 Indium\'s Partner', `<strong>Tin</strong> is the other metal in indium tin oxide (about 90% indium oxide, 10% tin oxide). The tin atoms add free electrons, which is what lets the see-through film conduct electricity.<br><br><strong>Fun fact:</strong> Tin is also the main ingredient of the solder that holds every chip onto the circuit board.`],
-                        ['Si', '🏖️ From Sand to Screen', `<strong>Silicon</strong> is the second most common element in Earth's crust, after oxygen. Sand is mostly silica: silicon combined with oxygen. Silica is the backbone of the tough cover glass.<br><br><strong>Fun fact:</strong> To toughen the glass it is dipped in hot molten potassium salt. Big potassium atoms swap places with smaller sodium atoms and squeeze the surface, so cracks struggle to start.`],
-                        ['Ir', '✨ The Light Maker', `In <strong>OLED</strong> screens, the red and green pixels in most displays use tiny amounts of <strong>iridium</strong>-containing molecules that turn electricity into light very efficiently.<br><br><strong>Fun fact:</strong> Iridium is one of the rarest elements in Earth's crust and about twice as dense as lead. A thin iridium-rich layer of rock found all over the world is evidence for the asteroid impact that wiped out the dinosaurs 66 million years ago.`]
-                    ],
-                    stats: [['$3,779', 'Metal value per tonne of screens'], ['~50%', 'of screen weight is the LCD panel']],
-                    note: VALUE_NOTE,
-                    facts: ['💡 <strong>Surprise!</strong> Gold makes up 73% of the metal value of a screen. Old phone screens hold 65–263 g of indium per tonne – more than the zinc ores indium is normally extracted from (20–50 g per tonne).']
-                },
-                {
-                    id: 'camera', title: '📸 Camera Module',
-                    elements: [
-                        ['Au', '🏆 The Corrosion-Proof Connector', `<strong>Gold</strong> doesn't rust or tarnish, so it coats connectors and forms ultra-fine wires that link chips such as the image sensor.<br><br><strong>Fun fact:</strong> Cameras are the most gold-rich part of a phone: on average about 1.2 kg of gold per tonne of camera modules. Typical gold ore holds only 1–3 g per tonne!`],
-                        ['Cu', '⚡ The Signal Highway', `<strong>Copper</strong> tracks and flexible cables carry the signals from the camera sensor to the phone's processor.<br><br><strong>Fun fact:</strong> Copper can be recycled again and again without losing any of its properties.`],
-                        ['Si', '📷 The Light Catcher', `The image sensor is a <strong>silicon</strong> chip covered in millions of light-sensitive pixels (a CMOS sensor). When light hits the silicon it frees electrons, which the chip counts to build up your photo.<br><br><strong>Fun fact:</strong> Silicon for chips is purified to 99.9999999% ("nine nines") or better.`],
-                        ['Nd', '🎯 The Focus Motor', `Tiny <strong>neodymium</strong> magnets in a "voice-coil motor" move the lens back and forth to focus. In many phones they also shift the lens to cancel out shaky hands (optical image stabilisation).`]
-                    ],
-                    stats: [['$86,860', 'Metal value per tonne of cameras – the highest of any part'], ['31.8%', 'Metal content (smartphone cameras)']],
-                    note: VALUE_NOTE,
-                    facts: ['💡 <strong>Where\'s the value?</strong> Gold makes up 93% of the metal value of a camera module.'],
-                    trend: '📈 Smartphone cameras contain more metal (31.8%) than the cameras of older phones (21.5%), linked to their higher-resolution technology.'
-                },
-                {
-                    id: 'pcb', title: '🔌 Circuit Board (PCB)',
-                    elements: [
-                        ['Cu', '🛣️ The Wiring', `<strong>Copper</strong> makes up about 28% of a circuit board's weight, in thin tracks connecting thousands of components. That's 10 to 50 times richer than copper ore, which contains only 0.5–3% copper.<br><br><strong>Where from?</strong> Chile mines about a quarter of the world's copper; China refines nearly half of it.`],
-                        ['Au', '💎 Hidden Treasure', `<strong>Gold</strong> plates the contacts and connectors so they never corrode. A tonne of phone circuit boards can contain up to 678 g of gold – hundreds of times more than typical gold ore (1–3 g per tonne).<br><br><strong>Fun fact:</strong> Gold is not on the critical lists, but it is the most valuable metal in a phone: about three-quarters of its metal value.`],
-                        ['Ag', '🥈 The Best Conductor', `<strong>Silver</strong> conducts electricity better than any other metal. It is in the lead-free solder that holds chips in place (a common type is 96.5% tin, 3% silver and 0.5% copper) and in many tiny components.<br><br><strong>Fun fact:</strong> A tonne of phone circuit boards can contain up to 1.3 kg of silver.`],
-                        ['Pd', '🪙 The Platinum-Group Metal', `<strong>Palladium</strong> plates some connectors and is used in some of the hundreds of tiny ceramic capacitors on the board (most of these now use cheaper nickel instead). A tonne of circuit boards can contain up to 98 g of palladium and 38 g of its sister metal, platinum.<br><br><strong>Where from?</strong> Russia and South Africa mined over 80% of the world's palladium in 2025.`],
-                        ['Ta', '🛑 The Power Smoother', `<strong>Tantalum</strong> capacitors store and release tiny amounts of electricity to smooth the power supply. They pack a lot of storage into a very small space – ideal for phones.<br><br><strong>Fun fact:</strong> It is named after Tantalus from Greek myth, who was punished by standing in water he could never drink. Tantalum sits in acid without absorbing any of it.<br><br><strong>Where from?</strong> About half of the world's tantalum was mined in DR Congo in 2025. As a "conflict mineral", companies must check it isn't funding armed groups.`],
-                        ['Ga', '📡 The Signal Booster', `<strong>Gallium arsenide</strong> chips amplify your phone's radio signal so it can reach the mobile mast. Gallium is also in the LEDs of the camera flash and LCD backlights.<br><br><strong>Fun fact:</strong> Gallium melts at 29.8 °C – a piece will melt in your hand!<br><br><strong>Where from?</strong> Gallium is a by-product of aluminium ore. China produced 99% of the world's primary gallium in 2025.`]
-                    ],
-                    stats: [['$55,459', 'Metal value per tonne of circuit boards'], ['18%', 'of phone weight']],
-                    note: VALUE_NOTE,
-                    facts: ['💡 <strong>Most metal-rich part:</strong> Circuit boards are on average 43% metal by weight – 52% in the smartphones studied.']
-                },
-                {
-                    id: 'speaker', title: '🔊 Speakers, Magnets & Vibration',
-                    elements: [
-                        ['Nd', '🧲 The Super Magnet', `<strong>Neodymium</strong>-iron-boron magnets are the strongest permanent magnets you can buy. In a speaker, the magnet pushes against a coil of wire to move a thin membrane that makes sound. Speaker parts in the study were 7–10% neodymium by weight.<br><br><strong>Fun fact:</strong> A neodymium magnet the size of a coin can hold up 5–8 kg.<br><br><strong>Where from?</strong> China mined about 69% of the world's rare earths in 2025, and refines most of them.`],
-                        ['Dy', '🌡️ The Heat Shield', `A little <strong>dysprosium</strong> (0.3–0.8% of the speaker parts studied) keeps the magnet strong when it gets hot.<br><br><strong>Fun fact:</strong> Its name comes from the Greek <em>dysprositos</em>, "hard to get at", because it was so difficult to separate from the other rare earths.<br><br><strong>Where from?</strong> Almost all dysprosium is refined in China, much of it from ore mined in China and Myanmar.`],
-                        ['Fe', '🧱 The Backbone', `A neodymium magnet (Nd<sub>2</sub>Fe<sub>14</sub>B) is mostly <strong>iron</strong> – about two-thirds to three-quarters of its weight.<br><br><strong>Fun fact:</strong> Thanks to Earth's metal core, iron is the most common element in our planet as a whole.`],
-                        ['W', '📳 The Buzz', `Your phone vibrates thanks to a tiny motor that shakes a small, heavy weight – often made of <strong>tungsten</strong>, one of the densest metals.<br><br><strong>Fun fact:</strong> Tungsten has the highest melting point of any metal: 3,422 °C.<br><br><strong>Where from?</strong> China mined about 79% of the world's tungsten in 2025.`]
-                    ],
-                    stats: [['$21,853', 'Metal value per tonne of speakers'], ['47%', 'Metal content']],
-                    note: VALUE_NOTE,
-                    facts: ['💡 <strong>Rare earth power:</strong> Neodymium, praseodymium and dysprosium make up 53% of the metal value of a speaker. Yet only about 1% of the world\'s rare earth demand is met by recycling e-waste.']
-                },
-                {
-                    id: 'battery', title: '🔋 Li-Ion Battery',
-                    elements: [
-                        ['Li', '🪶 The Lightweight Champion', `<strong>Lithium</strong> is the lightest metal – it floats on water (while fizzing as it reacts!). Your battery holds no lithium metal, though: lithium <em>ions</em> shuttle from the graphite side to the cobalt-oxide side as the battery powers your phone, and back again when you charge it.<br><br><strong>Where from?</strong> In 2025 about a third of mined lithium came from Australia, followed by China and Chile.`],
-                        ['Co', '⚙️ The Stabiliser', `Lithium cobalt oxide forms the positive side of most phone batteries. <strong>Cobalt</strong> helps it keep its layered structure as lithium moves in and out, so a lot of energy fits into a small space. A phone battery contains a few grams of cobalt.<br><br><strong>Fun fact:</strong> Cobalt is named after the <em>kobold</em>, a goblin of German folklore. Miners blamed kobolds for ores that gave off poisonous arsenic fumes when smelted.<br><br><strong>Where from?</strong> DR Congo mined 73% of the world's cobalt in 2025. Some is dug by hand in dangerous conditions, sometimes by children.`],
-                        ['C', '🅿️ The Ion Parking Garage', `The negative side of the battery is <strong>graphite</strong> – the same form of carbon as pencil "lead". Lithium ions park between its flat layers of carbon atoms when you charge.<br><br><strong>Fun fact:</strong> Battery graphite must be over 99.95% pure. Synthetic graphite is baked at around 3,000 °C.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025 and makes most battery graphite.`]
-                    ],
-                    stats: [['~24%', 'of phone weight'], ['73%', 'of mined cobalt came from DR Congo (2025)']],
-                    facts: ['💡 <strong>Handle with care:</strong> Batteries are removed before phones are recycled (and were not part of the study above). Never put phones or batteries in the household bin – damaged lithium-ion batteries can start fires in bin lorries and recycling plants.']
-                },
-                {
-                    id: 'casing', title: '📦 Casing & Frame',
-                    elements: [
-                        ['Al', '🏗️ The Frame', `Many phones have an <strong>aluminium</strong> frame: light, strong and easy to shape. Making new aluminium from ore takes huge amounts of electricity – around 14–15 MWh per tonne.<br><br><strong>Fun fact:</strong> Recycling aluminium saves about 95% of the energy needed to make it new.<br><br><strong>Where from?</strong> China made about 61% of the world's new aluminium in 2025.`],
-                        ['Mg', '🪶 The Lightest Structural Metal', `<strong>Magnesium</strong> is about one-third less dense than aluminium, and its alloys are strong for their weight. It is used in some phones' internal frames, as well as in laptops, cars and aircraft.<br><br><strong>Fun fact:</strong> Magnesium burns with a dazzling white light, and is used in flares, fireworks and sparklers.<br><br><strong>Where from?</strong> China produced about 86% of the world's magnesium metal in 2025.`],
-                        ['Plastic', '🛢️ Made from Oil and Gas', `<strong>Plastics</strong> are long chains of mostly carbon and hydrogen atoms, made mostly from oil and natural gas. The phone casings in the study were mainly polycarbonate/ABS blends.<br><br><strong>Fun fact:</strong> Plastics make up about 40% of a phone's weight, metals about 35% and glass and ceramics about 25%.`]
-                    ],
-                    stats: [['39%', 'of phone weight'], ['95%', 'Energy saved by recycling aluminium']],
-                    facts: ['💡 <strong>Close the loop:</strong> Older phones may contain brominated flame retardants in their plastics. Proper recycling keeps these chemicals out of the environment.']
-                }
-            ];
-
-            // ---------------------------------------------------------------
-            // RENDERING
-            // ---------------------------------------------------------------
             const TILE_CLASS = { precious: 'tile-precious', tech: 'tile-critical', rare: 'tile-rare', base: 'tile-base' };
             const isCritical = el => el.eu || el.us;
             const commonsUrl = title => 'https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(title.replace(/ /g, '_'));
+            const store = {
+                get(k) { try { return JSON.parse(sessionStorage.getItem(k)); } catch (e) { return null; } },
+                set(k, v) { try { sessionStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* ignore */ } }
+            };
 
-            function photoCredit(el) {
-                const [, title, author, licence] = el.photo;
-                const lic = LIC[licence] ? `<a href="${LIC[licence]}" target="_blank" rel="noopener">${licence}</a>` : licence;
-                return `<a href="${commonsUrl(title)}" target="_blank" rel="noopener">${author}</a>, ${lic}`;
-            }
+            Site.loadContent(init);
 
-            // "🔋 Title" -> decorative emoji hidden from screen readers
-            function withIcon(text) {
-                const i = text.indexOf(' ');
-                return `<span aria-hidden="true">${text.slice(0, i)}</span>${text.slice(i)}`;
-            }
+            function init(content) {
+                const t = Site.t;
+                const name = sym => content.elements[sym] || sym;
+                const LAYERS = content.layers;
+                const PARTS = LAYERS.map(l => l.id);
+                document.title = t('doc.title');
 
-            function critLine(el) {
-                if (el.eu === null) return '';
-                const tag = (on, label) => `<span class="${on ? 'crm-yes' : 'crm-no'}">${label} ${on ? '✔' : '✘'}</span>`;
-                return `<p class="crit-line">On critical-materials lists: ${tag(el.eu, 'EU')} ${tag(el.us, 'USA')}</p>`;
-            }
+                // -----------------------------------------------------------
+                // RENDERING
+                // -----------------------------------------------------------
+                function photoCredit(sym) {
+                    const [, title, author, licence] = ELEMENTS[sym].photo;
+                    const lic = LIC[licence] ? `<a href="${LIC[licence]}" target="_blank" rel="noopener">${licence}</a>` : licence;
+                    return `<a href="${commonsUrl(title)}" target="_blank" rel="noopener">${author}</a>, ${lic}`;
+                }
 
-            function renderLayer(layer) {
-                const tiles = layer.elements.map(([sym]) => {
-                    const el = ELEMENTS[sym];
-                    return `<button type="button" class="element-tile ${TILE_CLASS[el.type]}${isCritical(el) ? ' is-critical' : ''}" data-detail="${layer.id}-${sym}">
-                            <span class="atomic-number">${el.z}</span><span class="symbol">${el.symbol || sym}</span><span class="element-name">${el.name}</span>
-                        </button>`;
-                }).join('');
+                // "🔋 Title" -> decorative emoji hidden from screen readers
+                function withIcon(text) {
+                    const i = text.indexOf(' ');
+                    return `<span aria-hidden="true">${text.slice(0, i)}</span>${text.slice(i)}`;
+                }
 
-                const details = layer.elements.map(([sym, heading, text]) => {
-                    const el = ELEMENTS[sym];
-                    return `<div id="detail-${layer.id}-${sym}" class="element-detail${isCritical(el) ? '' : ' safe-metal'}">
-                            <div class="detail-layout">
-                                <img src="${el.photo[0]}" alt="${el.name}" class="element-img" width="100" height="100">
-                                <div class="detail-text">
-                                    <h4>${withIcon(heading)}</h4>
-                                    <p>${text}</p>
-                                    ${critLine(el)}
-                                    <p class="photo-credit">Photo: ${photoCredit(el)}</p>
+                function critLine(el) {
+                    if (el.eu === null) return '';
+                    const tag = (on, label) => `<span class="${on ? 'crm-yes' : 'crm-no'}">${label} ${on ? '✔' : '✘'}</span>`;
+                    return `<p class="crit-line">${t('card.crit')} ${tag(el.eu, t('card.eu'))} ${tag(el.us, t('card.us'))}</p>`;
+                }
+
+                function renderLayer(layer) {
+                    const tiles = layer.elements.map(([sym]) => {
+                        const el = ELEMENTS[sym];
+                        return `<button type="button" class="element-tile ${TILE_CLASS[el.type]}${isCritical(el) ? ' is-critical' : ''}" data-detail="${layer.id}-${sym}">
+                                <span class="atomic-number">${el.z}</span><span class="symbol">${el.symbol || sym}</span><span class="element-name">${name(sym)}</span>
+                            </button>`;
+                    }).join('');
+
+                    const details = layer.elements.map(([sym, heading, text]) => {
+                        const el = ELEMENTS[sym];
+                        return `<div id="detail-${layer.id}-${sym}" class="element-detail${isCritical(el) ? '' : ' safe-metal'}">
+                                <div class="detail-layout">
+                                    <img src="${el.photo[0]}" alt="${name(sym)}" class="element-img" width="100" height="100">
+                                    <div class="detail-text">
+                                        <h4>${withIcon(heading)}</h4>
+                                        <p>${text}</p>
+                                        ${critLine(el)}
+                                        <p class="photo-credit">${t('card.photo')} ${photoCredit(sym)}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                    }).join('');
+
+                    const stats = layer.stats.map(([num, lbl]) => `<div class="stat-box"><span class="stat-number">${num}</span><span class="stat-label">${lbl}</span></div>`).join('');
+
+                    return `<div class="info-card" id="${layer.id}-info">
+                            <h2>${withIcon(layer.title)}</h2>
+                            ${layer.intro ? `<p class="card-intro">${layer.intro}</p>` : ''}
+                            <h3 class="step-title"><span class="step-num" aria-hidden="true">2</span> ${t('card.step2')}</h3>
+                            <div class="element-grid">${tiles}</div>
+                            <div class="criticality-box">
+                                <div class="instruction-text"><span aria-hidden="true">👆</span> ${t('card.instruction')}</div>
+                                ${details}
+                                <div class="detail-nav" hidden>
+                                    <button type="button" class="nav-prev"><span aria-hidden="true">‹</span> ${t('card.prev')}</button>
+                                    <span class="nav-pos"></span>
+                                    <button type="button" class="nav-next">${t('card.next')} <span aria-hidden="true">›</span></button>
                                 </div>
                             </div>
+                            <div class="stats-container">
+                                <div class="stats-grid">${stats}</div>
+                                ${layer.note ? `<p class="stat-note">${layer.note}</p>` : ''}
+                                ${layer.facts.map(f => `<div class="fact-block">${f}</div>`).join('')}
+                                ${layer.trend ? `<div class="trend-fact">${layer.trend}</div>` : ''}
+                            </div>
                         </div>`;
-                }).join('');
+                }
 
-                const stats = layer.stats.map(([num, lbl]) => `<div class="stat-box"><span class="stat-number">${num}</span><span class="stat-label">${lbl}</span></div>`).join('');
+                document.querySelector('.info-section').insertAdjacentHTML('beforeend', LAYERS.map(renderLayer).join(''));
 
-                return `<div class="info-card" id="${layer.id}-info">
-                        <h2>${withIcon(layer.title)}</h2>
-                        ${layer.intro ? `<p class="card-intro">${layer.intro}</p>` : ''}
-                        <h3 class="step-title"><span class="step-num" aria-hidden="true">2</span> Tap an element to inspect</h3>
-                        <div class="element-grid">${tiles}</div>
-                        <div class="criticality-box">
-                            <div class="instruction-text">👆 Tap a tile above to see image &amp; details</div>
-                            ${details}
-                        </div>
-                        <div class="stats-container">
-                            <div class="stats-grid">${stats}</div>
-                            ${layer.note ? `<p class="stat-note">${layer.note}</p>` : ''}
-                            ${layer.facts.map(f => `<div class="fact-block">${f}</div>`).join('')}
-                            ${layer.trend ? `<div class="trend-fact">${layer.trend}</div>` : ''}
-                        </div>
-                    </div>`;
-            }
+                document.getElementById('photo-credits').innerHTML = Object.keys(ELEMENTS)
+                    .map(sym => `<li><strong>${name(sym)}:</strong> ${photoCredit(sym)}</li>`).join('');
 
-            document.querySelector('.info-section').insertAdjacentHTML('beforeend', LAYERS.map(renderLayer).join(''));
+                // -----------------------------------------------------------
+                // HOTSPOTS & CARDS
+                // -----------------------------------------------------------
+                const VIEW_W = 1696, VIEW_H = 2528; // must match the hotspot-map viewBox
+                const container = document.querySelector('.interactive-container');
+                const label = container.querySelector('.hotspot-label');
+                const hotspots = container.querySelectorAll('.hotspot');
 
-            document.getElementById('photo-credits').innerHTML = Object.entries(ELEMENTS)
-                .map(([sym, el]) => `<li><strong>${el.name}:</strong> ${photoCredit(el)}</li>`).join('');
+                // Show the label above a hotspot's anchor point, kept inside the image width
+                function showLabel(hotspot) {
+                    if (!hotspot) { label.classList.remove('visible'); return; }
+                    const [ax, ay] = hotspot.dataset.anchor.split(',').map(Number);
+                    label.textContent = hotspot.dataset.label;
+                    const w = container.clientWidth, half = label.offsetWidth / 2 + 4;
+                    const x = Math.min(Math.max(ax / VIEW_W * w, half), w - half);
+                    label.style.left = x + 'px';
+                    label.style.top = (ay / VIEW_H * 100) + '%';
+                    label.classList.add('visible');
+                }
 
-            // ---------------------------------------------------------------
-            // INTERACTION
-            // ---------------------------------------------------------------
-            const VIEW_W = 1696, VIEW_H = 2528; // must match the hotspot-map viewBox
-            const container = document.querySelector('.interactive-container');
-            const label = container.querySelector('.hotspot-label');
-            const hotspots = container.querySelectorAll('.hotspot');
+                // When nothing is hovered/focused, keep the selected layer labelled (helps on touch screens)
+                let selectedHotspot = null;
+                function restoreLabel() {
+                    showLabel(selectedHotspot);
+                }
 
-            // Show the label above a hotspot's anchor point, kept inside the image width
-            function showLabel(hotspot) {
-                if (!hotspot) { label.classList.remove('visible'); return; }
-                const [ax, ay] = hotspot.dataset.anchor.split(',').map(Number);
-                label.textContent = hotspot.dataset.label;
-                const w = container.clientWidth, half = label.offsetWidth / 2 + 4;
-                const x = Math.min(Math.max(ax / VIEW_W * w, half), w - half);
-                label.style.left = x + 'px';
-                label.style.top = (ay / VIEW_H * 100) + '%';
-                label.classList.add('visible');
-            }
+                function showLayer(component, hotspot, scroll) {
+                    try {
+                        hotspot = hotspot || container.querySelector(`.hotspot[data-layer="${component}"]`);
+                        // Highlight every area of the layer (e.g. front and rear camera)
+                        container.classList.remove('hint');
+                        hotspots.forEach(h => h.classList.toggle('active', h.dataset.layer === component));
+                        selectedHotspot = hotspot;
+                        showLabel(hotspot);
 
-            // When nothing is hovered/focused, keep the selected layer labelled (helps on touch screens)
-            let selectedHotspot = null;
-            function restoreLabel() {
-                showLabel(selectedHotspot);
-            }
+                        document.querySelectorAll('.info-card').forEach(c => c.classList.remove('active'));
 
-            function showLayer(component, hotspot) {
-                try {
-                    // Highlight every area of the layer (e.g. front and rear camera)
-                    container.classList.remove('hint');
-                    hotspots.forEach(h => h.classList.toggle('active', h.dataset.layer === component));
-                    selectedHotspot = hotspot;
-                    showLabel(hotspot);
+                        const infoCard = document.getElementById(component + '-info');
+                        if (infoCard) {
+                            infoCard.classList.add('active');
+                            // Reset selection within card
+                            infoCard.querySelectorAll('.element-tile').forEach(t => t.classList.remove('selected'));
+                            infoCard.querySelectorAll('.element-detail').forEach(d => d.classList.remove('active'));
+                            infoCard.querySelector('.criticality-box').classList.remove('has-content', 'safe-metal');
+                            infoCard.querySelector('.instruction-text').style.display = 'block';
+                            infoCard.querySelector('.detail-nav').hidden = true;
+                        }
 
-                    document.querySelectorAll('.info-card').forEach(c => c.classList.remove('active'));
+                        markExplored(component);
 
-                    const infoCard = document.getElementById(component + '-info');
-                    if (infoCard) {
-                        infoCard.classList.add('active');
-                        // Reset selection within card
-                        infoCard.querySelectorAll('.element-tile').forEach(t => t.classList.remove('selected'));
-                        infoCard.querySelectorAll('.element-detail').forEach(d => d.classList.remove('active'));
-                        infoCard.querySelector('.criticality-box').classList.remove('has-content', 'safe-metal');
-                        infoCard.querySelector('.instruction-text').style.display = 'block';
-                    }
+                        if (scroll !== false && window.innerWidth <= 900) {
+                            document.querySelector('.info-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                    } catch (error) { console.error('Layer Error:', error); }
+                }
 
-                    if (window.innerWidth <= 900) {
-                        document.querySelector('.info-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }
-                } catch (error) { console.error('Layer Error:', error); }
-            }
+                function showDetail(tile) {
+                    try {
+                        const card = tile.closest('.info-card');
+                        const tiles = [...card.querySelectorAll('.element-tile')];
+                        tiles.forEach(t => t.classList.remove('selected'));
+                        tile.classList.add('selected');
 
-            function showDetail(tile) {
-                try {
-                    const card = tile.closest('.info-card');
-                    card.querySelectorAll('.element-tile').forEach(t => t.classList.remove('selected'));
-                    tile.classList.add('selected');
+                        const instruction = card.querySelector('.instruction-text');
+                        if (instruction) instruction.style.display = 'none';
 
-                    const instruction = card.querySelector('.instruction-text');
-                    if (instruction) instruction.style.display = 'none';
+                        card.querySelectorAll('.element-detail').forEach(d => d.classList.remove('active'));
+                        const detail = document.getElementById('detail-' + tile.dataset.detail);
+                        if (detail) detail.classList.add('active');
 
-                    card.querySelectorAll('.element-detail').forEach(d => d.classList.remove('active'));
-                    const detail = document.getElementById('detail-' + tile.dataset.detail);
-                    if (detail) detail.classList.add('active');
+                        // Red box for critical materials, blue for the rest
+                        const box = card.querySelector('.criticality-box');
+                        box.classList.add('has-content');
+                        box.classList.toggle('safe-metal', !!detail && detail.classList.contains('safe-metal'));
 
-                    // Red box for critical materials, blue for the rest
+                        // Previous / next navigation
+                        const nav = card.querySelector('.detail-nav');
+                        nav.hidden = tiles.length < 2;
+                        nav.querySelector('.nav-pos').textContent = t('card.pos', { n: tiles.indexOf(tile) + 1, total: tiles.length });
+                    } catch (error) { console.error('Detail Error:', error); }
+                }
+
+                // Move to the previous (-1) or next (+1) element in a card, wrapping around.
+                // Keyboard: start from the focused tile; buttons and swipes: from the selected one.
+                function stepDetail(card, dir, moveFocus) {
+                    const tiles = [...card.querySelectorAll('.element-tile')];
+                    const from = moveFocus && tiles.includes(document.activeElement) ? document.activeElement : card.querySelector('.element-tile.selected');
+                    const i = Math.max(tiles.indexOf(from), 0);
+                    const next = tiles[(i + dir + tiles.length) % tiles.length];
+                    showDetail(next);
+                    if (moveFocus) next.focus();
+                }
+
+                document.querySelectorAll('.element-tile').forEach(t => t.addEventListener('click', () => showDetail(t)));
+
+                document.querySelectorAll('.info-card').forEach(card => {
                     const box = card.querySelector('.criticality-box');
-                    box.classList.add('has-content');
-                    box.classList.toggle('safe-metal', !!detail && detail.classList.contains('safe-metal'));
-                } catch (error) { console.error('Detail Error:', error); }
-            }
+                    if (!box) return;
+                    card.querySelector('.nav-prev').addEventListener('click', () => stepDetail(card, -1));
+                    card.querySelector('.nav-next').addEventListener('click', () => stepDetail(card, +1));
 
-            document.querySelectorAll('.element-tile').forEach(t => t.addEventListener('click', () => showDetail(t)));
+                    // Arrow keys move between element tiles
+                    card.querySelector('.element-grid').addEventListener('keydown', e => {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                            e.preventDefault();
+                            stepDetail(card, e.key === 'ArrowRight' ? 1 : -1, true);
+                        }
+                    });
 
-            hotspots.forEach(h => {
-                h.setAttribute('tabindex', '0');
-                h.setAttribute('role', 'button');
-                h.setAttribute('aria-label', h.dataset.label);
-                h.addEventListener('click', () => showLayer(h.dataset.layer, h));
-                h.addEventListener('keydown', e => {
-                    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showLayer(h.dataset.layer, h); }
+                    // Swipe left/right on the detail box (touch screens)
+                    let start = null;
+                    box.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') start = [e.clientX, e.clientY]; });
+                    box.addEventListener('pointerup', e => {
+                        if (!start || !box.classList.contains('has-content')) { start = null; return; }
+                        const dx = e.clientX - start[0], dy = e.clientY - start[1];
+                        start = null;
+                        if (Math.abs(dx) > 50 && Math.abs(dx) > 1.5 * Math.abs(dy)) stepDetail(card, dx < 0 ? 1 : -1);
+                    });
+                    box.addEventListener('pointercancel', () => { start = null; });
                 });
-                h.addEventListener('pointerenter', () => showLabel(h));
-                h.addEventListener('focus', () => showLabel(h));
-                h.addEventListener('pointerleave', restoreLabel);
-                h.addEventListener('blur', restoreLabel);
-            });
-            window.addEventListener('resize', restoreLabel);
+
+                hotspots.forEach(h => {
+                    h.setAttribute('tabindex', '0');
+                    h.setAttribute('role', 'button');
+                    h.setAttribute('aria-label', h.dataset.label);
+                    h.addEventListener('click', () => showLayer(h.dataset.layer, h));
+                    h.addEventListener('keydown', e => {
+                        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showLayer(h.dataset.layer, h); }
+                    });
+                    h.addEventListener('pointerenter', () => showLabel(h));
+                    h.addEventListener('focus', () => showLabel(h));
+                    h.addEventListener('pointerleave', restoreLabel);
+                    h.addEventListener('blur', restoreLabel);
+                });
+                window.addEventListener('resize', restoreLabel);
+
+                // -----------------------------------------------------------
+                // EXPLORATION PROGRESS (remembered for this visit only)
+                // -----------------------------------------------------------
+                const explored = new Set((store.get('phoneExplored') || []).filter(p => PARTS.includes(p)));
+                const chipsBox = document.querySelector('.progress-chips');
+                PARTS.forEach(part => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'chip';
+                    b.dataset.layer = part;
+                    b.addEventListener('click', () => showLayer(part));
+                    chipsBox.appendChild(b);
+                });
+
+                function renderProgress(current) {
+                    chipsBox.querySelectorAll('.chip').forEach(b => {
+                        const done = explored.has(b.dataset.layer);
+                        b.classList.toggle('done', done);
+                        b.classList.toggle('current', b.dataset.layer === current);
+                        b.textContent = (done ? '✓ ' : '') + t('short.' + b.dataset.layer);
+                        b.setAttribute('aria-label', t('short.' + b.dataset.layer) + (done ? ', ' + t('progress.visited') : ''));
+                    });
+                    document.querySelector('.progress-count').textContent = t('progress.count', { n: explored.size, total: PARTS.length });
+                    document.querySelector('.progress-done').hidden = explored.size < PARTS.length;
+                }
+
+                function markExplored(part) {
+                    explored.add(part);
+                    store.set('phoneExplored', [...explored]);
+                    renderProgress(part);
+                }
+
+                renderProgress();
+
+                // -----------------------------------------------------------
+                // PERIODIC TABLE
+                // -----------------------------------------------------------
+                const featured = {};
+                Object.entries(ELEMENTS).forEach(([sym, el]) => { if (el.z) featured[el.z] = sym; });
+                const partsFor = sym => LAYERS.filter(l => l.elements.some(([s]) => s === sym)).map(l => l.id);
+
+                // Row/column of each element in the standard 18-column layout (f-block in rows 9–10)
+                function position(z) {
+                    if (z === 1) return [1, 1];
+                    if (z === 2) return [1, 18];
+                    if (z <= 4) return [2, z - 2];
+                    if (z <= 10) return [2, z + 8];
+                    if (z <= 12) return [3, z - 10];
+                    if (z <= 18) return [3, z];
+                    if (z <= 36) return [4, z - 18];
+                    if (z <= 54) return [5, z - 36];
+                    if (z <= 56) return [6, z - 54];
+                    if (z <= 71) return [9, z - 54];
+                    if (z <= 86) return [6, z - 68];
+                    if (z <= 88) return [7, z - 86];
+                    if (z <= 103) return [10, z - 86];
+                    return [7, z - 100];
+                }
+
+                const table = document.querySelector('.ptable');
+                const cells = [];
+                SYMBOLS.forEach((sym, i) => {
+                    const z = i + 1;
+                    const [row, col] = position(z);
+                    const fsym = featured[z];
+                    let cell;
+                    if (fsym) {
+                        const el = ELEMENTS[fsym];
+                        cell = document.createElement('button');
+                        cell.type = 'button';
+                        cell.className = `pt-cell featured ${TILE_CLASS[el.type]}${isCritical(el) ? ' is-critical' : ''}`;
+                        cell.dataset.sym = fsym;
+                        cell.setAttribute('aria-label', `${name(fsym)} (${sym}, ${z})`);
+                        cell.addEventListener('click', () => showTableElement(fsym, cell));
+                    } else {
+                        cell = document.createElement('div');
+                        cell.className = 'pt-cell';
+                        cell.setAttribute('aria-hidden', 'true');
+                    }
+                    cell.innerHTML = `<span class="pt-z">${z}</span><span class="pt-sym">${sym}</span>`;
+                    cell.style.gridRow = row;
+                    cell.style.gridColumn = col;
+                    cells.push(cell);
+                });
+                [[6, '57–71'], [7, '89–103']].forEach(([row, text]) => {
+                    const ph = document.createElement('div');
+                    ph.className = 'pt-cell placeholder';
+                    ph.setAttribute('aria-hidden', 'true');
+                    ph.textContent = text;
+                    ph.style.gridRow = row;
+                    ph.style.gridColumn = 3;
+                    cells.push(ph);
+                });
+                [[9, 'pt.lanthanides'], [10, 'pt.actinides']].forEach(([row, key]) => {
+                    const lb = document.createElement('div');
+                    lb.className = 'pt-row-label';
+                    lb.setAttribute('aria-hidden', 'true');
+                    lb.textContent = t(key);
+                    lb.style.gridRow = row;
+                    lb.style.gridColumn = '1 / span 2';
+                    cells.push(lb);
+                });
+                // Featured elements go into the document in atomic-number order, so keyboard order is logical
+                table.append(...cells);
+                document.getElementById('pt-intro').textContent = t('pt.intro', { n: Object.keys(featured).length });
+
+                const panel = document.querySelector('.pt-panel');
+                function showTableElement(sym, cell) {
+                    table.querySelectorAll('.pt-cell.selected').forEach(c => c.classList.remove('selected'));
+                    cell.classList.add('selected');
+                    panel.innerHTML = `<h3></h3><p>${t('pt.foundIn')}</p><div class="pt-parts"></div>`;
+                    panel.querySelector('h3').textContent = `${name(sym)} (${sym})`;
+                    const box = panel.querySelector('.pt-parts');
+                    partsFor(sym).forEach(part => {
+                        const b = document.createElement('button');
+                        b.type = 'button';
+                        b.className = 'chip';
+                        b.innerHTML = `${t('short.' + part)} <span aria-hidden="true">→</span>`;
+                        b.addEventListener('click', () => goToElement(part, sym));
+                        box.appendChild(b);
+                    });
+                }
+
+                function goToElement(part, sym) {
+                    showLayer(part, null, false);
+                    const card = document.getElementById(part + '-info');
+                    const tile = card.querySelector(`[data-detail="${part}-${sym}"]`);
+                    if (tile) showDetail(tile);
+                    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    if (tile) tile.focus({ preventScroll: true });
+                }
+            }
         })();
     </script>
 </body>

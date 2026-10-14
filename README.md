@@ -3,24 +3,42 @@
 An interactive educational resource about the critical and strategic elements inside a smartphone, for classrooms, outreach events and self-guided learning.
 Tap a layer of the exploded phone (screen, camera, speaker, circuit board, battery, casing) to see which elements it contains, then tap an element for a photo and short explanation.
 
-It is a single static page (`index.html`) with no build step. Open it in a browser or serve the folder with any static host (e.g. GitHub Pages).
-
-## Hotspots
-
-The clickable areas are SVG polygons traced over `phone_parts_exploded_view.jpg`, using the photo's original 1696×2528 pixel grid as the `viewBox`. If the photo is replaced, the polygon `points` need re-tracing.
+It is a static website with no build step. Open `index.html` in a browser, or serve the folder with any static host (e.g. GitHub Pages).
 
 ## Pages
 
-- `index.html` – the interactive phone (start here)
-- `quiz.html` – a scored multiple-choice quiz (10 random questions per round; `quiz.html?n=all` asks all of them)
+- `index.html` – the interactive phone (start here), with exploration progress, previous/next navigation (buttons, swipe, arrow keys) and a periodic-table view
+- `quiz.html` – a scored multiple-choice quiz with a printable certificate (10 random questions per round; `quiz.html?n=all` asks all of them, `?n=5` five)
 - `teachers.html` – teacher guide: learning objectives, lesson plan, discussion questions, extension tasks, printable worksheet and quiz answer key
 
-## Editing the content
+## Features
 
-Quiz questions live in `quiz-questions.js` (the first option of each question is the correct one). The quiz and the teacher guide's answer key both read from this file.
+- **Exhibition mode:** add `?kiosk` to the address (e.g. `index.html?kiosk`). The display resets itself after 90 s without interaction (`?kiosk=120` for 120 s), external links are disabled and the teacher guide / certificate are hidden.
+- **Installable and offline:** when served over http(s), the site can be installed as an app and works offline after the first visit (`manifest.webmanifest`, `sw.js`).
+- **Dark mode:** follows the device setting; the 🌙/☀️ button switches manually (remembered per device).
+- **Languages:** all text of the interactive phone and the quiz is in `content/<language>.js`. See `content/languages.js` for how to add a language; a language menu appears automatically when there is more than one.
+- **Accessibility:** keyboard and screen-reader support, WCAG AA colour contrast in light and dark mode, reduced motion when requested.
 
+## Files
 
-All layer and element text, statistics and photo credits live in the `ELEMENTS` and `LAYERS` objects at the top of the script in `index.html`. The info cards and the credits list are built from that data.
+| File | What it contains |
+|---|---|
+| `content/en.js` | All English text: interface, element names, the six phone parts (element texts, statistics, facts) and the quiz questions (first option = correct answer) |
+| `content/languages.js` | List of available languages |
+| `index.html` | Main page; element data (type, critical-list status, photo credits) and the hotspot outlines |
+| `site.css`, `site.js` | Shared colours/themes, theme toggle, language loading, exhibition mode, offline support |
+| `sw.js` | Offline cache. **Increase `VERSION` whenever you change a file**, and add new files (e.g. a new language) to `FILES` |
+| `og-image.jpg` | Preview image for links shared on social media / messaging apps |
+| `icons/` | App icons |
+
+## Hotspots
+
+The clickable areas are SVG polygons traced over `phone_parts_exploded_view.jpg`, using the image's original 1696×2528 pixel grid as the `viewBox`. If the image is replaced, the polygon `points` need re-tracing.
+
+## After publishing
+
+- Link previews: some apps need the full address of the preview image. Change `og:image` in the three HTML files to e.g. `https://<account>.github.io/<repository>/og-image.jpg`.
+- Add the repository URL and the DOI to `CITATION.cff`, this README and the "how to cite" section of `teachers.html`.
 
 ## Sources
 

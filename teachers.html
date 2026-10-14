@@ -7,35 +7,46 @@
     <meta name="author" content="Prof. Peter Nockemann">
     <meta name="description" content="Teacher guide for Hidden Treasure in Your Pocket – an interactive resource on critical elements in smartphones.">
     <link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Teacher Guide – Hidden Treasure in Your Pocket">
+    <meta property="og:description" content="Lesson plan, background, discussion questions, worksheet and quiz answers for an interactive resource on critical elements in smartphones.">
+    <meta property="og:image" content="og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="manifest" href="manifest.webmanifest">
+    <meta name="theme-color" content="#1e3c72">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='12' fill='%231e3c72'/%3E%3Ctext x='32' y='43' font-family='Arial,sans-serif' font-weight='700' font-size='28' text-anchor='middle' fill='%23ffd76a'%3EAu%3C/text%3E%3C/svg%3E">
+    <script>try { var th = localStorage.getItem('theme'); if (th === 'dark' || th === 'light') document.documentElement.setAttribute('data-theme', th); } catch (e) {}</script>
+    <link rel="stylesheet" href="site.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: var(--page-bg);
             min-height: 100vh;
             padding: 20px;
-            color: #333;
+            color: var(--text);
             line-height: 1.6;
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: white;
+            background: var(--surface);
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 60px var(--shadow);
             overflow: hidden;
         }
 
         header {
+            position: relative;
             background:
                 radial-gradient(circle at 12% 15%, rgba(255, 215, 106, 0.18), transparent 35%),
                 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='68'%3E%3Crect x='6' y='6' width='52' height='56' rx='8' fill='none' stroke='%23ffffff' stroke-opacity='0.07' stroke-width='2'/%3E%3C/svg%3E"),
                 linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 30px;
+            padding: 30px 70px;
             text-align: center;
         }
         header h1 { font-size: 2.2em; margin-bottom: 6px; line-height: 1.2; }
@@ -51,40 +62,39 @@
 
         main { padding: 30px 40px; }
 
-        nav.toc { background: #f7f9fb; border: 1px solid #e3e8ee; border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; }
+        nav.toc { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 15px 20px; margin-bottom: 30px; }
         nav.toc h2 { font-size: 1em; margin: 0 0 6px; border: none; padding: 0; }
         nav.toc ol { padding-left: 22px; columns: 2; column-gap: 30px; }
-        nav.toc a { color: #2a5298; }
 
         h2 {
-            color: #2c3e50;
+            color: var(--heading);
             font-size: 1.5em;
             margin: 35px 0 12px;
             padding-bottom: 6px;
-            border-bottom: 2px solid #f0f2f5;
+            border-bottom: 2px solid var(--border);
         }
-        h3 { color: #2c3e50; font-size: 1.1em; margin: 20px 0 8px; }
+        h3 { color: var(--heading); font-size: 1.1em; margin: 20px 0 8px; }
         p { margin-bottom: 12px; }
         ul, ol { padding-left: 24px; margin-bottom: 12px; }
         li { margin-bottom: 6px; }
-        a { color: #2a5298; overflow-wrap: anywhere; }
+        a { color: var(--accent); overflow-wrap: anywhere; }
 
         table { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.95em; }
-        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e3e8ee; vertical-align: top; }
-        th { background: #f7f9fb; color: #2c3e50; }
+        th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        th { background: var(--surface-2); color: var(--heading); }
         .table-wrap { overflow-x: auto; }
 
-        .callout { background: #e3f2fd; border-left: 6px solid #2196f3; border-radius: 8px; padding: 12px 16px; margin-bottom: 15px; }
-        .callout.warn { background: #fdf2f2; border-left-color: #e74c3c; }
-        .callout.tip { background: #e8f8ef; border-left-color: #27ae60; }
+        .callout { background: var(--safe-bg); border-left: 6px solid #2196f3; border-radius: 8px; padding: 12px 16px; margin-bottom: 15px; }
+        .callout.warn { background: var(--crit-bg); border-left-color: #e74c3c; }
+        .callout.tip { background: var(--good-bg); border-left-color: #27ae60; }
 
-        details { background: #f7f9fb; border: 1px solid #e3e8ee; border-radius: 10px; padding: 10px 15px; margin-bottom: 12px; }
-        summary { cursor: pointer; font-weight: 700; color: #2c3e50; }
+        details { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 10px 15px; margin-bottom: 12px; }
+        summary { cursor: pointer; font-weight: 700; color: var(--heading); }
         details[open] summary { margin-bottom: 10px; }
 
         #answer-key li { margin-bottom: 10px; }
-        #answer-key .ans { color: #1e7e45; font-weight: 700; }
-        #answer-key .why { color: #555; font-size: 0.92em; }
+        #answer-key .ans { color: var(--good-text); font-weight: 700; }
+        #answer-key .why { color: var(--text-2); font-size: 0.92em; }
 
         .btn {
             display: inline-block; font: inherit; font-weight: 700;
@@ -93,12 +103,12 @@
         }
 
         /* Worksheet */
-        .worksheet { border: 2px dashed #c3cfe2; border-radius: 12px; padding: 20px; }
+        .worksheet { border: 2px dashed var(--border); border-radius: 12px; padding: 20px; }
         .worksheet h3 { margin-top: 0; }
         .worksheet td { height: 48px; }
-        .worksheet .lines { border-bottom: 1px solid #aaa; height: 32px; margin-bottom: 6px; }
+        .worksheet .lines { border-bottom: 1px solid var(--muted); height: 32px; margin-bottom: 6px; }
         .name-line { display: flex; gap: 20px; margin-bottom: 15px; }
-        .name-line span { flex: 1; border-bottom: 1px solid #aaa; padding-bottom: 4px; }
+        .name-line span { flex: 1; border-bottom: 1px solid var(--muted); padding-bottom: 4px; }
 
         footer { background: #2c3e50; color: white; padding: 18px 20px; text-align: center; font-size: 0.9em; }
         footer a { color: inherit; }
@@ -106,6 +116,7 @@
         @media (max-width: 700px) {
             body { padding: 10px; }
             main { padding: 20px 16px; }
+            header { padding: 58px 16px 24px; }
             header h1 { font-size: 1.7em; }
             nav.toc ol { columns: 1; }
         }
@@ -129,11 +140,14 @@
 <body>
     <div class="container">
         <header>
+            <div class="site-controls">
+                <button type="button" class="theme-toggle" aria-label="Switch to dark mode">🌙</button>
+            </div>
             <h1><span aria-hidden="true">📘</span> Teacher Guide</h1>
             <p>Hidden Treasure in Your Pocket – an interactive guide to critical elements in smartphones</p>
             <div class="top-links">
-                <a href="index.html">🔍 Open the interactive phone</a>
-                <a href="quiz.html">🧠 Open the quiz</a>
+                <a href="index.html"><span aria-hidden="true">🔍</span> Open the interactive phone</a>
+                <a href="quiz.html"><span aria-hidden="true">🧠</span> Open the quiz</a>
             </div>
         </header>
 
@@ -148,7 +162,7 @@
                     <li><a href="#lesson">Suggested lesson plan</a></li>
                     <li><a href="#discussion">Discussion questions</a></li>
                     <li><a href="#extension">Extension activities</a></li>
-                    <li><a href="#events">Using it at events</a></li>
+                    <li><a href="#events">Events, tablets &amp; offline</a></li>
                     <li><a href="#data">About the data</a></li>
                     <li><a href="#quiz">The quiz &amp; answer key</a></li>
                     <li><a href="#worksheet-section">Student worksheet</a></li>
@@ -166,7 +180,8 @@
                         <tr><th>Equipment</th><td>Any device with a web browser: computer, tablet, phone or interactive whiteboard. Touch-friendly. Nothing to install.</td></tr>
                         <tr><th>Subjects</th><td>Chemistry / science, geography, sustainability and citizenship, design &amp; technology.</td></tr>
                         <tr><th>Contents</th><td><strong>Interactive phone:</strong> six parts (display, camera, circuit board, speaker &amp; magnets, battery, casing) with 20 elements and materials, each with its role, facts, origin and critical-list status.<br>
-                            <strong>Quiz:</strong> 10 random questions from a bank of 22, with instant feedback, explanations and a score.<br>
+                            <strong>Periodic table:</strong> all 19 featured elements highlighted on the periodic table, each linking to where it is used in the phone.<br>
+                            <strong>Quiz:</strong> 10 random questions from a bank of 22, with instant feedback, explanations, a score and a printable certificate.<br>
                             <strong>Sources:</strong> all data is referenced on the main page.</td></tr>
                     </table>
                 </div>
@@ -176,7 +191,10 @@
                     <li><strong>Tap an element tile</strong> to see a photo of the element and read what it does, a fun fact and where it comes from.</li>
                     <li>A <strong>red corner</strong> on a tile (and a red info box) means the element is on the EU or US critical-materials list.</li>
                     <li>Each part also shows <strong>statistics</strong> from a scientific study of old mobile phones, e.g. the value of the metals per tonne.</li>
-                    <li>When pupils feel ready, they <strong>take the quiz</strong>.</li>
+                    <li><strong>Previous / Next</strong> buttons (or swiping, or the arrow keys) move between the elements of a part.</li>
+                    <li>Below the phone, <strong>"Parts explored"</strong> ticks off each part as it is visited. Once all six are done, pupils are invited to take the quiz.</li>
+                    <li>Further down, the <strong>periodic table</strong> highlights all the elements in the guide. Tapping one shows which parts of the phone contain it.</li>
+                    <li>When pupils feel ready, they <strong>take the quiz</strong> and can print a certificate with their name and score.</li>
                 </ol>
             </section>
 
@@ -301,12 +319,25 @@
             </section>
 
             <section id="events">
-                <h2>8. Using it at events and exhibitions</h2>
+                <h2>8. Using it at events, on tablets and offline</h2>
+                <h3>Exhibition mode</h3>
+                <p>Add <code>?kiosk</code> to the address, e.g. <code>index.html?kiosk</code>. In exhibition mode:</p>
                 <ul>
-                    <li>Open <code>index.html</code> in a web browser and switch to full screen (F11 on Windows, Ctrl + Cmd + F on Mac).</li>
-                    <li>It works well on a touchscreen or tablet. Reload the page to reset it for the next visitor.</li>
-                    <li>All files can be downloaded and run <strong>without an internet connection</strong> (only the links to external sources need one).</li>
-                    <li>Place a second device next to it running the quiz, so visitors can explore first and then test themselves.</li>
+                    <li>after 90 seconds without anyone touching the screen, a short countdown appears and the display then <strong>resets itself</strong> for the next visitor (use <code>?kiosk=120</code> for 120 seconds, or any other number);</li>
+                    <li>links to external websites are switched off, so visitors stay in the display;</li>
+                    <li>the teacher guide link and the certificate printing are hidden.</li>
+                </ul>
+                <p>Switch the browser to full screen (F11 on Windows, Ctrl + Cmd + F on Mac). It works well on a touchscreen. Place a second device next to it running <code>quiz.html?kiosk</code>, so visitors can explore first and then test themselves.</p>
+                <h3>Tablets and offline use</h3>
+                <ul>
+                    <li>When opened from the website, the resource can be <strong>installed as an app</strong> (e.g. "Add to Home Screen" on iPad, or the install icon in Chrome and Edge). After the first visit it also works <strong>without an internet connection</strong>.</li>
+                    <li>Alternatively, download all the files and open <code>index.html</code> directly – no internet needed (only the links to external sources need one).</li>
+                </ul>
+                <h3>Good to know</h3>
+                <ul>
+                    <li><strong>Dark mode:</strong> the pages follow the device's light/dark setting; the 🌙/☀️ button in the top corner switches manually.</li>
+                    <li><strong>Accessibility:</strong> everything works with a keyboard (Tab, Enter, arrow keys) and screen readers, and animations are reduced for users who have that setting on.</li>
+                    <li><strong>Languages:</strong> all the text of the interactive phone and the quiz is kept in one file per language (<code>content/en.js</code>), so translations can be added. A language menu appears automatically once there is more than one language.</li>
                 </ul>
             </section>
 
@@ -324,7 +355,7 @@
 
             <section id="quiz">
                 <h2>10. The quiz &amp; answer key</h2>
-                <p>Each round of the <a href="quiz.html">quiz</a> asks 10 questions chosen at random from the bank below, with the answers in a random order, so pupils can play several times. Pupils see an explanation after every answer and can review all answers at the end. The best score is remembered on each device.</p>
+                <p>Each round of the <a href="quiz.html">quiz</a> asks 10 questions chosen at random from the bank below, with the answers in a random order, so pupils can play several times. Pupils see an explanation after every answer and can review all answers at the end. The best score is remembered on each device, and pupils can print a <strong>certificate</strong> with their name and score (landscape A4).</p>
                 <div class="callout tip">💡 <strong>Teacher options:</strong> <a href="quiz.html?n=all">quiz.html?n=all</a> asks all questions; <a href="quiz.html?n=5">quiz.html?n=5</a> asks five (any number works).</div>
                 <details>
                     <summary>Show the full answer key (<span id="key-count"></span> questions)</summary>
@@ -375,14 +406,20 @@
         </footer>
     </div>
 
-    <script src="quiz-questions.js"></script>
+    <script src="content/languages.js"></script>
+    <script src="content/en.js"></script>
+    <script src="site.js"></script>
     <script>
         (function() {
             'use strict';
 
+            // This guide is in English only; site.js just sets up the theme button
+            Site.loadContent(() => {}, { i18n: false });
+
             // Answer key, built from the same questions the quiz uses (first option = correct)
+            const QUESTIONS = window.SITE_CONTENT.en.quiz;
             const key = document.getElementById('answer-key');
-            window.QUIZ_QUESTIONS.forEach(q => {
+            QUESTIONS.forEach(q => {
                 const li = document.createElement('li');
                 li.innerHTML = '<span class="q"></span><br>Answer: <span class="ans"></span><br><span class="why"></span>';
                 li.querySelector('.q').textContent = q.q;
@@ -390,7 +427,7 @@
                 li.querySelector('.why').textContent = q.explain;
                 key.appendChild(li);
             });
-            document.getElementById('key-count').textContent = window.QUIZ_QUESTIONS.length;
+            document.getElementById('key-count').textContent = QUESTIONS.length;
 
             // Print only the worksheet
             document.getElementById('print-worksheet').addEventListener('click', () => {

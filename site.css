@@ -1,0 +1,161 @@
+/*
+ * Shared styles for all pages: colour themes (light/dark), the theme and
+ * language controls, and exhibition ("kiosk") mode.
+ */
+
+/* --- COLOUR THEMES --------------------------------------------------- */
+:root {
+    color-scheme: light;
+    --page-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --surface: #ffffff;
+    --surface-2: #f7f9fb;
+    --chip: #eef2f7;
+    --text: #333333;
+    --text-2: #4a5560;
+    --muted: #5f6b76;
+    --heading: #2c3e50;
+    --border: #e3e8ee;
+    --accent: #2a5298;
+    --accent-strong: #1e3c72;
+    --crit-bg: #fdf2f2;
+    --crit-text: #c0392b;
+    --safe-bg: #e3f2fd;
+    --safe-text: #1565c0;
+    --good-bg: #e8f8ef;
+    --good-text: #1e7e45;
+    --bad-bg: #fdecea;
+    --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme: follows the device setting unless the visitor picked a theme */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --page-bg: linear-gradient(135deg, #0b1220 0%, #1a2436 100%);
+        --surface: #182131;
+        --surface-2: #1f2a3d;
+        --chip: #2a3650;
+        --text: #e6eaf0;
+        --text-2: #c9d1dc;
+        --muted: #a3afbf;
+        --heading: #f1f5f9;
+        --border: #33415a;
+        --accent: #9cbcff;
+        --accent-strong: #b4ccff;
+        --crit-bg: #3a2228;
+        --crit-text: #ff9a8f;
+        --safe-bg: #172e4a;
+        --safe-text: #9fd0ff;
+        --good-bg: #16362a;
+        --good-text: #7ee2a8;
+        --bad-bg: #3a2228;
+        --shadow: rgba(0, 0, 0, 0.45);
+    }
+}
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: linear-gradient(135deg, #0b1220 0%, #1a2436 100%);
+    --surface: #182131;
+    --surface-2: #1f2a3d;
+    --chip: #2a3650;
+    --text: #e6eaf0;
+    --text-2: #c9d1dc;
+    --muted: #a3afbf;
+    --heading: #f1f5f9;
+    --border: #33415a;
+    --accent: #9cbcff;
+    --accent-strong: #b4ccff;
+    --crit-bg: #3a2228;
+    --crit-text: #ff9a8f;
+    --safe-bg: #172e4a;
+    --safe-text: #9fd0ff;
+    --good-bg: #16362a;
+    --good-text: #7ee2a8;
+    --bad-bg: #3a2228;
+    --shadow: rgba(0, 0, 0, 0.45);
+}
+
+/* Always print in light colours */
+@media print {
+    :root:root:root {
+        color-scheme: light;
+        --page-bg: #ffffff;
+        --surface: #ffffff;
+        --surface-2: #f7f9fb;
+        --chip: #eef2f7;
+        --text: #333333;
+        --text-2: #4a5560;
+        --muted: #5f6b76;
+        --heading: #2c3e50;
+        --border: #d5dce4;
+        --accent: #2a5298;
+        --accent-strong: #1e3c72;
+        --crit-bg: #fdf2f2;
+        --crit-text: #c0392b;
+        --safe-bg: #e3f2fd;
+        --safe-text: #1565c0;
+        --good-bg: #e8f8ef;
+        --good-text: #1e7e45;
+        --bad-bg: #fdecea;
+    }
+}
+
+/* --- HEADER CONTROLS (theme + language) ------------------------------ */
+.site-controls {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    z-index: 5;
+}
+.theme-toggle,
+.lang-select {
+    font: inherit;
+    font-size: 0.9em;
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    cursor: pointer;
+}
+.theme-toggle { width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1em; }
+.lang-select { height: 38px; padding: 0 10px; }
+.lang-select option { color: #333; }
+.theme-toggle:hover, .lang-select:hover { background: rgba(255, 255, 255, 0.25); }
+.theme-toggle:focus-visible, .lang-select:focus-visible { outline: 3px solid #ffd76a; outline-offset: 2px; }
+
+/* --- EXHIBITION (KIOSK) MODE ------------------------------------------ */
+.kiosk .hide-in-kiosk { display: none !important; }
+.kiosk a[href^="http"] { cursor: default; text-decoration: none; color: inherit; }
+
+.kiosk-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 18, 32, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+}
+.kiosk-overlay[hidden] { display: none; }
+.kiosk-overlay .box {
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 16px;
+    padding: 30px 35px;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+.kiosk-overlay .count { display: block; font-size: 3em; font-weight: 800; color: var(--accent-strong); margin: 10px 0; }
+
+@media print {
+    .site-controls, .kiosk-overlay { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
