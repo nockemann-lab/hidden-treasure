@@ -1,0 +1,12 @@
+{
+  "name": "phone-critical-elements",
+  "private": true,
+  "description": "Build tooling for the 3D phone model (the website itself needs no build step).",
+  "scripts": {
+    "build:3d": "esbuild src/phone3d.js --bundle --minify --format=iife --target=es2019 --legal-comments=eof --outfile=phone3d.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.21.5",
+    "three": "0.160.0"
+  }
+}

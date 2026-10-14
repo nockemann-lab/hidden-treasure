@@ -46,6 +46,20 @@ window.SITE_CONTENT.en = (function () {
             'short.battery': 'Battery',
             'short.casing': 'Casing',
 
+            // 3D model
+            '3d.label': 'Interactive 3D model of a smartphone. You can also choose the parts with the buttons under "Parts explored".',
+            '3d.apart': 'Take apart',
+            '3d.together': 'Put together',
+            '3d.assembled': 'Assembled',
+            '3d.exploded': 'Exploded',
+            '3d.slider': 'Take the phone apart',
+            '3d.diagonal': 'Diagonal view',
+            '3d.reset': 'Reset view',
+            '3d.photo': 'Photo',
+            '3d.model': '3D model',
+            '3d.hint': 'Drag sideways to turn the phone. Tap a part to explore it.',
+            '3d.hintPhoto': 'Tap a part of the photo to explore it.',
+
             // Exploration progress
             'progress.title': 'Parts explored:',
             'progress.count': '{n} of {total}',
@@ -149,8 +163,8 @@ window.SITE_CONTENT.en = (function () {
             'sources.main': 'Main data source',
             'sources.mainNote': 'Component values, weights and metal contents on this page come from this study: 15 phones made between 2002 and 2015, with metal prices from 2021. Batteries were not analysed in the study.',
             'sources.other': 'Other sources',
-            'sources.illustration': 'Phone illustration',
-            'sources.illustrationText': 'Exploded-view phone illustration created by Peter Nockemann using Google Gemini (AI image generation).',
+            'sources.illustration': 'Phone illustration and 3D model',
+            'sources.illustrationText': 'Exploded-view phone illustration and interactive 3D phone model created by Peter Nockemann using Google Gemini (AI generation), adapted for this resource. The 3D graphics use three.js (© 2010–2023 three.js authors, MIT licence).',
             'sources.photos': 'Element photos',
             'sources.photosText': 'From Wikimedia Commons, resized and cropped for display. Click a name to see the original file and its licence.',
 
@@ -208,6 +222,7 @@ window.SITE_CONTENT.en = (function () {
             Dy: 'Dysprosium', Fe: 'Iron', W: 'Tungsten', Li: 'Lithium', Co: 'Cobalt',
             C: 'Graphite', Al: 'Aluminium', Mg: 'Magnesium', Eu: 'Europium', Tb: 'Terbium',
             Ni: 'Nickel', Ba: 'Barium', Hf: 'Hafnium', As: 'Arsenic', Y: 'Yttrium', Pr: 'Praseodymium', Ti: 'Titanium', Sb: 'Antimony',
+            K: 'Potassium', La: 'Lanthanum', Mn: 'Manganese',
             Plastic: 'Plastics'
         },
 
@@ -218,10 +233,12 @@ window.SITE_CONTENT.en = (function () {
                 elements: [
                     ['In', '🔍 The Invisible Wires', `<strong>Indium</strong> is combined with tin and oxygen to make <strong>indium tin oxide (ITO)</strong>: a see-through material that conducts electricity. Thin ITO layers act as invisible wires that switch the pixels and, in many phones, help detect your finger.<br><br><strong>Fun fact:</strong> Indium is so soft you can scratch it with a fingernail, and a bent bar of it makes a faint crackling "cry".<br><br><strong>Where from?</strong> Indium is a by-product of zinc mining. China refined about 70% of the world's indium in 2025.`],
                     ['Sn', '🤝 Indium\'s Partner', `<strong>Tin</strong> is the other metal in indium tin oxide (about 90% indium oxide, 10% tin oxide). The tin atoms add free electrons, which is what lets the see-through film conduct electricity.<br><br><strong>Fun fact:</strong> Tin is also the main ingredient of the solder that holds every chip onto the circuit board.<br><br><strong>Where from?</strong> China and Indonesia mined almost half of the world's tin in 2025. Tin is one of the "conflict minerals", so companies must check where it comes from.`],
-                    ['Si', '🏖️ From Sand to Screen', `<strong>Silicon</strong> is the second most common element in Earth's crust, after oxygen. Sand is mostly silica: silicon combined with oxygen. Silica is the backbone of the tough cover glass.<br><br><strong>Fun fact:</strong> To toughen the glass it is dipped in hot molten potassium salt. Big potassium atoms swap places with smaller sodium atoms and squeeze the surface, so cracks struggle to start.<br><br><strong>Where from?</strong> Silicon is made by heating quartz with carbon in huge electric furnaces. China produced almost 80% of the world's silicon materials in 2025.`],
+                    ['Si', '🏖️ From Sand to Screen', `<strong>Silicon</strong> is the second most common element in Earth's crust, after oxygen. Sand is mostly silica: silicon combined with oxygen. Silica is the backbone of the tough cover glass.<br><br><strong>Fun fact:</strong> Silicon Valley in California got its name from the silicon chips made by the companies there.<br><br><strong>Where from?</strong> Silicon is made by heating quartz with carbon in huge electric furnaces. China produced almost 80% of the world's silicon materials in 2025.`],
+                    ['K', '🛡️ The Glass Toughener', `The cover glass is made tougher in a hot bath of molten <strong>potassium</strong> nitrate at around 400 °C. Big potassium atoms swap places with smaller sodium atoms in the glass surface and squeeze it together, so cracks struggle to start.<br><br><strong>Fun fact:</strong> Potassium metal is so reactive that it fizzes on water and burns with a lilac flame. In your body, potassium helps your nerves and muscles work, which is why bananas are a famous source.<br><br><strong>Where from?</strong> Potassium comes from potash minerals. Canada mined about 30% of the world's potash in 2025, followed by Russia, China and Belarus.`],
                     ['Ir', '✨ The Light Maker', `In <strong>OLED</strong> screens, the red and green pixels in most displays use tiny amounts of <strong>iridium</strong>-containing molecules that turn electricity into light very efficiently.<br><br><strong>Fun fact:</strong> Iridium is one of the rarest elements in Earth's crust and about twice as dense as lead. A thin iridium-rich layer of rock found all over the world is evidence for the asteroid impact that wiped out the dinosaurs 66 million years ago.<br><br><strong>Where from?</strong> Iridium is a by-product of platinum mining. South Africa mined about 70% of the world's platinum in 2025, and most iridium comes from there too.`],
                     ['Eu', '🌈 The Colour Maker', `Many LCD screens are lit from behind by white LEDs: a blue LED coated with <em>phosphors</em> that glow green and red. Some of the best of these phosphors contain a pinch of <strong>europium</strong>. The study found less than 1 g per tonne of screens.<br><br><strong>Fun fact:</strong> Europium is named after Europe. Under UV light, euro banknotes glow red thanks to a europium-containing ink that helps to stop forgers.<br><br><strong>Where from?</strong> Most of the world's rare earths, including europium, are refined in China.`],
-                    ['Y', '💡 The Yellow Glow', `Many white LEDs, like your camera's flash and the backlight of LCD screens, are really blue LEDs coated with a phosphor that glows yellow. Blue plus yellow looks white! That phosphor is yttrium aluminium garnet with a little cerium (YAG:Ce), and <strong>yttrium</strong> is one of its main ingredients.<br><br><strong>Fun fact:</strong> In 1987 a compound of yttrium, barium, copper and oxygen became the first superconductor to work above the temperature of liquid nitrogen (−196 °C), carrying electricity with no resistance at all.<br><br><strong>Where from?</strong> China produced most of the world's yttrium in 2025, with a significant share from Myanmar.`]
+                    ['Y', '💡 The Yellow Glow', `Many white LEDs, like your camera's flash and the backlight of LCD screens, are really blue LEDs coated with a phosphor that glows yellow. Blue plus yellow looks white! That phosphor is yttrium aluminium garnet with a little cerium (YAG:Ce), and <strong>yttrium</strong> is one of its main ingredients.<br><br><strong>Fun fact:</strong> In 1987 a compound of yttrium, barium, copper and oxygen became the first superconductor to work above the temperature of liquid nitrogen (−196 °C), carrying electricity with no resistance at all.<br><br><strong>Where from?</strong> China produced most of the world's yttrium in 2025, with a significant share from Myanmar.`],
+                    ['Mn', '🔴 The Red Glow', `Many LCD screens that show very rich colours use a red-glowing phosphor called KSF (potassium silicon fluoride with a little <strong>manganese</strong>). Manganese is also used in many larger batteries, such as those in electric cars, where it helps to use less cobalt.<br><br><strong>Fun fact:</strong> Stone Age artists used black manganese oxide to paint animals on cave walls, for example at Lascaux in France about 17,000 years ago.<br><br><strong>Where from?</strong> South Africa and Gabon mined over 60% of the world's manganese in 2025.`]
                 ],
                 stats: [['£2,750', 'Metal value per tonne of screens'], ['~50%', 'of screen weight is the LCD panel']],
                 note: VALUE_NOTE,
@@ -233,7 +250,8 @@ window.SITE_CONTENT.en = (function () {
                     ['Au', '🏆 The Corrosion-Proof Connector', `<strong>Gold</strong> doesn't rust or tarnish, so it coats connectors and forms ultra-fine wires that link chips such as the image sensor.<br><br><strong>Fun fact:</strong> Cameras are the most gold-rich part of a phone: on average about 1.2 kg of gold per tonne of camera modules. Typical gold ore holds only 1–3 g per tonne!<br><br><strong>Where from?</strong> Gold is mined in many countries. China, Russia, Australia, Canada and the USA were the top five producers in 2025, together mining about 40% of the world's gold.`],
                     ['Cu', '⚡ The Signal Highway', `<strong>Copper</strong> tracks and flexible cables carry the signals from the camera sensor to the phone's processor.<br><br><strong>Fun fact:</strong> Copper can be recycled again and again without losing any of its properties.<br><br><strong>Where from?</strong> Chile mines about a quarter of the world's copper; China refines nearly half of it.`],
                     ['Si', '📷 The Light Catcher', `The image sensor is a <strong>silicon</strong> chip covered in millions of light-sensitive pixels (a CMOS sensor). When light hits the silicon it frees electrons, which the chip counts to build up your photo.<br><br><strong>Fun fact:</strong> Silicon for chips is purified to 99.9999999% ("nine nines") or better.<br><br><strong>Where from?</strong> Chip-grade silicon is purified from ordinary silicon metal. China produced almost 80% of the world's silicon materials in 2025.`],
-                    ['Nd', '🎯 The Focus Motor', `Tiny <strong>neodymium</strong> magnets in a "voice-coil motor" move the lens back and forth to focus. In many phones they also shift the lens to cancel out shaky hands (optical image stabilisation).<br><br><strong>Fun fact:</strong> Neodymium is also used in powerful lasers (Nd:YAG lasers) that doctors use for eye surgery and to remove tattoos.<br><br><strong>Where from?</strong> China mined about 69% of the world's rare earths in 2025, and refines most of them.`]
+                    ['Nd', '🎯 The Focus Motor', `Tiny <strong>neodymium</strong> magnets in a "voice-coil motor" move the lens back and forth to focus. In many phones they also shift the lens to cancel out shaky hands (optical image stabilisation).<br><br><strong>Fun fact:</strong> Neodymium is also used in powerful lasers (Nd:YAG lasers) that doctors use for eye surgery and to remove tattoos.<br><br><strong>Where from?</strong> China mined about 69% of the world's rare earths in 2025, and refines most of them.`],
+                    ['La', '🔭 The Lens Sharpener', `Most phone camera lenses are made of moulded plastic, but some phones add a glass lens element. High-quality optical glass often contains <strong>lanthanum</strong> oxide, which bends light strongly without splitting it into colour fringes. The study found only traces of lanthanum in the cameras.<br><br><strong>Fun fact:</strong> The "flint" in a lighter is a rare earth alloy called mischmetal, and about a quarter of it is lanthanum.<br><br><strong>Where from?</strong> China mined about 69% of the world's rare earths in 2025, and refines most of them.`]
                 ],
                 stats: [['£63,100', 'Metal value per tonne of cameras, the highest of any part'], ['31.8%', 'Metal content (smartphone cameras)']],
                 note: VALUE_NOTE,
@@ -281,7 +299,8 @@ window.SITE_CONTENT.en = (function () {
                     ['C', '🅿️ The Ion Parking Garage', `The negative side of the battery is <strong>graphite</strong>, the same form of carbon as pencil "lead". Lithium ions park between its flat layers of carbon atoms when you charge.<br><br><strong>Fun fact:</strong> Battery graphite must be over 99.95% pure. Synthetic graphite is baked at around 3,000 °C.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025 and makes most battery graphite.`]
                 ],
                 stats: [['~24%', 'of phone weight'], ['73%', 'of mined cobalt came from DR Congo (2025)']],
-                facts: ['💡 <strong>Handle with care:</strong> Batteries are removed before phones are recycled (and were not part of the study above). Never put phones or batteries in the household bin: damaged lithium-ion batteries can start fires in bin lorries and recycling plants.']
+                facts: ['🔋 <strong>Inside the battery:</strong> The two sides of the battery are coated onto very thin metal foils: copper on the graphite side and aluminium on the cobalt-oxide side.',
+                    '💡 <strong>Handle with care:</strong> Batteries are removed before phones are recycled (and were not part of the study above). Never put phones or batteries in the household bin: damaged lithium-ion batteries can start fires in bin lorries and recycling plants.']
             },
             {
                 id: 'casing', title: '📦 Casing & Frame',
@@ -289,6 +308,7 @@ window.SITE_CONTENT.en = (function () {
                     ['Al', '🏗️ The Frame', `Many phones have an <strong>aluminium</strong> frame: light, strong and easy to shape. Making new aluminium from ore takes huge amounts of electricity: around 14–15 MWh per tonne.<br><br><strong>Fun fact:</strong> Recycling aluminium saves about 95% of the energy needed to make it new.<br><br><strong>Where from?</strong> China made about 61% of the world's new aluminium in 2025.`],
                     ['Ti', '🛡️ The Featherweight Armour', `Some recent top-of-the-range phones have frames made of <strong>titanium</strong>, for example the iPhone 15 Pro and 16 Pro and Samsung's Galaxy S24 and S25 Ultra. Newer models of both brands switched back to aluminium, but the slim iPhone Air (2025) still uses titanium.<br><br><strong>Fun fact:</strong> Titanium is about 40% lighter than steel, and titanium alloys can be as strong as many steels. Bone grows tightly against it, so it is used for hip and knee replacements and dental implants.<br><br><strong>Where from?</strong> China made about 70% of the world's titanium metal in 2025.`],
                     ['Mg', '🪶 The Lightest Structural Metal', `<strong>Magnesium</strong> is about one-third less dense than aluminium, and its alloys are strong for their weight. It is used in some phones' internal frames, as well as in laptops, cars and aircraft.<br><br><strong>Fun fact:</strong> Magnesium burns with a dazzling white light, and is used in flares, fireworks and sparklers.<br><br><strong>Where from?</strong> China produced about 86% of the world's magnesium metal in 2025.`],
+                    ['C', '🌡️ The Heat Spreader', `Many phones have thin sheets of <strong>graphite</strong> behind the screen and on the frame. Heat travels along these sheets up to several times better than along copper, spreading the heat from the busy processor so the phone does not get hot spots.<br><br><strong>Fun fact:</strong> A single layer of graphite, just one atom thick, is called graphene. It was first isolated in 2004 at the University of Manchester using sticky tape, and won the 2010 Nobel Prize in Physics.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025. Heat-spreading sheets are usually made of synthetic graphite.`],
                     ['Sb', '🔥 The Fire Fighter', `Plastics in electronics must not catch fire easily. <strong>Antimony</strong> oxide is added to some plastics together with bromine-containing flame retardants, and the two work as a team to slow down flames.<br><br><strong>Fun fact:</strong> In ancient Egypt, a black antimony mineral (stibnite) was used as eye make-up (kohl).<br><br><strong>Where from?</strong> China, Russia and Tajikistan mined about 85% of the world's antimony in 2025.`],
                     ['Plastic', '🛢️ Made from Oil and Gas', `<strong>Plastics</strong> are long chains of mostly carbon and hydrogen atoms, made mostly from oil and natural gas. The phone casings in the study were mainly polycarbonate/ABS blends.<br><br><strong>Fun fact:</strong> Plastics make up about 40% of a phone's weight, metals about 35% and glass and ceramics about 25%.<br><br><strong>Where from?</strong> Plastics are made in chemical plants from oil and natural gas. About a third of the world's plastics are made in China.`]
                 ],
@@ -389,6 +409,11 @@ window.SITE_CONTENT.en = (function () {
                 img: ['element-C-graphite.jpg', 'A shiny grey mineral specimen', 'Photo: <a href="https://commons.wikimedia.org/wiki/File:Graphite-233436.jpg" target="_blank" rel="noopener">Robert M. Lavinsky</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>'],
                 options: ['The battery', 'The camera', 'The speaker', 'The cover glass'],
                 explain: 'Graphite forms the negative side of the battery. Lithium ions park between its flat layers of carbon atoms when you charge.'
+            },
+            {
+                q: 'Graphene, a single layer of the graphite that spreads heat in phones, was first isolated in 2004 at which UK university?',
+                options: ['University of Manchester', 'University of Oxford', 'University of Cambridge', "Queen's University Belfast"],
+                explain: 'Andre Geim and Konstantin Novoselov isolated graphene with sticky tape and won the 2010 Nobel Prize in Physics.'
             },
             {
                 q: 'In 2022 the UK produced the second most e-waste per person in the world. Which country produced the most?',

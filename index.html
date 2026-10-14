@@ -225,6 +225,69 @@
         .interactive-container.hint .hotspot:hover,
         .interactive-container.hint .hotspot:focus-visible { fill: rgba(255, 215, 0, 0.18); stroke: #ffd700; stroke-dasharray: none; animation: none; }
 
+        /* --- 3D VIEWER --- */
+        .viewer { width: 100%; max-width: 520px; margin: 0 auto; }
+        .phone3d {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            border-radius: 16px;
+            overflow: hidden;
+            /* light "studio" backdrop in both themes, like the photo */
+            background: radial-gradient(circle at 50% 40%, #ffffff 0%, #eef2f6 60%, #dce4ee 100%);
+            border: 1px solid var(--border);
+        }
+        .phone3d[hidden], .interactive-container[hidden] { display: none; }
+        .phone3d-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
+        .phone3d-canvas:active { cursor: grabbing; }
+        .phone3d-label {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            background: rgba(44, 62, 80, 0.92);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+        .phone3d-label.visible { opacity: 1; }
+        .viewer-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 8px 10px;
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+        }
+        .viewer.photo-mode .only-3d { display: none; }
+        .v-btn {
+            font: inherit;
+            font-size: 0.85em;
+            font-weight: 700;
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--chip);
+            color: var(--heading);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .v-btn.primary { background: #2a5298; border-color: #2a5298; color: white; }
+        .v-btn:hover { filter: brightness(0.95); }
+        .v-btn:focus-visible, .v-slider input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .v-btn[hidden] { display: none; }
+        .v-slider { display: flex; align-items: center; gap: 8px; font-size: 0.8em; font-weight: 600; color: var(--muted); }
+        .v-slider input { width: 120px; accent-color: #2a5298; }
+        .viewer-hint { margin-top: 8px; font-size: 0.85em; color: var(--muted); text-align: center; }
+
         /* --- EXPLORATION PROGRESS --- */
         .progress {
             width: 100%;
@@ -767,6 +830,8 @@
             .big-stats { grid-template-columns: 1fr; }
             .detail-layout { flex-direction: column; align-items: center; text-align: center; }
             .element-detail h4 { justify-content: center; }
+            .phone3d { aspect-ratio: 1 / 1.15; }
+            .v-slider input { width: 90px; }
         }
     </style>
 </head>
@@ -801,6 +866,9 @@
             <div class="phone-section">
                 <h2 class="step-title"><span class="step-num" aria-hidden="true">1</span> <span data-i18n="step1">Tap a part of the phone</span></h2>
 
+                <div class="viewer">
+                <div class="phone3d" id="phone3d" role="img" data-i18n-aria="3d.label" aria-label="Interactive 3D model of a smartphone" hidden></div>
+
                 <div class="interactive-container hint">
                     <img src="phone_parts_exploded_view.jpg" data-i18n-alt="img.alt" alt="Exploded view of a smartphone: display, camera, circuit board, casing and battery" class="main-phone-img" width="1200" height="1789">
 
@@ -823,6 +891,20 @@
                             points="1120,668 1335,652 1340,738 1125,752"/>
                     </svg>
                     <div class="hotspot-label" aria-hidden="true"></div>
+                </div>
+
+                <div class="viewer-controls">
+                    <button type="button" class="v-btn primary only-3d" id="v-toggle" data-i18n="3d.apart">Take apart</button>
+                    <label class="v-slider only-3d">
+                        <span data-i18n="3d.assembled">Assembled</span>
+                        <input type="range" id="v-slider" min="0" max="1" step="0.01" value="0" data-i18n-aria="3d.slider" aria-label="Take the phone apart">
+                        <span data-i18n="3d.exploded">Exploded</span>
+                    </label>
+                    <button type="button" class="v-btn only-3d" id="v-diagonal" data-i18n="3d.diagonal">Diagonal view</button>
+                    <button type="button" class="v-btn only-3d" id="v-reset" data-i18n="3d.reset">Reset view</button>
+                    <button type="button" class="v-btn" id="v-mode" hidden></button>
+                </div>
+                <p class="viewer-hint" id="viewer-hint" data-i18n="3d.hintPhoto">Tap a part of the photo to explore it.</p>
                 </div>
 
                 <div class="progress">
@@ -969,8 +1051,8 @@
                     <li>EuChemS (2019). Element Scarcity: EuChemS Periodic Table. <a href="https://www.euchems.eu/euchems-periodic-table/">euchems.eu</a></li>
                 </ul>
 
-                <h3 data-i18n="sources.illustration">Phone illustration</h3>
-                <p data-i18n="sources.illustrationText">Exploded-view phone illustration created by Peter Nockemann using Google Gemini (AI image generation).</p>
+                <h3 data-i18n="sources.illustration">Phone illustration and 3D model</h3>
+                <p data-i18n="sources.illustrationText">Exploded-view phone illustration and interactive 3D phone model created by Peter Nockemann using Google Gemini (AI generation), adapted for this resource. The 3D graphics use three.js (© 2010–2023 three.js authors, MIT licence).</p>
 
                 <h3 data-i18n="sources.photos">Element photos</h3>
                 <p data-i18n="sources.photosText">From Wikimedia Commons, resized and cropped for display. Click a name to see the original file and its licence.</p>
@@ -1056,6 +1138,9 @@
                 Pr: { z: 59, type: 'rare',     eu: true,  us: true,  uk: true,  photo: ['element-Pr.jpg', 'Praseodymium (59 Pr).jpg', HIRES, 'CC BY 3.0'] },
                 Ti: { z: 22, type: 'base',     eu: true,  us: true,  uk: true,  photo: ['element-Ti.jpg', 'Titan-crystal bar.JPG', 'Alchemist-hp (www.pse-mendelejew.de)', 'CC BY-SA 3.0'] },
                 Sb: { z: 51, type: 'tech',     eu: true,  us: true,  uk: true,  photo: ['element-Sb.jpg', 'Antimony-2.jpg', 'Jurii', 'CC BY 3.0'] },
+                K:  { z: 19, type: 'base',     eu: false, us: true,  uk: false, photo: ['element-K.jpg', 'Potassium (19 K).jpg', HIRES, 'CC BY 3.0'] },
+                La: { z: 57, type: 'rare',     eu: true,  us: true,  uk: true,  photo: ['element-La.jpg', 'Lanthanum.jpg', 'Jurii', 'CC BY 3.0'] },
+                Mn: { z: 25, type: 'tech',     eu: true,  us: true,  uk: true,  photo: ['element-Mn.jpg', 'Manganese electrolytic and 1cm3 cube.jpg', ALCH, 'Free Art License 1.3'] },
                 // Not an element: plastics are carbon + hydrogen polymers
                 Plastic: { z: '', symbol: 'C·H', type: 'base', eu: null, us: null, uk: null, photo: ['material-plastic.jpg', 'Pellets of reclycle ABS.jpg', 'Amandaprc', 'CC BY-SA 4.0'] }
             };
@@ -1209,6 +1294,7 @@
                         hotspots.forEach(h => h.classList.toggle('active', h.dataset.layer === component));
                         selectedHotspot = hotspot;
                         showLabel(hotspot);
+                        if (viewer) viewer.select(component);   // keep the 3D model in step with chips, photo and periodic table
 
                         document.querySelectorAll('.info-card').forEach(c => c.classList.remove('active'));
 
@@ -1310,6 +1396,74 @@
                     h.addEventListener('blur', restoreLabel);
                 });
                 window.addEventListener('resize', restoreLabel);
+
+                // -----------------------------------------------------------
+                // 3D MODEL (falls back to the photo when 3D is not possible)
+                // -----------------------------------------------------------
+                const viewerEl = document.querySelector('.viewer');
+                const box3d = document.getElementById('phone3d');
+                const modeBtn = document.getElementById('v-mode');
+                const toggleBtn = document.getElementById('v-toggle');
+                const slider = document.getElementById('v-slider');
+                const hintEl = document.getElementById('viewer-hint');
+                const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                let viewer = null, loading = false;
+                const savedMode = (() => { try { return localStorage.getItem('viewMode'); } catch (e) { return null; } })();
+
+                function setMode(mode) {
+                    const is3d = mode === '3d' && viewer;
+                    viewerEl.classList.toggle('photo-mode', !is3d);
+                    box3d.hidden = !is3d;
+                    container.hidden = !!is3d;
+                    modeBtn.innerHTML = is3d ? `<span aria-hidden="true">📷</span> ${t('3d.photo')}` : `<span aria-hidden="true">🧊</span> ${t('3d.model')}`;
+                    hintEl.textContent = t(is3d ? '3d.hint' : '3d.hintPhoto');
+                    try { localStorage.setItem('viewMode', is3d ? '3d' : 'photo'); } catch (e) { /* ignore */ }
+                }
+
+                function start3d() {
+                    if (viewer) { setMode('3d'); return; }
+                    if (loading) return;
+                    loading = true;
+                    const done = () => {
+                        loading = false;
+                        try {
+                            box3d.hidden = false;
+                            viewer = Phone3D.create(box3d, {
+                                label: key => t(key),
+                                reducedMotion: reduceMotion,
+                                onSelect: part => showLayer(part, null),
+                                onExplode: f => {
+                                    slider.value = f;
+                                    toggleBtn.textContent = t(f >= 0.5 ? '3d.together' : '3d.apart');
+                                }
+                            });
+                            modeBtn.hidden = false;
+                            setMode('3d');
+                            if (selectedHotspot) viewer.select(selectedHotspot.dataset.layer);
+                            // intro: the phone takes itself apart
+                            setTimeout(() => viewer.setExplode(1, true), reduceMotion ? 0 : 600);
+                        } catch (err) {
+                            console.warn('3D model not available, showing the photo instead.', err);
+                            viewer = null; modeBtn.hidden = true; setMode('photo');
+                        }
+                    };
+                    if (window.Phone3D) { done(); return; }
+                    const sc = document.createElement('script');
+                    sc.src = 'phone3d.min.js';
+                    sc.onload = done;
+                    sc.onerror = () => { loading = false; modeBtn.hidden = true; setMode('photo'); };
+                    document.head.appendChild(sc);
+                }
+
+                modeBtn.addEventListener('click', () => { if (viewer && !box3d.hidden) setMode('photo'); else start3d(); });
+                toggleBtn.addEventListener('click', () => viewer && viewer.toggle());
+                slider.addEventListener('input', () => viewer && viewer.setExplode(parseFloat(slider.value), false));
+                document.getElementById('v-diagonal').addEventListener('click', () => viewer && viewer.diagonalView());
+                document.getElementById('v-reset').addEventListener('click', () => viewer && viewer.resetView());
+
+                setMode('photo');
+                modeBtn.hidden = false;
+                if (savedMode !== 'photo') start3d();
 
                 // -----------------------------------------------------------
                 // EXPLORATION PROGRESS (remembered for this visit only)

@@ -12,8 +12,13 @@ own terms:
     licence and source link for each photo are listed on the page under
     "Sources & image credits".
 
-The exploded-view phone illustration (phone_parts_exploded_view.jpg) was created
-by Peter Nockemann using Google Gemini (AI image generation).
+The exploded-view phone illustration (phone_parts_exploded_view.jpg) and the
+interactive 3D phone model (src/phone3d.js) were created by Peter Nockemann
+using Google Gemini (AI generation).
+
+The bundled file phone3d.min.js includes three.js
+(https://threejs.org, Copyright 2010-2023 Three.js Authors), which is licensed
+under the MIT licence; its licence notice is kept at the end of that file.
 
 -----------------------------------------------------------------------
 

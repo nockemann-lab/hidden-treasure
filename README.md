@@ -28,8 +28,21 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 | `index.html` | Main page; element data (type, critical-list status, photo credits) and the hotspot outlines |
 | `site.css`, `site.js` | Shared colours/themes, theme toggle, language loading, exhibition mode, offline support |
 | `sw.js` | Offline cache. **Increase `VERSION` whenever you change a file**, and add new files (e.g. a new language) to `FILES` |
+| `src/phone3d.js`, `phone3d.min.js` | 3D phone model (source and bundled version; see "3D model") |
+| `package.json` | Build tooling for the 3D bundle only (three.js, esbuild) |
 | `og-image.jpg` | Preview image for links shared on social media / messaging apps |
 | `icons/` | App icons |
+
+## 3D model
+
+The phone on the main page is an interactive 3D model (take apart / put together, turn it, tap a part). It is built with three.js; the source is `src/phone3d.js` and the page loads the bundled file `phone3d.min.js`. The website itself needs no build step; only after editing `src/phone3d.js`, rebuild the bundle:
+
+```
+npm install
+npm run build:3d
+```
+
+The "Photo" button switches to the exploded-view photo with clickable outlines. The photo is also shown automatically on devices that cannot display 3D graphics.
 
 ## Hotspots
 
