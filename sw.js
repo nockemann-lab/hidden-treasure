@@ -5,7 +5,7 @@
  * IMPORTANT: when you change any file, increase the version number below so visitors get the
  * new version. When you add a file (e.g. a new language in content/), add it to FILES too.
  */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'phone-elements-' + VERSION;
 
 const FILES = [
@@ -19,6 +19,7 @@ const FILES = [
     'element-Co.jpg',
     'element-Cu.jpg',
     'element-Dy.jpg',
+    'element-Eu.jpg',
     'element-Fe.jpg',
     'element-Ga.jpg',
     'element-In.jpg',
@@ -30,6 +31,7 @@ const FILES = [
     'element-Si.jpg',
     'element-Sn.jpg',
     'element-Ta.jpg',
+    'element-Tb.jpg',
     'element-W.jpg',
     'icons/apple-touch-icon.png',
     'icons/icon-192.png',

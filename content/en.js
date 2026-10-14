@@ -12,7 +12,7 @@
  */
 window.SITE_CONTENT = window.SITE_CONTENT || {};
 window.SITE_CONTENT.en = (function () {
-    const VALUE_NOTE = 'Value = metals contained, at 2021 prices, averaged over 15 phones made 2002–2015 (Gómez et al., 2023). Recycling costs not included.';
+    const VALUE_NOTE = 'Value = metals contained, at 2021 prices (converted from US$ at the 2021 average rate of $1.38 = £1), averaged over 15 phones made 2002–2015 (Gómez et al., 2023). Recycling costs not included.';
 
     return {
         ui: {
@@ -24,6 +24,7 @@ window.SITE_CONTENT.en = (function () {
             'nav.quiz': 'Take the quiz',
             'nav.teachers': 'For teachers',
             'nav.explore': 'Explore the phone',
+            'nav.ptable': 'Periodic table',
             'theme.toDark': 'Switch to dark mode',
             'theme.toLight': 'Switch to light mode',
             'lang.label': 'Language',
@@ -89,6 +90,9 @@ window.SITE_CONTENT.en = (function () {
             'pt.scroll': 'Scroll sideways to see the whole table',
             'pt.pick': 'Tap a highlighted element above to see where it is in the phone.',
             'pt.foundIn': 'Found in:',
+            'pt.close': 'Close',
+            'pt.mini': 'Where is {name} on the periodic table? Open the full table',
+            'pt.miniCaption': 'Periodic table',
             'pt.lanthanides': 'Lanthanides',
             'pt.actinides': 'Actinides',
 
@@ -102,7 +106,7 @@ window.SITE_CONTENT.en = (function () {
             'action.donate.desc': 'Working phones can have a second life with someone else.',
             'action.spread.title': 'Spread Awareness',
             'action.spread.desc': 'Tell others about the value hidden in electronic waste!',
-            'action.value': 'The 5 billion phones expected to be thrown away in 2022 contained metals worth an estimated US$9.25 billion – value we only get back if phones are collected and recycled.',
+            'action.value': 'The 5 billion phones expected to be thrown away in 2022 contained metals worth an estimated £6.7 billion (US$9.25 billion) – value we only get back if phones are collected and recycled.',
             'action.recycled': "Yet in 2022 only 22% of the world's electronic waste was documented as properly collected and recycled.",
 
             // Sources
@@ -167,7 +171,7 @@ window.SITE_CONTENT.en = (function () {
             In: 'Indium', Sn: 'Tin', Si: 'Silicon', Ir: 'Iridium', Au: 'Gold', Cu: 'Copper',
             Ag: 'Silver', Pd: 'Palladium', Ta: 'Tantalum', Ga: 'Gallium', Nd: 'Neodymium',
             Dy: 'Dysprosium', Fe: 'Iron', W: 'Tungsten', Li: 'Lithium', Co: 'Cobalt',
-            C: 'Graphite', Al: 'Aluminium', Mg: 'Magnesium', Plastic: 'Plastics'
+            C: 'Graphite', Al: 'Aluminium', Mg: 'Magnesium', Eu: 'Europium', Tb: 'Terbium', Plastic: 'Plastics'
         },
 
         layers: [
@@ -178,9 +182,10 @@ window.SITE_CONTENT.en = (function () {
                     ['In', '🔍 The Invisible Wires', `<strong>Indium</strong> is combined with tin and oxygen to make <strong>indium tin oxide (ITO)</strong>: a see-through material that conducts electricity. Thin ITO layers act as invisible wires that switch the pixels and, in many phones, help detect your finger.<br><br><strong>Fun fact:</strong> Indium is so soft you can scratch it with a fingernail, and a bent bar of it makes a faint crackling "cry".<br><br><strong>Where from?</strong> Indium is a by-product of zinc mining. China refined about 70% of the world's indium in 2025.`],
                     ['Sn', '🤝 Indium\'s Partner', `<strong>Tin</strong> is the other metal in indium tin oxide (about 90% indium oxide, 10% tin oxide). The tin atoms add free electrons, which is what lets the see-through film conduct electricity.<br><br><strong>Fun fact:</strong> Tin is also the main ingredient of the solder that holds every chip onto the circuit board.`],
                     ['Si', '🏖️ From Sand to Screen', `<strong>Silicon</strong> is the second most common element in Earth's crust, after oxygen. Sand is mostly silica: silicon combined with oxygen. Silica is the backbone of the tough cover glass.<br><br><strong>Fun fact:</strong> To toughen the glass it is dipped in hot molten potassium salt. Big potassium atoms swap places with smaller sodium atoms and squeeze the surface, so cracks struggle to start.`],
-                    ['Ir', '✨ The Light Maker', `In <strong>OLED</strong> screens, the red and green pixels in most displays use tiny amounts of <strong>iridium</strong>-containing molecules that turn electricity into light very efficiently.<br><br><strong>Fun fact:</strong> Iridium is one of the rarest elements in Earth's crust and about twice as dense as lead. A thin iridium-rich layer of rock found all over the world is evidence for the asteroid impact that wiped out the dinosaurs 66 million years ago.`]
+                    ['Ir', '✨ The Light Maker', `In <strong>OLED</strong> screens, the red and green pixels in most displays use tiny amounts of <strong>iridium</strong>-containing molecules that turn electricity into light very efficiently.<br><br><strong>Fun fact:</strong> Iridium is one of the rarest elements in Earth's crust and about twice as dense as lead. A thin iridium-rich layer of rock found all over the world is evidence for the asteroid impact that wiped out the dinosaurs 66 million years ago.`],
+                    ['Eu', '🌈 The Colour Maker', `Many LCD screens are lit from behind by white LEDs: a blue LED coated with <em>phosphors</em> that glow green and red. Some of the best of these phosphors contain a pinch of <strong>europium</strong> – the study found less than 1 g per tonne of screens.<br><br><strong>Fun fact:</strong> Europium is named after Europe. Under UV light, euro banknotes glow red thanks to a europium-containing ink that helps to stop forgers.<br><br><strong>Where from?</strong> Most of the world's rare earths, including europium, are refined in China.`]
                 ],
-                stats: [['$3,779', 'Metal value per tonne of screens'], ['~50%', 'of screen weight is the LCD panel']],
+                stats: [['£2,750', 'Metal value per tonne of screens'], ['~50%', 'of screen weight is the LCD panel']],
                 note: VALUE_NOTE,
                 facts: ['💡 <strong>Surprise!</strong> Gold makes up 73% of the metal value of a screen. Old phone screens hold 65–263 g of indium per tonne – more than the zinc ores indium is normally extracted from (20–50 g per tonne).']
             },
@@ -190,9 +195,9 @@ window.SITE_CONTENT.en = (function () {
                     ['Au', '🏆 The Corrosion-Proof Connector', `<strong>Gold</strong> doesn't rust or tarnish, so it coats connectors and forms ultra-fine wires that link chips such as the image sensor.<br><br><strong>Fun fact:</strong> Cameras are the most gold-rich part of a phone: on average about 1.2 kg of gold per tonne of camera modules. Typical gold ore holds only 1–3 g per tonne!`],
                     ['Cu', '⚡ The Signal Highway', `<strong>Copper</strong> tracks and flexible cables carry the signals from the camera sensor to the phone's processor.<br><br><strong>Fun fact:</strong> Copper can be recycled again and again without losing any of its properties.`],
                     ['Si', '📷 The Light Catcher', `The image sensor is a <strong>silicon</strong> chip covered in millions of light-sensitive pixels (a CMOS sensor). When light hits the silicon it frees electrons, which the chip counts to build up your photo.<br><br><strong>Fun fact:</strong> Silicon for chips is purified to 99.9999999% ("nine nines") or better.`],
-                    ['Nd', '🎯 The Focus Motor', `Tiny <strong>neodymium</strong> magnets in a "voice-coil motor" move the lens back and forth to focus. In many phones they also shift the lens to cancel out shaky hands (optical image stabilisation).`]
+                    ['Nd', '🎯 The Focus Motor', `Tiny <strong>neodymium</strong> magnets in a "voice-coil motor" move the lens back and forth to focus. In many phones they also shift the lens to cancel out shaky hands (optical image stabilisation).<br><br><strong>Fun fact:</strong> Neodymium is also used in powerful lasers (Nd:YAG lasers) that doctors use for eye surgery and to remove tattoos.`]
                 ],
-                stats: [['$86,860', 'Metal value per tonne of cameras – the highest of any part'], ['31.8%', 'Metal content (smartphone cameras)']],
+                stats: [['£63,100', 'Metal value per tonne of cameras – the highest of any part'], ['31.8%', 'Metal content (smartphone cameras)']],
                 note: VALUE_NOTE,
                 facts: ['💡 <strong>Where\'s the value?</strong> Gold makes up 93% of the metal value of a camera module.'],
                 trend: '📈 Smartphone cameras contain more metal (31.8%) than the cameras of older phones (21.5%), linked to their higher-resolution technology.'
@@ -200,14 +205,14 @@ window.SITE_CONTENT.en = (function () {
             {
                 id: 'pcb', title: '🔌 Circuit Board (PCB)',
                 elements: [
-                    ['Cu', '🛣️ The Wiring', `<strong>Copper</strong> makes up about 28% of a circuit board's weight, in thin tracks connecting thousands of components. That's 10 to 50 times richer than copper ore, which contains only 0.5–3% copper.<br><br><strong>Where from?</strong> Chile mines about a quarter of the world's copper; China refines nearly half of it.`],
+                    ['Cu', '🛣️ The Wiring', `<strong>Copper</strong> makes up about 28% of a circuit board's weight, in thin tracks connecting thousands of components. That's 10 to 50 times richer than copper ore, which contains only 0.5–3% copper.<br><br><strong>Fun fact:</strong> The Statue of Liberty is covered in copper sheets just 2.4 mm thick. Its famous green colour is a thin layer of copper compounds that formed in the air.<br><br><strong>Where from?</strong> Chile mines about a quarter of the world's copper; China refines nearly half of it.`],
                     ['Au', '💎 Hidden Treasure', `<strong>Gold</strong> plates the contacts and connectors so they never corrode. A tonne of phone circuit boards can contain up to 678 g of gold – hundreds of times more than typical gold ore (1–3 g per tonne).<br><br><strong>Fun fact:</strong> Gold is not on the critical lists, but it is the most valuable metal in a phone: about three-quarters of its metal value.`],
                     ['Ag', '🥈 The Best Conductor', `<strong>Silver</strong> conducts electricity better than any other metal. It is in the lead-free solder that holds chips in place (a common type is 96.5% tin, 3% silver and 0.5% copper) and in many tiny components.<br><br><strong>Fun fact:</strong> A tonne of phone circuit boards can contain up to 1.3 kg of silver.`],
-                    ['Pd', '🪙 The Platinum-Group Metal', `<strong>Palladium</strong> plates some connectors and is used in some of the hundreds of tiny ceramic capacitors on the board (most of these now use cheaper nickel instead). A tonne of circuit boards can contain up to 98 g of palladium and 38 g of its sister metal, platinum.<br><br><strong>Where from?</strong> Russia and South Africa mined over 80% of the world's palladium in 2025.`],
+                    ['Pd', '🧽 The Hydrogen Sponge', `<strong>Palladium</strong> plates some connectors and is used in some of the hundreds of tiny ceramic capacitors on the board (most of these now use cheaper nickel instead). A tonne of circuit boards can contain up to 98 g of palladium and 38 g of its sister metal, platinum.<br><br><strong>Fun fact:</strong> Palladium can soak up to 900 times its own volume of hydrogen gas – like a metal sponge. It is named after the asteroid Pallas, discovered a year before the metal.<br><br><strong>Where from?</strong> Russia and South Africa mined over 80% of the world's palladium in 2025.`],
                     ['Ta', '🛑 The Power Smoother', `<strong>Tantalum</strong> capacitors store and release tiny amounts of electricity to smooth the power supply. They pack a lot of storage into a very small space – ideal for phones.<br><br><strong>Fun fact:</strong> It is named after Tantalus from Greek myth, who was punished by standing in water he could never drink. Tantalum sits in acid without absorbing any of it.<br><br><strong>Where from?</strong> About half of the world's tantalum was mined in DR Congo in 2025. As a "conflict mineral", companies must check it isn't funding armed groups.`],
                     ['Ga', '📡 The Signal Booster', `<strong>Gallium arsenide</strong> chips amplify your phone's radio signal so it can reach the mobile mast. Gallium is also in the LEDs of the camera flash and LCD backlights.<br><br><strong>Fun fact:</strong> Gallium melts at 29.8 °C – a piece will melt in your hand!<br><br><strong>Where from?</strong> Gallium is a by-product of aluminium ore. China produced 99% of the world's primary gallium in 2025.`]
                 ],
-                stats: [['$55,459', 'Metal value per tonne of circuit boards'], ['18%', 'of phone weight']],
+                stats: [['£40,300', 'Metal value per tonne of circuit boards'], ['18%', 'of phone weight']],
                 note: VALUE_NOTE,
                 facts: ['💡 <strong>Most metal-rich part:</strong> Circuit boards are on average 43% metal by weight – 52% in the smartphones studied.']
             },
@@ -216,17 +221,18 @@ window.SITE_CONTENT.en = (function () {
                 elements: [
                     ['Nd', '🧲 The Super Magnet', `<strong>Neodymium</strong>-iron-boron magnets are the strongest permanent magnets you can buy. In a speaker, the magnet pushes against a coil of wire to move a thin membrane that makes sound. Speaker parts in the study were 7–10% neodymium by weight.<br><br><strong>Fun fact:</strong> A neodymium magnet the size of a coin can hold up 5–8 kg.<br><br><strong>Where from?</strong> China mined about 69% of the world's rare earths in 2025, and refines most of them.`],
                     ['Dy', '🌡️ The Heat Shield', `A little <strong>dysprosium</strong> (0.3–0.8% of the speaker parts studied) keeps the magnet strong when it gets hot.<br><br><strong>Fun fact:</strong> Its name comes from the Greek <em>dysprositos</em>, "hard to get at", because it was so difficult to separate from the other rare earths.<br><br><strong>Where from?</strong> Almost all dysprosium is refined in China, much of it from ore mined in China and Myanmar.`],
+                    ['Tb', '💪 The Magnet Booster', `Like dysprosium, a little <strong>terbium</strong> helps neodymium magnets stay strong when they get hot – it works even better, but is rarer and more expensive. In the phones studied, most terbium was in the speakers (up to about 1.6 kg per tonne of speaker parts), while the screens contained less than 1 g per tonne.<br><br><strong>Fun fact:</strong> Terbium is one of four elements named after the same small village – Ytterby in Sweden – along with yttrium, erbium and ytterbium. Terbium also makes the bright green glow in energy-saving fluorescent lamps.<br><br><strong>Where from?</strong> Almost all terbium is refined in China, much of it from ore mined in China and Myanmar.`],
                     ['Fe', '🧱 The Backbone', `A neodymium magnet (Nd<sub>2</sub>Fe<sub>14</sub>B) is mostly <strong>iron</strong> – about two-thirds to three-quarters of its weight.<br><br><strong>Fun fact:</strong> Thanks to Earth's metal core, iron is the most common element in our planet as a whole.`],
                     ['W', '📳 The Buzz', `Your phone vibrates thanks to a tiny motor that shakes a small, heavy weight – often made of <strong>tungsten</strong>, one of the densest metals.<br><br><strong>Fun fact:</strong> Tungsten has the highest melting point of any metal: 3,422 °C.<br><br><strong>Where from?</strong> China mined about 79% of the world's tungsten in 2025.`]
                 ],
-                stats: [['$21,853', 'Metal value per tonne of speakers'], ['47%', 'Metal content']],
+                stats: [['£15,900', 'Metal value per tonne of speakers'], ['47%', 'Metal content']],
                 note: VALUE_NOTE,
                 facts: ['💡 <strong>Rare earth power:</strong> Neodymium, praseodymium and dysprosium make up 53% of the metal value of a speaker. Yet only about 1% of the world\'s rare earth demand is met by recycling e-waste.']
             },
             {
                 id: 'battery', title: '🔋 Li-Ion Battery',
                 elements: [
-                    ['Li', '🪶 The Lightweight Champion', `<strong>Lithium</strong> is the lightest metal – it floats on water (while fizzing as it reacts!). Your battery holds no lithium metal, though: lithium <em>ions</em> shuttle from the graphite side to the cobalt-oxide side as the battery powers your phone, and back again when you charge it.<br><br><strong>Where from?</strong> In 2025 about a third of mined lithium came from Australia, followed by China and Chile.`],
+                    ['Li', '🪶 The Lightweight Champion', `<strong>Lithium</strong> is the lightest metal. Your battery holds no lithium metal, though: lithium <em>ions</em> shuttle from the graphite side to the cobalt-oxide side as the battery powers your phone, and back again when you charge it.<br><br><strong>Fun fact:</strong> Lithium is so light it floats on water (while fizzing as it reacts!), and lithium compounds give some fireworks a bright crimson-red colour.<br><br><strong>Where from?</strong> In 2025 about a third of mined lithium came from Australia, followed by China and Chile.`],
                     ['Co', '⚙️ The Stabiliser', `Lithium cobalt oxide forms the positive side of most phone batteries. <strong>Cobalt</strong> helps it keep its layered structure as lithium moves in and out, so a lot of energy fits into a small space. A phone battery contains a few grams of cobalt.<br><br><strong>Fun fact:</strong> Cobalt is named after the <em>kobold</em>, a goblin of German folklore. Miners blamed kobolds for ores that gave off poisonous arsenic fumes when smelted.<br><br><strong>Where from?</strong> DR Congo mined 73% of the world's cobalt in 2025. Some is dug by hand in dangerous conditions, sometimes by children.`],
                     ['C', '🅿️ The Ion Parking Garage', `The negative side of the battery is <strong>graphite</strong> – the same form of carbon as pencil "lead". Lithium ions park between its flat layers of carbon atoms when you charge.<br><br><strong>Fun fact:</strong> Battery graphite must be over 99.95% pure. Synthetic graphite is baked at around 3,000 °C.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025 and makes most battery graphite.`]
                 ],
@@ -337,6 +343,16 @@ window.SITE_CONTENT.en = (function () {
                 img: ['element-C-graphite.jpg', 'A shiny grey mineral specimen', 'Photo: <a href="https://commons.wikimedia.org/wiki/File:Graphite-233436.jpg" target="_blank" rel="noopener">Robert M. Lavinsky</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>'],
                 options: ['The battery', 'The camera', 'The speaker', 'The cover glass'],
                 explain: 'Graphite forms the negative side of the battery. Lithium ions park between its flat layers of carbon atoms when you charge.'
+            },
+            {
+                q: 'Which of these elements, found in some phone screens, is named after a continent?',
+                options: ['Europium', 'Germanium', 'Francium', 'Polonium'],
+                explain: 'Europium is named after Europe. The others are named after countries: Germany, France and Poland.'
+            },
+            {
+                q: 'Terbium is one of four elements named after the same small village. Where is it?',
+                options: ['Ytterby, Sweden', 'Stockholm, Sweden', 'Oxford, England', 'Paris, France'],
+                explain: 'Yttrium, terbium, erbium and ytterbium are all named after Ytterby, where an unusual mineral containing them was found.'
             },
             {
                 q: 'How much energy does recycling aluminium save, compared with making new aluminium from ore?',

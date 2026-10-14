@@ -100,7 +100,10 @@
         .hero-tiles span:nth-child(3n) { --r: 3deg; }
 
         .header-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
-        .header-links a {
+        .header-links a,
+        .header-links button {
+            font: inherit;
+            cursor: pointer;
             color: white;
             text-decoration: none;
             font-weight: 700;
@@ -110,7 +113,8 @@
             border-radius: 20px;
             transition: background 0.2s;
         }
-        .header-links a:hover { background: rgba(255,255,255,0.25); }
+        .header-links a:hover, .header-links button:hover { background: rgba(255,255,255,0.25); }
+        .header-links button:focus-visible { outline: 3px solid #ffd76a; outline-offset: 2px; }
 
         .quiz-cta {
             display: inline-block;
@@ -476,8 +480,66 @@
         .legend .legend-crm::after { border-top-width: 10px; border-left-width: 10px; }
 
         /* --- PERIODIC TABLE --- */
-        .ptable-section { padding: 10px 30px 35px; }
-        .ptable-section h2 { color: var(--heading); text-align: center; font-size: 1.5em; margin-bottom: 8px; }
+        .pt-dialog {
+            border: none;
+            border-radius: 16px;
+            padding: 0;
+            width: min(1150px, 96vw);
+            max-height: 92vh;
+            margin: auto;
+            background: var(--surface);
+            color: var(--text);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+        .pt-dialog::backdrop { background: rgba(11, 18, 32, 0.65); }
+        .pt-dialog[open] { animation: fadeIn 0.2s ease; }
+        .pt-dialog-head {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 14px 20px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+        }
+        .pt-dialog-head h2 { color: var(--heading); font-size: 1.35em; }
+        .pt-close {
+            font: inherit;
+            font-size: 1.1em;
+            width: 38px; height: 38px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--chip);
+            color: var(--heading);
+            cursor: pointer;
+        }
+        .pt-close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .pt-dialog-body { padding: 18px 20px 25px; }
+
+        /* Mini periodic table next to an element's photo */
+        .detail-media { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
+        .pt-mini {
+            font: inherit;
+            width: 100px;
+            padding: 5px 4px 3px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex; flex-direction: column; align-items: center; gap: 2px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .pt-mini:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .pt-mini:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .pt-mini svg { width: 100%; height: auto; display: block; }
+        .pt-mini rect { fill: var(--muted); opacity: 0.35; }
+        .pt-mini rect.here { fill: #e74c3c; opacity: 1; }
+        .pt-mini circle { fill: none; stroke: #e74c3c; stroke-width: 1.2; }
+        .pt-mini-cap { font-size: 0.68em; color: var(--muted); }
         .pt-intro { color: var(--text-2); text-align: center; max-width: 720px; margin: 0 auto 20px; line-height: 1.5; }
         .ptable-scroll { overflow-x: auto; padding: 4px 2px 10px; }
         .ptable {
@@ -612,7 +674,7 @@
             .hero-tiles span:nth-child(n+7) { display: none; }
             .header-links { margin-top: 14px; }
             .main-content { padding: 20px 16px; }
-            .ptable-section { padding: 10px 16px 30px; }
+            .pt-dialog-head, .pt-dialog-body { padding-left: 14px; padding-right: 14px; }
             .pt-row-label { font-size: 0.55em; padding-right: 3px; }
             .action-section { padding: 30px 16px; }
             .sources { padding: 20px 16px; }
@@ -643,6 +705,7 @@
             </div>
             <nav class="header-links">
                 <a href="quiz.html"><span aria-hidden="true">🧠</span> <span data-i18n="nav.quiz">Take the quiz</span></a>
+                <button type="button" class="pt-open"><span aria-hidden="true">🧪</span> <span data-i18n="nav.ptable">Periodic table</span></button>
                 <a href="teachers.html" class="hide-in-kiosk"><span aria-hidden="true">📘</span> <span data-i18n="nav.teachers">For teachers</span></a>
             </nav>
         </header>
@@ -719,16 +782,6 @@
             </div>
         </div>
 
-        <section class="ptable-section" aria-labelledby="pt-title">
-            <h2 id="pt-title"><span aria-hidden="true">🧪</span> <span data-i18n="pt.title">Your phone on the periodic table</span></h2>
-            <p class="pt-intro" id="pt-intro"></p>
-            <p class="pt-scroll-hint"><span aria-hidden="true">↔</span> <span data-i18n="pt.scroll">Scroll sideways to see the whole table</span></p>
-            <div class="ptable-scroll">
-                <div class="ptable" role="group" data-i18n-aria="pt.label" aria-label="Periodic table of the elements"></div>
-            </div>
-            <div class="pt-panel" aria-live="polite"><p data-i18n="pt.pick">Tap a highlighted element above to see where it is in the phone.</p></div>
-        </section>
-
         <div class="action-section">
             <h2><span aria-hidden="true">📱</span> <span data-i18n="action.title">What Can YOU Do?</span></h2>
             <div class="action-grid">
@@ -770,6 +823,8 @@
                     <li>U.S. Geological Survey (2026). <em>Mineral Commodity Summaries 2026</em> – production shares for 2025. <a href="https://pubs.usgs.gov/periodicals/mcs2026/">pubs.usgs.gov/periodicals/mcs2026</a></li>
                     <li>U.S. Geological Survey (2025). Final 2025 List of Critical Minerals. <em>Federal Register</em> 90 FR 50494.</li>
                     <li>European Union (2024). Critical Raw Materials Act, Regulation (EU) 2024/1252, Annexes I–II. <a href="https://eur-lex.europa.eu/eli/reg/2024/1252/oj">eur-lex.europa.eu/eli/reg/2024/1252/oj</a></li>
+                    <li>Bank of England. Daily spot exchange rate, US$ into sterling (series XUDLUSS): 2021 average $1.3757 = £1, used to convert the study's US$ values to pounds. <a href="https://www.bankofengland.co.uk/boeapps/database/">bankofengland.co.uk</a></li>
+                    <li>Suyver, J.F. &amp; Meijerink, A. (2002). Europium safeguards the euro. <em>Chemisch2Weekblad</em> 98(4), 12–13. <a href="https://dspace.library.uu.nl/handle/1874/25831">dspace.library.uu.nl</a></li>
                     <li>Royal Society of Chemistry. Periodic Table (element properties and history). <a href="https://periodic-table.rsc.org/">periodic-table.rsc.org</a></li>
                     <li>Baldé, C.P. et al. (2024). <em>The Global E-waste Monitor 2024</em>. ITU &amp; UNITAR. <a href="https://ewastemonitor.info/the-global-e-waste-monitor-2024/">ewastemonitor.info</a></li>
                     <li>International Aluminium Institute – energy use of primary aluminium and recycling. <a href="https://international-aluminium.org/statistics/primary-aluminium-smelting-power-consumption/">international-aluminium.org</a></li>
@@ -793,6 +848,22 @@
             <p class="copyright" data-i18n-html="footer.copyright">© 2025–2026 Prof. Peter Nockemann. Licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>, except element photos, which keep their own licences (see credits).</p>
         </footer>
     </div>
+
+    <!-- Periodic table pop-up (opened from the header button or an element's mini table) -->
+    <dialog class="pt-dialog" id="pt-dialog" aria-labelledby="pt-title">
+        <div class="pt-dialog-head">
+            <h2 id="pt-title"><span aria-hidden="true">🧪</span> <span data-i18n="pt.title">Your phone on the periodic table</span></h2>
+            <button type="button" class="pt-close" data-i18n-aria="pt.close" aria-label="Close">✕</button>
+        </div>
+        <div class="pt-dialog-body">
+            <p class="pt-intro" id="pt-intro"></p>
+            <p class="pt-scroll-hint"><span aria-hidden="true">↔</span> <span data-i18n="pt.scroll">Scroll sideways to see the whole table</span></p>
+            <div class="ptable-scroll">
+                <div class="ptable" role="group" data-i18n-aria="pt.label" aria-label="Periodic table of the elements"></div>
+            </div>
+            <div class="pt-panel" aria-live="polite"><p data-i18n="pt.pick">Tap a highlighted element above to see where it is in the phone.</p></div>
+        </div>
+    </dialog>
 
     <script src="content/languages.js"></script>
     <script src="content/en.js"></script>
@@ -838,6 +909,8 @@
                 C:  { z: 6,  type: 'tech',     eu: true,  us: true,  photo: ['element-C-graphite.jpg', 'Graphite-233436.jpg', 'Robert M. Lavinsky', 'CC BY-SA 3.0'] },
                 Al: { z: 13, type: 'base',     eu: true,  us: true,  photo: ['element-Al.jpg', 'Aluminium.jpg', 'Jurii', 'CC BY 3.0'] },
                 Mg: { z: 12, type: 'base',     eu: true,  us: true,  photo: ['element-Mg.jpg', 'Magnesium crystals.jpg', 'Warut Roonguthai', 'CC BY-SA 3.0'] },
+                Eu: { z: 63, type: 'rare',     eu: true,  us: true,  photo: ['element-Eu.jpg', 'Europium (63 Eu).jpg', HIRES, 'CC BY 3.0'] },
+                Tb: { z: 65, type: 'rare',     eu: true,  us: true,  photo: ['element-Tb.jpg', 'Terbium (65 Tb).jpg', HIRES, 'CC BY 3.0'] },
                 // Not an element: plastics are carbon + hydrogen polymers
                 Plastic: { z: '', symbol: 'C·H', type: 'base', eu: null, us: null, photo: ['material-plastic.jpg', 'Pellets of reclycle ABS.jpg', 'Amandaprc', 'CC BY-SA 4.0'] }
             };
@@ -880,6 +953,21 @@
                     return `<span aria-hidden="true">${text.slice(0, i)}</span>${text.slice(i)}`;
                 }
 
+                // Small clickable periodic table with the element's position marked
+                function miniTable(sym) {
+                    const target = ELEMENTS[sym].z;
+                    let rects = '', mark = '';
+                    for (let z = 1; z <= SYMBOLS.length; z++) {
+                        const [row, col] = position(z), x = (col - 1) * 6, y = (row - 1) * 6;
+                        rects += `<rect x="${x}" y="${y}" width="5" height="5" rx="1"${z === target ? ' class="here"' : ''}/>`;
+                        if (z === target) mark = `<circle cx="${x + 2.5}" cy="${y + 2.5}" r="5.5"/>`;
+                    }
+                    return `<button type="button" class="pt-mini" data-sym="${sym}" aria-label="${t('pt.mini', { name: name(sym) })}">
+                            <svg viewBox="-1 -1 109 61" aria-hidden="true">${rects}${mark}</svg>
+                            <span class="pt-mini-cap" aria-hidden="true">${t('pt.miniCaption')}</span>
+                        </button>`;
+                }
+
                 function critLine(el) {
                     if (el.eu === null) return '';
                     const tag = (on, label) => `<span class="${on ? 'crm-yes' : 'crm-no'}">${label} ${on ? '✔' : '✘'}</span>`;
@@ -898,7 +986,10 @@
                         const el = ELEMENTS[sym];
                         return `<div id="detail-${layer.id}-${sym}" class="element-detail${isCritical(el) ? '' : ' safe-metal'}">
                                 <div class="detail-layout">
-                                    <img src="${el.photo[0]}" alt="${name(sym)}" class="element-img" width="100" height="100">
+                                    <div class="detail-media">
+                                        <img src="${el.photo[0]}" alt="${name(sym)}" class="element-img" width="100" height="100">
+                                        ${el.z ? miniTable(sym) : ''}
+                                    </div>
                                     <div class="detail-text">
                                         <h4>${withIcon(heading)}</h4>
                                         <p>${text}</p>
@@ -1199,6 +1290,7 @@
                 }
 
                 function goToElement(part, sym) {
+                    dialog.close();
                     showLayer(part, null, false);
                     const card = document.getElementById(part + '-info');
                     const tile = card.querySelector(`[data-detail="${part}-${sym}"]`);
@@ -1206,6 +1298,22 @@
                     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     if (tile) tile.focus({ preventScroll: true });
                 }
+
+                // Pop-up: open from the header button (whole table) or a mini table (that element selected)
+                const dialog = document.getElementById('pt-dialog');
+                function openTable(sym) {
+                    dialog.showModal();
+                    const cell = sym && table.querySelector(`.pt-cell[data-sym="${sym}"]`);
+                    if (cell) {
+                        showTableElement(sym, cell);
+                        cell.scrollIntoView({ block: 'nearest', inline: 'center' });
+                        cell.focus({ preventScroll: true });
+                    }
+                }
+                document.querySelector('.pt-open').addEventListener('click', () => openTable());
+                document.querySelectorAll('.pt-mini').forEach(b => b.addEventListener('click', () => openTable(b.dataset.sym)));
+                dialog.querySelector('.pt-close').addEventListener('click', () => dialog.close());
+                dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });  // click on the backdrop
             }
         })();
     </script>
