@@ -5,7 +5,7 @@
  * IMPORTANT: when you change any file, increase the version number below so visitors get the
  * new version. When you add a file (e.g. a new language in content/), add it to FILES too.
  */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = 'phone-elements-' + VERSION;
 
 const FILES = [
@@ -13,6 +13,14 @@ const FILES = [
     'content/en.js',
     'content/languages.js',
     'element-Ag.jpg',
+    'element-Ni.jpg',
+    'element-Ba.jpg',
+    'element-Hf.jpg',
+    'element-As.jpg',
+    'element-Y.jpg',
+    'element-Pr.jpg',
+    'element-Ti.jpg',
+    'element-Sb.jpg',
     'element-Al.jpg',
     'element-Au.jpg',
     'element-C-graphite.jpg',
