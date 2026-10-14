@@ -5,7 +5,7 @@
  * IMPORTANT: when you change any file, increase the version number below so visitors get the
  * new version. When you add a file (e.g. a new language in content/), add it to FILES too.
  */
-const VERSION = 'v3';
+const VERSION = 'v4';
 const CACHE = 'phone-elements-' + VERSION;
 
 const FILES = [

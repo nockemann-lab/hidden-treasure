@@ -7,9 +7,9 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 
 ## Pages
 
-- `index.html` – the interactive phone (start here), with exploration progress, previous/next navigation (buttons, swipe, arrow keys) and a periodic-table view
-- `quiz.html` – a scored multiple-choice quiz with a printable certificate (10 random questions per round; `quiz.html?n=all` asks all of them, `?n=5` five)
-- `teachers.html` – teacher guide: learning objectives, lesson plan, discussion questions, extension tasks, printable worksheet and quiz answer key
+- `index.html`: the interactive phone (start here), with exploration progress, previous/next navigation (buttons, swipe, arrow keys) and a periodic-table view
+- `quiz.html`: a scored multiple-choice quiz with a printable certificate (10 random questions per round; `quiz.html?n=all` asks all of them, `?n=5` five)
+- `teachers.html`: teacher guide: learning objectives, lesson plan, discussion questions, extension tasks, printable worksheet and quiz answer key
 
 ## Features
 
