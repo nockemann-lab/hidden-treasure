@@ -1,0 +1,46 @@
+cff-version: 1.2.0
+message: "If you use or adapt this resource, please cite it as below."
+title: "Hidden Treasure in Your Pocket: An Interactive Guide to Critical Elements in Smartphones"
+type: software
+authors:
+  - given-names: Peter
+    family-names: Nockemann
+    # affiliation: ""
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+abstract: >-
+  An interactive science-festival display about the critical and strategic
+  elements inside a smartphone. Visitors select a layer of an exploded phone
+  (display, camera, circuit board, speaker, battery, casing) to explore which
+  elements it contains, what they do, where they come from, and whether they
+  are on the EU and US critical raw materials lists.
+keywords:
+  - critical raw materials
+  - smartphones
+  - e-waste
+  - recycling
+  - chemistry education
+  - science communication
+license: CC-BY-4.0
+repository-code: "https://github.com/peternockemann-gif/phone-critical-elements"
+references:
+  - type: article
+    title: >-
+      Critical and strategic metals in mobile phones: A detailed
+      characterisation of multigenerational waste mobile phones and the
+      economic drivers for recovery of metal value
+    authors:
+      - family-names: Gómez
+        given-names: M.
+      - family-names: Grimes
+        given-names: S.
+      - family-names: Qian
+        given-names: Y.
+      - family-names: Feng
+        given-names: Y.
+      - family-names: Fowler
+        given-names: G.
+    journal: Journal of Cleaner Production
+    volume: 419
+    start: 138099
+    year: 2023
+    doi: 10.1016/j.jclepro.2023.138099
