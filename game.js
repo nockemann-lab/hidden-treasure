@@ -54,6 +54,18 @@
     const challenge = () => CHALLENGES[today() % CHALLENGES.length];
     const TARGET = { working: 'sell', screen: 'repair', battery: 'repair', water: 'recycle', old: 'recycle', swollen: 'safety' };
     const MAX_FIRES = 4, SPREAD_AFTER = 10;
+    // Difficulty: belt speed, time between phones and time before swollen batteries ignite (multipliers)
+    const LEVELS = {
+        easy: { icon: '🌱', speed: 0.78, spawn: 1.3, ignite: 1.35, spread: false, stars: [400, 1200, 2600] },
+        normal: { icon: '⚙️', speed: 1, spawn: 1, ignite: 1, spread: true, stars: [500, 1600, 3400] },
+        hard: { icon: '🚀', speed: 1.2, spawn: 0.82, ignite: 0.8, spread: true, stars: [700, 2200, 4800] }
+    };
+    const LEVEL_KEY = 'urbanMineLevel';
+    const COMBO = [[8, 3], [4, 2]];          // correct choices in a row -> points multiplier
+    const DANGER = 120;                      // last stretch of the belt before the landfill bin
+    // Element tiles that float up when a phone is recycled (grams per phone, as in PER_PHONE)
+    const TILES = [['Cu', 'cu', '#bbdefb', '#1976d2'], ['Ag', 'ag', '#fff59d', '#fbc02d'], ['Au', 'au', '#fff59d', '#fbc02d'], ['Pd', 'pd', '#fff59d', '#fbc02d']];
+    const grams = v => v >= 1 ? `${+v.toFixed(1)} g` : `${+(v * 1000).toFixed(v * 1000 >= 10 ? 0 : 1)} mg`;
     const EMOJI = s => `${s}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
     const FONT = (w, s) => `${w} ${s}px system-ui,-apple-system,"Segoe UI",Arial,sans-serif`;
 
@@ -111,6 +123,8 @@
             splash: () => noise(0.16, 0.35, 2600),
             out: () => [880, 698, 523].forEach((f, i) => tone(f, 0.12, 'triangle', 0.18, i * 0.07)),
             landfill: () => tone(150, 0.3, 'sine', 0.35, 0, 60),
+            tick: () => { tone(1500, 0.035, 'square', 0.06); tone(1500, 0.035, 'square', 0.06, 0.13); },
+            combo: () => [659, 880, 1319].forEach((f, i) => tone(f, 0.08, 'square', 0.09, i * 0.05)),
             event: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.1, 'square', 0.08, i * 0.08)),
             end: () => [523, 659, 784, 659, 784, 1047].forEach((f, i) => tone(f, 0.16, 'triangle', 0.18, i * 0.13))
         };
@@ -148,12 +162,14 @@
         };
     })();
 
-    let root, t = k => k, canvas, ctx, L, g = null, raf = 0, last = 0, timeScale = 1;
+    let root, t = k => k, opts = {}, canvas, ctx, L, g = null, raf = 0, last = 0, timeScale = 1;
     let pointer = null, nextId = 1, hudCache = {};
 
     const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
     const money = n => (n < 0 ? '−£' : '£') + Math.abs(Math.round(n));
-    const readBest = () => { try { return JSON.parse(localStorage.getItem(BEST_KEY)); } catch (e) { return null; } };
+    const bestKey = level => level === 'normal' ? BEST_KEY : BEST_KEY + '.' + level;
+    const readBest = level => { try { return JSON.parse(localStorage.getItem(bestKey(level))); } catch (e) { return null; } };
+    const readLevel = () => { try { const l = localStorage.getItem(LEVEL_KEY); return LEVELS[l] ? l : 'normal'; } catch (e) { return 'normal'; } };
 
     // ---------------------------------------------------------------------
     // Layout (logical coordinates; landscape on wide screens, portrait on phones)
@@ -172,9 +188,11 @@
     // ---------------------------------------------------------------------
     // Game state
     // ---------------------------------------------------------------------
-    function newGame(tutorial) {
+    function newGame(tutorial, level) {
+        level = LEVELS[level] ? level : 'normal';
+        try { localStorage.setItem(LEVEL_KEY, level); } catch (e) { /* ignore */ }
         g = {
-            tutorial: !!tutorial, hinted: {}, challenge: challenge(),
+            tutorial: !!tutorial, hinted: {}, challenge: challenge(), level, lv: LEVELS[level], combo: 0, bestCombo: 0, tiles: [],
             t: 0, running: true, paused: false, over: false, score: 0, money: 30,
             parts: { screen: 1, battery: 1 }, orders: [], phones: [], selId: null, spawnIn: 0.5, burst: 0,
             jobs: { repair: [], sell: [], recycle: [], safety: [] }, fires: [], particles: [], texts: [],
@@ -206,8 +224,8 @@
     const readCh = () => { try { return JSON.parse(localStorage.getItem(CH_KEY)) || {}; } catch (e) { return {}; } };
 
     const stage = () => STAGES.reduce((s, st) => (g.t >= st[0] ? st : s), STAGES[0]);
-    const speed = () => stage()[2] * (g.phones.some(p => p.hint) ? 0.45 : 1);
-    const igniteAfter = () => (g && g.t < g.heatUntil ? 5 : 8.5);
+    const speed = () => stage()[2] * g.lv.speed * (g.phones.some(p => p.hint) ? 0.45 : 1);
+    const igniteAfter = () => (g && g.t < g.heatUntil ? 5 : 8.5) * (g ? g.lv.ignite : 1);
     const partPrice = p => Math.round(PRICES[p] * (g && g.t < g.saleUntil ? 0.5 : 1));
 
     function spawnPhone() {
@@ -229,6 +247,19 @@
         g.score += n;
         if (text) g.texts.push({ x, y, text, color: color || (n >= 0 ? '#1e8449' : '#c0392b'), age: 0 });
     }
+
+    // Streak of correct choices: 4 in a row doubles the points, 8 in a row triples them
+    const mult = () => (COMBO.find(([n]) => g.combo >= n) || [0, 1])[1];
+    function good(points, x, y, text) {
+        g.combo++; g.bestCombo = Math.max(g.bestCombo, g.combo);
+        const m = mult();
+        addScore(points * m, x, y, text + (m > 1 ? ` ×${m}` : ''));
+        if (COMBO.some(([n]) => g.combo === n)) {
+            g.texts.push({ x, y: y - 24, text: t('game.combo', { n: m }), color: '#7c3aed', age: 0, big: true });
+            Sound.play('combo');
+        }
+    }
+    function streakLost() { g.combo = 0; }
 
     function toast(key, vars) {
         const box = root.querySelector('.rr-toasts');
@@ -266,6 +297,7 @@
         const ty = phone.type;
         if (ty === 'swollen' && stId !== 'safety') {
             removePhone(phone);
+            streakLost();
             addScore(-30, c.x, c.y - 40, t('game.msg.fire'));
             startFire(c.x, c.y, stId);
             return;
@@ -297,17 +329,17 @@
         const c = stationCenter(stId), ty = job.phone.type, y = stationRect(stId).y - 14;
         if (stId === 'repair') {
             g.money += 55; g.stats.repaired++;
-            addScore(40, c.x, y, t('game.msg.repaired', { amount: money(55) }));
+            good(40, c.x, y, t('game.msg.repaired', { amount: money(55) }));
             Sound.play('repaired');
             firstTime('repair');
         } else if (stId === 'sell') {
             if (ty === 'working') {
                 g.money += 40; g.stats.sold++;
-                addScore(30, c.x, y, t('game.msg.sold', { amount: money(40) }));
+                good(30, c.x, y, t('game.msg.sold', { amount: money(40) }));
                 Sound.play('sold');
                 firstTime('sell');
             } else {
-                g.stats.returned++;
+                g.stats.returned++; streakLost();
                 addScore(-10, c.x, y, t('game.msg.returned'));
                 Sound.play('no');
                 g.phones.push(Object.assign(job.phone, { x: L.belt.x0 + 4, held: false }));
@@ -316,18 +348,16 @@
         } else if (stId === 'recycle') {
             Object.keys(PER_PHONE).forEach(k => { g.metals[k] += PER_PHONE[k]; });
             g.money += METAL_VALUE;
-            for (let i = 0; i < 10; i++) {
-                const col = ['#e0b23a', '#c8743f', '#cfd6de', '#7ed3a0'][i % 4];
-                g.particles.push({ x: c.x, y: c.y, vx: (Math.random() - 0.5) * 160, vy: -80 - Math.random() * 140, col, age: 0, life: 1 + Math.random() * 0.5 });
-            }
-            if (ty === 'working') { g.stats.wasted++; addScore(5, c.x, y, t('game.msg.stillWorked'), '#b45309'); }
-            else if (ty === 'screen' || ty === 'battery') { g.stats.wasted++; addScore(8, c.x, y, t('game.msg.couldRepair'), '#b45309'); }
-            else { g.stats.recycled++; addScore(15, c.x, y, t('game.msg.recycled')); }
+            // the recovered metals float up as element tiles
+            TILES.forEach(([sym, k, bg, edge], i) => g.tiles.push({ x: c.x + (i - 1.5) * 50, y: c.y + 10, sym, amount: '+' + grams(PER_PHONE[k]), bg, edge, age: -i * 0.12 }));
+            if (ty === 'working') { g.stats.wasted++; streakLost(); addScore(5, c.x, y, t('game.msg.stillWorked'), '#b45309'); }
+            else if (ty === 'screen' || ty === 'battery') { g.stats.wasted++; streakLost(); addScore(8, c.x, y, t('game.msg.couldRepair'), '#b45309'); }
+            else { g.stats.recycled++; good(15, c.x, y, t('game.msg.recycled')); }
             firstTime('recycle');
             Sound.play('recycle');
         } else if (stId === 'safety') {
             g.stats.safe++;
-            addScore(25, c.x, y, t('game.msg.safe'));
+            good(25, c.x, y, t('game.msg.safe'));
             Sound.play('safe');
             firstTime('safe');
         }
@@ -372,7 +402,7 @@
         const firstX = g.phones.reduce((m, p) => Math.min(m, p.held ? Infinity : p.x), Infinity);
         if (g.spawnIn <= 0 && firstX > L.belt.x0 + 62) {
             spawnPhone();
-            if (g.burst > 0) { g.burst--; g.spawnIn = 0.75; } else g.spawnIn = stage()[1] * (0.8 + Math.random() * 0.4);
+            if (g.burst > 0) { g.burst--; g.spawnIn = 0.75; } else g.spawnIn = stage()[1] * g.lv.spawn * (0.8 + Math.random() * 0.4);
         }
 
         g.beltOffset = (g.beltOffset + speed() * dt) % 40;
@@ -381,14 +411,15 @@
             p.age += dt;
             if (p.type === 'swollen' && p.age > igniteAfter()) {
                 removePhone(p);
-                g.stats.destroyed++;
+                g.stats.destroyed++; streakLost();
                 addScore(-10, p.x, L.belt.y - 50, t('game.msg.fire'));
                 startFire(p.x, L.belt.y, null);
                 continue;
             }
+            if (!p.held && !p.warned && p.x > L.belt.x1 - DANGER) { p.warned = true; Sound.play('tick'); }   // last chance!
             if (!p.held && p.x > L.belt.x1) {
                 removePhone(p);
-                g.stats.landfill++;
+                g.stats.landfill++; streakLost();
                 addScore(-15, L.bin.x + L.bin.w / 2, L.bin.y - 10, t('game.msg.landfill'));
                 Sound.play('landfill');
                 firstTime('landfill');
@@ -396,7 +427,7 @@
             }
             // phones passing a fire on the belt are destroyed
             if (!p.held && g.fires.some(f => !f.station && Math.abs(f.x - p.x) < 30)) {
-                removePhone(p); g.stats.destroyed++;
+                removePhone(p); g.stats.destroyed++; streakLost();
                 addScore(-10, p.x, L.belt.y - 50, t('game.msg.burnt'));
             }
         }
@@ -416,7 +447,7 @@
         for (const f of [...g.fires]) {
             f.age += dt;
             g.score -= 3 * dt;
-            if (f.age > SPREAD_AFTER && !f.spread) {
+            if (f.age > SPREAD_AFTER && !f.spread && g.lv.spread) {
                 f.spread = true;
                 if (f.station) {
                     const i = STATIONS.findIndex(s => s.id === f.station);
@@ -428,6 +459,7 @@
 
         g.particles = g.particles.filter(p => { p.age += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 260 * dt; return p.age < p.life; });
         g.texts = g.texts.filter(x => { x.age += dt; x.y -= 34 * dt; return x.age < 1.6; });
+        g.tiles = g.tiles.filter(x => { x.age += dt; if (x.age > 0) x.y -= 46 * dt; return x.age < 1.7; });
     }
 
     // ---------------------------------------------------------------------
@@ -443,7 +475,7 @@
         ctx.translate(x, y);
         ctx.scale(s, s);
         const ty = TYPES[p.type];
-        if (highlight) { ctx.shadowColor = '#ffd76a'; ctx.shadowBlur = 18; }
+        if (highlight) { ctx.shadowColor = highlight === true ? '#ffd76a' : highlight; ctx.shadowBlur = 18; }
         if (p.type === 'old') {
             rr(-15, -27, 30, 54, 6); ctx.fillStyle = '#6b7280'; ctx.fill();
             ctx.shadowBlur = 0;
@@ -516,6 +548,9 @@
         ctx.fillStyle = '#1f2937'; ctx.fillRect(belt.x0, belt.y - belt.h / 2, belt.x1 - belt.x0, belt.h);
         ctx.strokeStyle = '#374151'; ctx.lineWidth = 6;
         for (let x = belt.x0 - 40 + (g ? g.beltOffset : 0); x < belt.x1 + 40; x += 40) { ctx.beginPath(); ctx.moveTo(x, belt.y - belt.h / 2); ctx.lineTo(x + 16, belt.y); ctx.lineTo(x, belt.y + belt.h / 2); ctx.stroke(); }
+        const dz = ctx.createLinearGradient(belt.x1 - DANGER, 0, belt.x1, 0);   // last-chance zone before the landfill
+        dz.addColorStop(0, 'rgba(239,68,68,0)'); dz.addColorStop(1, 'rgba(239,68,68,0.45)');
+        ctx.fillStyle = dz; ctx.fillRect(belt.x1 - DANGER, belt.y - belt.h / 2, DANGER, belt.h);
         ctx.restore();
 
         // stations
@@ -544,14 +579,24 @@
             ctx.textAlign = 'center'; ctx.fillStyle = '#475569'; ctx.font = EMOJI(15);
             ctx.fillText(st.badges.join(' '), r.x + r.w / 2, r.y + r.h - 44);
             ctx.font = FONT(600, 12); ctx.fillText(t('game.st.' + st.id + '.hint'), r.x + r.w / 2, r.y + r.h - 22, r.w - 16);
-            if (pointer && pointer.moved && inRect(pointer.x, pointer.y, r)) { rr(r.x, r.y, r.w, r.h, 14); ctx.strokeStyle = '#ffd76a'; ctx.lineWidth = 5; ctx.stroke(); }
+            const full = g && g.jobs[st.id].length >= st.slots;
+            if (full && !burning(st.id)) {                     // "FULL" sign: no free slot
+                ctx.font = FONT(800, 12); const fw = ctx.measureText(t('game.full')).width + 18;
+                const fy = slotY - (L.portrait ? 60 : 52);      // centred above the slots, clear of the parts shelves
+                rr(r.x + r.w / 2 - fw / 2, fy - 10, fw, 20, 10); ctx.fillStyle = '#c0392b'; ctx.fill();
+                ctx.fillStyle = 'white'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t('game.full'), r.x + r.w / 2, fy + 0.5);
+            }
+            if (pointer && pointer.moved && inRect(pointer.x, pointer.y, r)) {
+                rr(r.x, r.y, r.w, r.h, 14); ctx.strokeStyle = full || (g && burning(st.id)) ? '#ef4444' : '#ffd76a'; ctx.lineWidth = 5; ctx.stroke();
+            }
             if (g && burning(st.id)) { rr(r.x, r.y, r.w, r.h, 14); ctx.fillStyle = 'rgba(231,76,60,0.18)'; ctx.fill(); }
         });
 
         if (!g) return;
         for (const p of g.phones) {
             if (pointer && pointer.moved && pointer.dragId === p.id) continue;
-            drawPhone(p, p.x, belt.y, 1, p.id === g.selId);
+            const danger = !p.held && p.x > belt.x1 - DANGER;
+            drawPhone(p, p.x + (danger ? Math.sin(g.t * 38) * 2.2 : 0), belt.y, 1, p.id === g.selId || (danger && '#ef4444'));
             if (p.id === g.selId) { ctx.strokeStyle = '#ffd76a'; ctx.lineWidth = 3; rr(p.x - 24, belt.y - 38, 48, 76, 9); ctx.stroke(); }
         }
         for (const f of g.fires) {
@@ -595,9 +640,20 @@
         }
         for (const p of g.particles) { ctx.globalAlpha = Math.max(0, 1 - p.age / p.life); ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fill(); }
         ctx.globalAlpha = 1;
+        for (const x of g.tiles) {
+            if (x.age < 0) continue;
+            ctx.globalAlpha = Math.min(1, x.age * 6, 2.5 * (1.7 - x.age));
+            ctx.save(); ctx.shadowColor = 'rgba(15,23,42,0.3)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2;
+            rr(x.x - 22, x.y - 24, 44, 48, 7); ctx.fillStyle = x.bg; ctx.fill(); ctx.restore();
+            ctx.fillStyle = x.edge; ctx.fillRect(x.x - 22, x.y + 20, 44, 4);
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#2c3e50';
+            ctx.font = FONT(800, 18); ctx.fillText(x.sym, x.x, x.y - 6);
+            ctx.font = FONT(700, 10); ctx.fillStyle = '#334155'; ctx.fillText(x.amount, x.x, x.y + 11, 42);
+        }
+        ctx.globalAlpha = 1;
         for (const x of g.texts) {
             ctx.globalAlpha = Math.min(1, 2 * (1.6 - x.age));
-            ctx.font = FONT(800, 15); ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = 'white';
+            ctx.font = FONT(800, x.big ? 20 : 15); ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = 'white';
             ctx.strokeText(x.text, x.x, x.y); ctx.fillStyle = x.color; ctx.fillText(x.text, x.x, x.y);
         }
         ctx.globalAlpha = 1;
@@ -628,10 +684,17 @@
         set('.rr-score', String(Math.max(0, Math.round(g.score))));
         set('.rr-money', money(g.money));
         ['screen', 'battery'].forEach(p => {
-            const coming = g.orders.filter(o => o.part === p).length;
+            const mine = g.orders.filter(o => o.part === p), coming = mine.length, shelf = root.querySelector(`[data-part="${p}"]`);
             set(`[data-part="${p}"] .rr-part-n`, '×' + g.parts[p] + (coming ? ` (+${coming})` : ''));
-            root.querySelector(`[data-part="${p}"]`).classList.toggle('empty', g.parts[p] < 1 && !coming);
+            shelf.classList.toggle('empty', g.parts[p] < 1 && !coming);
+            shelf.classList.toggle('low', g.parts[p] === 1 && !coming);           // last one: time to order
+            const eta = shelf.querySelector('.rr-part-eta');                       // delivery countdown
+            eta.hidden = !coming;
+            if (coming) set(`[data-part="${p}"] .rr-part-eta`, '🚚 ' + Math.ceil(Math.min(...mine.map(o => o.eta))) + ' s');
         });
+        const m = mult();
+        set('.rr-combo-val', g.combo + (m > 1 ? ' · ×' + m : ''));
+        root.querySelector('.rr-combo').classList.toggle('hot', m > 1);
         set('.rr-time-num', Math.max(0, Math.ceil(SHIFT - g.t)) + ' s');
         const cp = challengeProgress();
         set('.rr-ch-val', cp.text);
@@ -656,6 +719,8 @@
         mus.textContent = '🎵';
         mus.classList.toggle('off', !Sound.prefs.music);
         mus.setAttribute('aria-pressed', String(Sound.prefs.music)); mus.setAttribute('aria-label', t('game.music')); mus.title = t('game.music');
+        const cb = root.querySelector('.rr-combo');
+        cb.title = t('game.comboLabel'); cb.setAttribute('aria-label', cb.title);
         const ch = root.querySelector('.rr-ch');
         ch.title = t('game.ch.today') + ' ' + challengeText(challenge());
         ch.setAttribute('aria-label', ch.title);
@@ -669,8 +734,9 @@
         if (btn) btn.focus({ preventScroll: true });
     }
 
+    const bestLine = level => { const b = readBest(level); return b ? `⭐ ${esc(t('game.best', { score: b.score }))}` : ''; };
     function introHtml() {
-        const best = readBest();
+        const level = readLevel();
         let tutDone = false;
         try { tutDone = !!localStorage.getItem(TUT_KEY); } catch (e) { /* ignore */ }
         return `<div class="rr-card">
@@ -682,9 +748,14 @@
             </ul>
             <p class="rr-warn"><span aria-hidden="true">🔥</span> ${t('game.intro.fire')}</p>
             <p class="rr-challenge"><span aria-hidden="true">🎯</span> <strong>${esc(t('game.ch.today'))}</strong> ${esc(challengeText(challenge()))}${readCh().day === today() ? ` <span class="g-new">✓ ${esc(t('game.ch.doneToday'))}</span>` : ''}<br><span class="rr-small">${esc(t('game.ch.bonus', { n: CH_BONUS }))}</span></p>
+            <p class="rr-small"><span aria-hidden="true">⚡</span> ${esc(t('game.intro.combo'))}</p>
+            <fieldset class="rr-level"><legend>${esc(t('game.level'))}</legend>
+                ${Object.keys(LEVELS).map(id => `<label><input type="radio" name="rr-level" value="${id}" ${id === level ? 'checked' : ''}>
+                    <span><b><span aria-hidden="true">${LEVELS[id].icon}</span> ${esc(t('game.level.' + id))}</b><small>${esc(t('game.level.' + id + '.hint'))}</small></span></label>`).join('')}
+            </fieldset>
             <label class="rr-tut"><input type="checkbox" id="rr-tut" ${tutDone ? '' : 'checked'}> ${esc(t('game.tutorial'))}</label>
             <p class="rr-small">${esc(t('game.intro.controls'))}</p>
-            ${best ? `<p class="g-best">⭐ ${esc(t('game.best', { score: best.score }))}</p>` : ''}
+            <p class="g-best" aria-live="polite">${bestLine(level)}</p>
             <button type="button" class="g-btn primary" data-go="start">${esc(t('game.start'))} <span aria-hidden="true">▶</span></button>
             <p class="rr-small">${esc(t('game.intro.note'))}</p>
         </div>`;
@@ -698,10 +769,11 @@
         if (ch) { g.score += CH_BONUS; try { localStorage.setItem(CH_KEY, JSON.stringify({ day: today() })); } catch (e) { /* ignore */ } }
         if (g.tutorial) { try { localStorage.setItem(TUT_KEY, '1'); } catch (e) { /* ignore */ } }
         const s = g.stats, score = Math.max(0, Math.round(g.score));   // no negative final scores
-        const stars = score >= 1400 ? 3 : score >= 800 ? 2 : score >= 300 ? 1 : 0;
-        const best = readBest();
+        const stars = g.lv.stars.filter(n => score >= n).length;
+        const best = readBest(g.level);
         const isBest = score > 0 && (!best || score > best.score);
-        if (isBest) { try { localStorage.setItem(BEST_KEY, JSON.stringify({ score, stars })); } catch (e) { /* ignore */ } }
+        if (isBest) { try { localStorage.setItem(bestKey(g.level), JSON.stringify({ score, stars })); } catch (e) { /* ignore */ } }
+        const link = endLink();
         const m = g.metals, n = (v, d) => v.toLocaleString('en-GB', { maximumFractionDigits: d });
         const lessons = [];
         if (s.fires) lessons.push(t('game.lesson.fires', { n: s.fires }));
@@ -715,6 +787,7 @@
             <div class="g-stars" role="img" aria-label="${esc(t('game.starsLabel', { n: stars }))}">${[1, 2, 3].map(i => `<span class="${i <= stars ? 'on' : ''}">★</span>`).join('')}</div>
             <h3>${esc(t('game.end.title' + stars))}</h3>
             <p class="g-total">${esc(t('game.end.score', { n: score }))}${isBest ? ` <span class="g-new">${esc(t('game.newBest'))}</span>` : ''}</p>
+            <p class="rr-small">${LEVELS[g.level].icon} ${esc(t('game.level.' + g.level))} · <span aria-hidden="true">⚡</span> ${esc(t('game.bestCombo', { n: g.bestCombo }))}</p>
             <p class="rr-challenge ${ch ? 'done' : ''}"><span aria-hidden="true">🎯</span> ${esc(challengeText(g.challenge))}: <strong>${esc(ch ? t('game.ch.won', { n: CH_BONUS }) : t('game.ch.lost'))}</strong></p>
             <div class="rr-end-grid">
                 <table class="g-table"><tbody>
@@ -731,11 +804,24 @@
                 </ul></div>
             </div>
             <ul class="g-lessons">${lessons.map(l => `<li>${esc(l)}</li>`).join('')}</ul>
+            ${link ? `<p class="rr-link"><span>${esc(link.text)}</span> <button type="button" class="g-btn small" data-go="element" data-sym="${link.sym}">${esc(t('game.link.button', { name: opts.elementName(link.sym) }))} <span aria-hidden="true">→</span></button></p>` : ''}
             <div class="g-end-btns">
                 <button type="button" class="g-btn primary" data-go="start">${esc(t('game.again'))}</button>
                 <button type="button" class="g-btn" data-go="close">${esc(t('game.close'))}</button>
             </div>
         </div>`);
+    }
+
+    // End screen: a link from the shift to one element card on the main page
+    function endLink() {
+        if (!opts.openElement || !opts.elementName) return null;
+        const s = g.stats;
+        if (s.recycled + s.wasted > 0) {
+            const k = ['au', 'ag', 'pd', 'cu', 'ree'][Math.floor(Math.random() * 5)];
+            return { sym: { au: 'Au', ag: 'Ag', pd: 'Pd', cu: 'Cu', ree: 'Nd' }[k], text: t('game.link.metal', { amount: grams(g.metals[k]), metal: t('drawer.' + k) }) };
+        }
+        if (s.safe || s.fires) return { sym: 'Li', text: t('game.link.battery') };
+        return { sym: 'Au', text: t('game.link.gold') };
     }
 
     function pause(on) {
@@ -848,11 +934,13 @@
     // Public API
     // ---------------------------------------------------------------------
     window.UrbanMine = {
-        mount(el, translate) {
-            root = el; t = translate || t;
+        // options: elementName(sym) and openElement(sym) link the end screen to the element cards
+        mount(el, translate, options) {
+            root = el; t = translate || t; opts = options || {};
             const part = p => `<div class="rr-part" data-part="${p}">
                         <span class="rr-part-icon" aria-hidden="true">${p === 'screen' ? '📱' : '🔋'}</span>
                         <b class="rr-part-n">×1</b>
+                        <span class="rr-part-eta" hidden></span>
                         <span class="rr-part-lbl">${esc(t('game.part.' + p))}</span>
                         <button type="button" class="rr-buy" data-order="${p}"><span>${esc(t('game.buy', { price: money(PRICES[p]) }))}</span></button>
                     </div>`;
@@ -875,6 +963,7 @@
                     <div class="rr-time" title="${esc(t('game.timeLeft'))}"><span aria-hidden="true">⏱️</span><div class="rr-time-bar"><span></span></div><b class="rr-time-num">${SHIFT} s</b></div>
                     <span class="rr-stat"><span aria-hidden="true">⭐</span> <b class="rr-score">0</b></span>
                     <span class="rr-stat"><span aria-hidden="true">💷</span> <b class="rr-money">£30</b></span>
+                    <span class="rr-stat rr-combo" title=""><span aria-hidden="true">⚡</span> <b class="rr-combo-val">0</b></span>
                     <span class="rr-stat rr-ch" title=""><span aria-hidden="true">🎯</span> <b class="rr-ch-val">–</b></span>
                 </div>
                 <p class="rr-small rr-keys">${esc(t('game.keys'))}</p>`;
@@ -895,11 +984,19 @@
                 else if (b.classList.contains('rr-pause')) pause(!(g && g.paused));
                 else if (b.classList.contains('rr-sfx')) { Sound.toggle('sfx'); audioButtons(); }
                 else if (b.classList.contains('rr-music')) { Sound.toggle('music'); audioButtons(); }
-                else if (b.dataset.go === 'start') { const c = root.querySelector('#rr-tut'); newGame(c ? c.checked : false); }
-                else if (b.dataset.go === 'restart') { if (g) newGame(g.tutorial); else { const c = root.querySelector('#rr-tut'); newGame(c ? c.checked : false); } }
+                else if (b.dataset.go === 'start' || (b.dataset.go === 'restart' && !g)) {
+                    const c = root.querySelector('#rr-tut'), lv = root.querySelector('input[name="rr-level"]:checked');
+                    newGame(c ? c.checked : false, lv ? lv.value : readLevel());
+                }
+                else if (b.dataset.go === 'restart') newGame(g.tutorial, g.level);
+                else if (b.dataset.go === 'element') opts.openElement(b.dataset.sym);
                 else if (b.dataset.go === 'exit') quit(true);
                 else if (b.dataset.go === 'resume') pause(false);
                 else if (b.dataset.go === 'close') { const d = root.closest('dialog'); if (d) d.close(); }
+            });
+            root.addEventListener('change', ev => {           // best score for the chosen difficulty
+                if (ev.target.name !== 'rr-level') return;
+                const b = root.querySelector('.rr-overlay .g-best'); if (b) b.innerHTML = bestLine(ev.target.value);
             });
             document.addEventListener('visibilitychange', () => { if (document.hidden) pause(true); });
             audioButtons();
