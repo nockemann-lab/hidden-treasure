@@ -1213,7 +1213,7 @@
                     <span class="action-num" aria-hidden="true">4</span>
                     <span class="action-icon" aria-hidden="true">♻️</span>
                     <strong class="action-title" data-i18n="action.recycle.title">Recycle it</strong>
-                    <span class="action-desc" data-i18n="action.recycle.desc">Shops that sell electricals must take back your old phone when you buy a new one. Large electrical shops must take small electricals for free, even if you don't buy anything. Council recycling centres take them too.</span>
+                    <span class="action-desc" data-i18n="action.recycle.desc">Many shops that sell electricals will take back your old phone when you buy a new one, and some large electrical shops take small electricals for free, even if you don't buy anything. Council recycling centres take them too.</span>
                     <a class="action-link hide-in-kiosk" href="https://www.recycleyourelectricals.org.uk/" target="_blank" rel="noopener"><span data-i18n="action.recycle.link">Find your nearest drop-off point</span> <span aria-hidden="true">→</span></a>
                 </li>
                 <li class="action-card">
@@ -1247,8 +1247,8 @@
             <div class="game-cta">
                 <div class="game-cta-icon" aria-hidden="true">🏭</div>
                 <div>
-                    <h3 data-i18n="game.cta.title">Can you run a recycling centre?</h3>
-                    <p data-i18n="game.cta.text">Play Urban Mine: decide what happens to the old phones that arrive at your centre, keep the batteries safe and recover as much treasure as you can.</p>
+                    <h3 data-i18n="game.cta.title">Can you run a repair and recycling shop?</h3>
+                    <p data-i18n="game.cta.text">Play Urban Mine: old phones come down the conveyor belt. Repair them, sell them or recycle them before they end up in landfill, and watch out for swollen batteries!</p>
                 </div>
                 <button type="button" class="game-open game-cta-btn"><span aria-hidden="true">🎮</span> <span data-i18n="game.cta.button">Play the recycling game</span></button>
             </div>
@@ -1331,7 +1331,7 @@
     <!-- Recycling game pop-up -->
     <dialog class="game-dialog" id="game-dialog" aria-labelledby="game-title">
         <div class="pt-dialog-head">
-            <h2 id="game-title"><span aria-hidden="true">🎮</span> <span data-i18n="game.title">Urban Mine</span></h2>
+            <h2 id="game-title"><span aria-hidden="true">🎮</span> <span data-i18n="game.title">Urban Mine: Repair Rush</span></h2>
             <button type="button" class="pt-close game-close" data-i18n-aria="pt.close" aria-label="Close">✕</button>
         </div>
         <div class="game-body" id="game-root" aria-live="polite"></div>
@@ -1673,6 +1673,7 @@
                     modeBtn.innerHTML = is3d ? `<span aria-hidden="true">📷</span> ${t('3d.photo')}` : `<span aria-hidden="true">🧊</span> ${t('3d.model')}`;
                     hintEl.textContent = t(is3d ? '3d.hint' : '3d.hintPhoto');
                     try { localStorage.setItem('viewMode', is3d ? '3d' : 'photo'); } catch (e) { /* ignore */ }
+                    if (!is3d) restoreLabel();   // the photo was hidden: place the label again now it can be measured
                 }
 
                 function start3d() {
@@ -1915,8 +1916,11 @@
 
                 // Pop-up: open from the header button (whole table) or a mini table (that element selected)
                 const dialog = document.getElementById('pt-dialog');
+                // the 3D model stops drawing while a pop-up covers it (smoother game on slower devices)
+                const pause3d = on => { if (viewer && viewer.setPaused) viewer.setPaused(on); };
                 function openTable(sym) {
                     dialog.showModal();
+                    pause3d(true);
                     const cell = sym && table.querySelector(`.pt-cell[data-sym="${sym}"]`);
                     if (cell) {
                         showTableElement(sym, cell);
@@ -1939,9 +1943,11 @@
                     }
                     else UrbanMine.reset();
                     gameDialog.showModal();
+                    pause3d(true);
                 }));
                 gameDialog.querySelector('.game-close').addEventListener('click', () => gameDialog.close());
-                gameDialog.addEventListener('close', () => UrbanMine.pause());
+                gameDialog.addEventListener('close', () => { UrbanMine.pause(); pause3d(false); });
+                dialog.addEventListener('close', () => pause3d(false));
                 gameDialog.addEventListener('click', e => { if (e.target === gameDialog) gameDialog.close(); });
                 document.querySelectorAll('.pt-mini').forEach(b => b.addEventListener('click', () => openTable(b.dataset.sym)));
                 dialog.querySelector('.pt-close').addEventListener('click', () => dialog.close());

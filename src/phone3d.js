@@ -732,14 +732,14 @@ function create(container, opts) {
         fly = { from: camera.position.clone(), fromT: controls.target.clone(), to: view, t: 0 };
     }
 
-    // ---- render loop (paused while off-screen) ----
-    let visible = true;
+    // ---- render loop (paused while off-screen or covered by a pop-up) ----
+    let visible = true, paused = false;
     new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }).observe(container);
     let last = performance.now();
     function frame(now) {
         requestAnimationFrame(frame);
         const dt = Math.min((now - last) / 1000, 0.1); last = now;
-        if (!visible || document.hidden) return;
+        if (!visible || paused || document.hidden) return;
         clock += dt;
         if (animating) {
             const d = target - factor;
@@ -763,6 +763,7 @@ function create(container, opts) {
 
     return {
         select(part) { selected = part; },
+        setPaused(on) { paused = !!on; },
         setExplode,
         toggle() { setExplode(target < 0.5 ? 1 : 0, true); return target; },
         isExploded: () => target >= 0.5,

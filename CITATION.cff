@@ -9,11 +9,13 @@ authors:
     orcid: "https://orcid.org/0000-0001-9864-9702"
 abstract: >-
   An interactive educational resource about the critical and strategic
-  elements inside a smartphone. Visitors select a layer of an exploded phone
-  (display, camera, circuit board, speaker, battery, casing) to explore which
-  elements it contains, what they do, where they come from, and whether they
-  are on the EU and US critical raw materials lists. Includes a scored quiz
-  and a guide for teachers.
+  elements inside a smartphone, for pupils aged 11-16 and general audiences.
+  Visitors take apart a 3D phone and select one of its parts (display, camera,
+  circuit board, speaker, battery, casing) to explore which elements it
+  contains, what they do, where they come from, and whether they are on the
+  EU, US and UK critical raw materials lists. Includes a periodic-table view,
+  a real-time recycling game, a scored quiz with certificate and a guide for
+  teachers.
 keywords:
   - critical raw materials
   - smartphones
@@ -21,6 +23,7 @@ keywords:
   - recycling
   - chemistry education
   - science communication
+  - educational game
 license: CC-BY-4.0
 repository-code: "https://github.com/peternockemann-gif/phone-critical-elements"
 references:

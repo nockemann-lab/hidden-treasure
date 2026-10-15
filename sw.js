@@ -5,7 +5,7 @@
  * IMPORTANT: when you change any file, increase the version number below so visitors get the
  * new version. When you add a file (e.g. a new language in content/), add it to FILES too.
  */
-const VERSION = 'v17';
+const VERSION = 'v18';
 const CACHE = 'phone-elements-' + VERSION;
 
 const FILES = [
@@ -61,7 +61,8 @@ const FILES = [
 ];
 
 self.addEventListener('install', event => {
-    event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting()));
+    // 'reload' skips the browser's HTTP cache, so the new version never stores old copies
+    event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
@@ -76,17 +77,18 @@ self.addEventListener('fetch', event => {
     const req = event.request;
     if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
 
-    if (req.mode === 'navigate') {
-        // Pages: try the network first (fresh content), fall back to the cached copy when offline
+    // Pages, scripts, styles and text: network first, so a new page never runs with old scripts;
+    // the cached copy is used when offline
+    if (req.mode === 'navigate' || /\.(html|js|css|webmanifest)$/.test(new URL(req.url).pathname)) {
         event.respondWith(
-            fetch(req)
-                .then(res => { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); return res; })
-                .catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || caches.match('index.html')))
+            fetch(req.mode === 'navigate' ? req : new Request(req, { cache: 'no-cache' }))
+                .then(res => { if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); } return res; })
+                .catch(() => caches.match(req, { ignoreSearch: true }).then(r => r || (req.mode === 'navigate' ? caches.match('index.html') : Response.error())))
         );
         return;
     }
 
-    // Everything else: serve from the cache, fetch and cache anything new
+    // Images: serve from the cache, fetch and cache anything new
     event.respondWith(
         caches.match(req, { ignoreSearch: true }).then(cached => cached || fetch(req).then(res => {
             if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }

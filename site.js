@@ -151,27 +151,37 @@
             }
         }, true);
 
-        const overlay = document.createElement('div');
+        const overlay = document.createElement('dialog');
         overlay.className = 'kiosk-overlay';
-        overlay.hidden = true;
         overlay.innerHTML = '<div class="box" role="alertdialog" aria-live="assertive"><h2></h2><p></p><span class="count"></span></div>';
         overlay.querySelector('h2').textContent = t('kiosk.title');
         overlay.querySelector('p').textContent = t('kiosk.text');
         document.body.appendChild(overlay);
 
-        let last = Date.now();
-        const activity = () => { last = Date.now(); overlay.hidden = true; };
+        // The fresh start page waits for the first visitor; any other page counts down from loading
+        const home = /(^|\/)(index\.html)?$/.test(location.pathname) && !location.hash;
+        let last = home ? null : Date.now();
+        const activity = () => { last = Date.now(); if (overlay.open) overlay.close(); };
         ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart', 'scroll'].forEach(ev =>
             window.addEventListener(ev, activity, { passive: true, capture: true }));
+        overlay.addEventListener('cancel', activity);   // Esc closes the warning and counts as activity
+
+        // Forget the last visitor: progress, settings and quiz best (the game's high scores stay)
+        const KEEP = /^(urbanMineRushBest|urbanMineAudio)/;
+        function forgetVisitor() {
+            try { sessionStorage.clear(); } catch (e) { /* ignore */ }
+            try { Object.keys(localStorage).filter(k => !KEEP.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) { /* ignore */ }
+        }
 
         setInterval(() => {
+            if (last === null) return;
             const left = idleSecs - Math.floor((Date.now() - last) / 1000);
             if (left <= 0) {
-                try { sessionStorage.clear(); } catch (e) { /* ignore */ }
+                forgetVisitor();
                 location.href = 'index.html?' + kioskParams();
             } else if (left <= warnSecs) {
                 overlay.querySelector('.count').textContent = left;
-                overlay.hidden = false;
+                if (!overlay.open) { try { overlay.showModal(); } catch (e) { overlay.show(); } }
             }
         }, 1000);
     }

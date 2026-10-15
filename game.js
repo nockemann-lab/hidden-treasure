@@ -87,7 +87,7 @@
                 sfxBus = ac.createGain(); sfxBus.connect(master);
                 musicBus = ac.createGain(); musicBus.gain.value = 0.16; musicBus.connect(master);
             }
-            if (ac.state === 'suspended') ac.resume();
+            if (ac.state !== 'running' && ac.resume) ac.resume().catch(() => {});   // also iOS 'interrupted'
             return ac;
         }
         function tone(freq, dur, type, vol, when, slideTo, bus) {
@@ -153,6 +153,7 @@
                 timer = setInterval(schedule, 50);
             },
             stopMusic() { clearInterval(timer); timer = null; },
+            unlock() { ctx(); },   // create the audio context during a tap (needed on iPads)
             tempo(n) { bpm = n; },
             toggle(kind) {
                 prefs[kind] = !prefs[kind]; save();
@@ -201,7 +202,9 @@
         };
         root.querySelector('.rr-toasts').innerHTML = '';
         showOverlay(null);
-        hudCache = {};
+        hudCache = {}; pointer = null;
+        pauseButton(false);
+        Sound.unlock();
         Sound.tempo(112);
         Sound.startMusic();
         canvas.focus({ preventScroll: true });
@@ -210,7 +213,8 @@
     // Stop the current shift without a score (Exit) or start again (Restart)
     function quit(close) {
         Sound.stopMusic();
-        g = null; hudCache = {};
+        g = null; hudCache = {}; pointer = null;
+        pauseButton(false);
         showOverlay(introHtml());
         if (close) { const d = root.closest('dialog'); if (d && d.open) d.close(); }
     }
@@ -824,12 +828,19 @@
         return { sym: 'Au', text: t('game.link.gold') };
     }
 
-    function pause(on) {
-        if (!g || g.over || g.paused === on) return;
-        g.paused = on;
+    function pauseButton(on) {
         const b = root.querySelector('.rr-pause');
         b.textContent = on ? '▶' : '⏸';
         b.setAttribute('aria-label', t(on ? 'game.resume' : 'game.pause'));
+    }
+    function pause(on) {
+        if (!g || g.over || g.paused === on) return;
+        if (on && pointer) {                 // let go of a phone that is being dragged (it stays on the belt)
+            const ph = g.phones.find(q => q.id === pointer.dragId); if (ph) ph.held = false;
+            pointer = null;
+        }
+        g.paused = on;
+        pauseButton(on);
         if (on) Sound.stopMusic(); else Sound.startMusic();
         showOverlay(on ? `<div class="rr-card"><h3>${esc(t('game.paused'))}</h3>
             <div class="g-end-btns">
@@ -907,12 +918,25 @@
     function resize() {
         if (!root.clientWidth) return;
         const portrait = root.clientWidth < 660;
-        if (!L || L.portrait !== portrait) L = layout(portrait);
+        if (!L || L.portrait !== portrait) {
+            const old = L;
+            L = layout(portrait);
+            if (old && g) {                  // the device was turned mid-shift: move phones and fires to the new layout
+                const k = (L.belt.x1 - L.belt.x0) / (old.belt.x1 - old.belt.x0);
+                g.phones.forEach(p => { p.x = L.belt.x0 + (p.x - old.belt.x0) * k; p.held = false; });
+                g.fires.forEach(f => {
+                    if (f.station) { const c = stationCenter(f.station); f.x = c.x; f.y = c.y; }
+                    else { f.x = L.belt.x0 + (f.x - old.belt.x0) * k; f.y = L.belt.y; }
+                });
+                g.texts = []; g.tiles = []; g.particles = []; pointer = null;
+            }
+        }
         // fit the whole game on screen: leave room for the title, controls and status line
+        // (on very short screens, e.g. a phone held sideways, keep it big enough to play and let it scroll)
         const stage = root.querySelector('.rr-stage');
         const spare = window.innerHeight * 0.94 - 225;
         const cs = getComputedStyle(root), inner = root.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-        const w = Math.max(260, Math.min(inner, spare * L.W / L.H));
+        const w = Math.max(Math.min(inner, 520), Math.min(inner, spare * L.W / L.H));
         stage.style.width = w + 'px';
         root.querySelector('.rr-status').style.maxWidth = w + 'px';
         const h = w * L.H / L.W, dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -976,7 +1000,13 @@
             canvas.addEventListener('pointermove', onMove);
             canvas.addEventListener('pointerup', onUp);
             canvas.addEventListener('pointercancel', onUp);
-            canvas.addEventListener('keydown', onKey);
+            canvas.addEventListener('lostpointercapture', onUp);
+            // game keys work anywhere in the game, e.g. right after pressing a Buy button
+            root.addEventListener('keydown', ev => {
+                if (ev.target.closest('button, input') && ['Enter', ' ', 'Tab'].includes(ev.key)) return;   // keep buttons working
+                if (ev.target.closest('input') && ev.key.startsWith('Arrow')) return;                        // and the difficulty choice
+                onKey(ev);
+            });
             root.addEventListener('click', ev => {
                 const b = ev.target.closest('button');
                 if (!b || b.disabled) return;
@@ -1007,8 +1037,10 @@
         reset() {
             if (!g || g.over) { g = null; showOverlay(introHtml()); }
             resize();
+            if (!raf) { last = performance.now(); raf = requestAnimationFrame(frame); }
         },
-        pause() { pause(true); Sound.stopMusic(); },
+        // the pop-up was closed: pause the shift and stop drawing
+        pause() { pause(true); Sound.stopMusic(); cancelAnimationFrame(raf); raf = 0; },
         // used by the automatic tests
         _debug: {
             state: () => g, layout: () => L,

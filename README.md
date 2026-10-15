@@ -1,16 +1,16 @@
 # Hidden Treasure in Your Pocket
 
-An interactive educational resource about the critical and strategic elements inside a smartphone, for classrooms, outreach events and self-guided learning.
-Tap a layer of the exploded phone (screen, camera, speaker, circuit board, battery, casing) to see which elements it contains, then tap an element for a photo and short explanation.
+An interactive educational resource about the critical and strategic elements inside a smartphone, for classrooms (ages 11–16), outreach events and self-guided learning.
+Take a 3D phone apart, tap one of its six parts (display, camera, circuit board, speaker, battery, casing) to see which elements it contains, then tap an element for a photo, what it does, a fun fact, where it comes from and whether it is on the EU, US or UK critical list.
 
 It is a static website with no build step. Open `index.html` in a browser, or serve the folder with any static host (e.g. GitHub Pages).
 
 ## Pages
 
-- `index.html`: the interactive phone (start here), with exploration progress, previous/next navigation (buttons, swipe, arrow keys) and a periodic-table view
-- Recycling game "Urban Mine: Repair Rush" (`game.js`): opens as a pop-up from the main page; a 2½-minute real-time game in which phones ride a conveyor belt and players repair, sell or recycle them, keep swollen batteries safe and put out fires
+- `index.html`: the interactive phone (start here): 3D model or exploded-view photo, element cards with previous/next navigation (buttons, swipe, arrow keys), exploration progress, an "Element of the day", a periodic-table pop-up, the drawer challenge and "What can YOU do?"
+- Recycling game "Urban Mine: Repair Rush" (`game.js`): opens as a pop-up from the main page; a 2½-minute real-time game in which phones ride a conveyor belt and players repair (buying spare parts), sell or recycle them, keep swollen batteries safe and put out fires. Three difficulty levels, streak bonus, daily challenge, tutorial hints, synthesised sound and music, keyboard controls; the end screen links back to an element card
 - `quiz.html`: a scored multiple-choice quiz with a printable certificate (10 random questions per round; `quiz.html?n=all` asks all of them, `?n=5` five)
-- `teachers.html`: teacher guide: learning objectives, lesson plan, discussion questions, extension tasks, printable worksheet and quiz answer key
+- `teachers.html`: teacher guide: how the resource and the game work, learning objectives, background, UK curriculum links, lesson plan, discussion questions, extension tasks, exhibition and offline use, privacy, troubleshooting, printable worksheet and quiz answer key
 
 ## Features
 
@@ -19,6 +19,7 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 - **Dark mode:** follows the device setting; the 🌙/☀️ button switches manually (remembered per device).
 - **Languages:** all text of the interactive phone and the quiz is in `content/<language>.js`. See `content/languages.js` for how to add a language; a language menu appears automatically when there is more than one.
 - **Accessibility:** keyboard and screen-reader support, WCAG AA colour contrast in light and dark mode, reduced motion when requested.
+- **Privacy:** no accounts, cookies, analytics or third-party requests. Only a few settings and best scores are kept in the browser's local storage on the device.
 
 ## Files
 
@@ -27,6 +28,8 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 | `content/en.js` | All English text: interface, element names, the six phone parts (element texts, statistics, facts) and the quiz questions (first option = correct answer) |
 | `content/languages.js` | List of available languages |
 | `index.html` | Main page; element data (type, critical-list status, photo credits) and the hotspot outlines |
+| `game.js` | The recycling game (canvas, Web Audio); its text is in `content/en.js` (`game.*` keys) |
+| `quiz.html`, `teachers.html` | Quiz (with certificate) and teacher guide; the guide's answer key is built from the quiz questions |
 | `site.css`, `site.js` | Shared colours/themes, theme toggle, language loading, exhibition mode, offline support |
 | `sw.js` | Offline cache. **Increase `VERSION` whenever you change a file**, and add new files (e.g. a new language) to `FILES` |
 | `src/phone3d.js`, `phone3d.min.js` | 3D phone model (source and bundled version; see "3D model") |

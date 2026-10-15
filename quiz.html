@@ -498,6 +498,8 @@
                 showBest();
                 $('start-btn').addEventListener('click', start);
                 $('next-btn').addEventListener('click', next);
+                // holding Enter on "Next" must not also answer the next question
+                $('options').addEventListener('keydown', e => { if (e.repeat) e.preventDefault(); });
                 $('again-btn').addEventListener('click', start);
                 $('cert-btn').addEventListener('click', printCertificate);
             }
