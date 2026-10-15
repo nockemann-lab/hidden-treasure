@@ -901,6 +901,7 @@
                         <span data-i18n="3d.exploded">Exploded</span>
                     </label>
                     <button type="button" class="v-btn only-3d" id="v-diagonal" data-i18n="3d.diagonal">Diagonal view</button>
+                    <button type="button" class="v-btn only-3d" id="v-back" data-i18n="3d.back">Back view</button>
                     <button type="button" class="v-btn only-3d" id="v-reset" data-i18n="3d.reset">Reset view</button>
                     <button type="button" class="v-btn" id="v-mode" hidden></button>
                 </div>
@@ -1052,7 +1053,7 @@
                 </ul>
 
                 <h3 data-i18n="sources.illustration">Phone illustration and 3D model</h3>
-                <p data-i18n="sources.illustrationText">Exploded-view phone illustration and interactive 3D phone model created by Peter Nockemann using Google Gemini (AI generation), adapted for this resource. The 3D graphics use three.js (© 2010–2023 three.js authors, MIT licence).</p>
+                <p data-i18n="sources.illustrationText">Exploded-view phone illustration and interactive 3D phone model (a generic modern smartphone) created by Peter Nockemann using Google Gemini (AI generation), adapted for this resource. The 3D graphics use three.js (© 2010–2023 three.js authors, MIT licence).</p>
 
                 <h3 data-i18n="sources.photos">Element photos</h3>
                 <p data-i18n="sources.photosText">From Wikimedia Commons, resized and cropped for display. Click a name to see the original file and its licence.</p>
@@ -1459,6 +1460,7 @@
                 toggleBtn.addEventListener('click', () => viewer && viewer.toggle());
                 slider.addEventListener('input', () => viewer && viewer.setExplode(parseFloat(slider.value), false));
                 document.getElementById('v-diagonal').addEventListener('click', () => viewer && viewer.diagonalView());
+                document.getElementById('v-back').addEventListener('click', () => viewer && viewer.backView());
                 document.getElementById('v-reset').addEventListener('click', () => viewer && viewer.resetView());
 
                 setMode('photo');

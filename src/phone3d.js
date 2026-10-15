@@ -1,6 +1,7 @@
 /*
  * Interactive 3D smartphone (assembled / exploded) for "Hidden Treasure in Your Pocket".
- * Based on a model generated with Google Gemini; built with three.js (MIT licence).
+ * A generic modern smartphone, based on a detailed model generated with Google Gemini
+ * (brand names and logos removed); built with three.js (MIT licence).
  *
  * This is the SOURCE file. The website loads the bundled version, phone3d.min.js.
  * After editing, rebuild with:   npm install   then   npm run build:3d
@@ -12,223 +13,259 @@
  *       onExplode: t => {},            // explode factor changed (0 = assembled, 1 = exploded)
  *       reducedMotion: false
  *   });
- *   viewer.select('pcb'); viewer.toggle(); viewer.setExplode(0.5); viewer.diagonalView(); viewer.resetView();
+ *   viewer.select('pcb'); viewer.toggle(); viewer.setExplode(0.5);
+ *   viewer.diagonalView(); viewer.backView(); viewer.resetView();
  */
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
-const PHONE_W = 2.7;
-const PHONE_H = 5.55;
+const W = 2.75;   // phone width
+const H = 5.85;   // phone height
+const R = 0.42;   // corner radius
 
 // ---------------------------------------------------------------------------
 // Textures drawn on a canvas (no image files needed)
 // ---------------------------------------------------------------------------
-function batteryLabelTexture() {
+function canvasTexture(w, h, draw) {
     const c = document.createElement('canvas');
-    c.width = 1024; c.height = 1536;
-    const ctx = c.getContext('2d');
-    const font = (w, s) => `${w} ${s}px -apple-system, "Segoe UI", Arial, sans-serif`;
-
-    const g = ctx.createLinearGradient(0, 0, 1024, 1536);
-    g.addColorStop(0, '#d9dde1'); g.addColorStop(1, '#bcc2c8');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, 1024, 1536);
-    ctx.strokeStyle = '#8a9198'; ctx.lineWidth = 20; ctx.strokeRect(30, 30, 964, 1476);
-
-    ctx.fillStyle = '#16181b';
-    ctx.font = font('bold', 58); ctx.fillText('Lithium-ion Polymer Battery', 90, 170);
-    ctx.font = font('600', 40); ctx.fillText('3.85 V   3400 mAh   13.1 Wh', 90, 240);
-    ctx.fillRect(90, 280, 844, 5);
-
-    ctx.fillStyle = 'rgba(30, 60, 114, 0.10)'; ctx.fillRect(90, 320, 844, 300);
-    ctx.strokeStyle = '#1e3c72'; ctx.lineWidth = 4; ctx.strokeRect(90, 320, 844, 300);
-    ctx.fillStyle = '#1e3c72';
-    ctx.font = font('bold', 40); ctx.fillText('WHAT IS INSIDE?', 120, 380);
-    ctx.fillStyle = '#16181b'; ctx.font = font('500', 36);
-    ctx.fillText('+  Lithium cobalt oxide (Li, Co)', 120, 440);
-    ctx.fillText('−  Graphite (C)', 120, 495);
-    ctx.fillText('Foils: copper (Cu), aluminium (Al)', 120, 550);
-    ctx.fillText('Electrolyte: lithium salt', 120, 600);
-
-    ctx.font = font('bold', 40); ctx.fillText('Do not put in the bin!', 90, 720);
-    ctx.font = font('500', 34);
-    ctx.fillText('Damaged batteries can start fires.', 90, 775);
-    ctx.fillText('Recycle at an e-waste collection point.', 90, 822);
-
-    // Crossed-out wheelie bin (the real WEEE symbol)
-    ctx.strokeStyle = '#16181b'; ctx.fillStyle = '#16181b'; ctx.lineWidth = 10;
-    const bx = 160, by = 930;
-    ctx.fillRect(bx - 20, by - 12, 170, 14);              // lid
-    ctx.strokeRect(bx, by + 10, 130, 170);                // body
-    ctx.beginPath(); ctx.arc(bx + 20, by + 195, 16, 0, Math.PI * 2); ctx.fill();   // wheel
-    ctx.beginPath(); ctx.moveTo(bx - 40, by - 40); ctx.lineTo(bx + 170, by + 230);
-    ctx.moveTo(bx + 170, by - 40); ctx.lineTo(bx - 40, by + 230); ctx.stroke();
-    ctx.fillRect(bx - 40, by + 250, 210, 18);              // bar under the bin
-
-    // Recycling arrows (three chasing arrows in a triangle)
-    ctx.save(); ctx.translate(560, 1050); ctx.lineWidth = 14;
-    for (let k = 0; k < 3; k++) {
-        ctx.rotate((2 * Math.PI) / 3);
-        ctx.beginPath(); ctx.moveTo(-60, 70); ctx.lineTo(60, 70); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(60, 70); ctx.lineTo(35, 45); ctx.lineTo(35, 95); ctx.closePath(); ctx.fill();
-    }
-    ctx.restore();
-    ctx.font = font('bold', 44); ctx.fillText('Li-ion', 760, 1065);
-
-    ctx.font = font('500', 30); ctx.fillStyle = '#3d434a';
-    ctx.fillText('Illustration for "Hidden Treasure in Your Pocket"', 90, 1420);
-
+    c.width = w; c.height = h;
+    draw(c.getContext('2d'));
     const tex = new THREE.CanvasTexture(c);
     tex.colorSpace = THREE.SRGBColorSpace;
     tex.anisotropy = 8;
     return tex;
+}
+const FONT = (weight, size) => `${weight} ${size}px -apple-system, "Segoe UI", Arial, sans-serif`;
+
+// Fixed pseudo-random numbers, so the circuit board looks the same every time
+function seeded(seed) {
+    return () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+}
+
+function displayTexture() {
+    return canvasTexture(1024, 2200, ctx => {
+        const bg = ctx.createRadialGradient(512, 1100, 80, 512, 1100, 1100);
+        bg.addColorStop(0, '#1e293b'); bg.addColorStop(0.45, '#0f172a'); bg.addColorStop(1, '#05070b');
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, 1024, 2200);
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.14)'; ctx.lineWidth = 4;
+        for (let r = 160; r <= 480; r += 80) { ctx.beginPath(); ctx.arc(512, 1050, r, 0, Math.PI * 2); ctx.stroke(); }
+        ctx.fillStyle = 'rgba(248, 250, 252, 0.28)'; ctx.textAlign = 'center';
+        ctx.font = FONT(300, 150); ctx.fillText('09:30', 512, 540);
+        ctx.font = FONT(500, 38); ctx.fillText('Hidden Treasure in Your Pocket', 512, 615);
+    });
+}
+
+function chipTexture() {
+    return canvasTexture(512, 512, ctx => {
+        ctx.fillStyle = '#181c20'; ctx.fillRect(0, 0, 512, 512);
+        ctx.strokeStyle = '#334155'; ctx.lineWidth = 10; ctx.strokeRect(12, 12, 488, 488);
+        ctx.fillStyle = '#cbd5e1'; ctx.font = FONT('bold', 64); ctx.fillText('Si', 60, 130);
+        ctx.fillStyle = '#94a3b8'; ctx.font = FONT('bold', 46); ctx.fillText('PROCESSOR', 60, 230);
+        ctx.font = FONT(500, 32); ctx.fillText('silicon chip', 60, 290);
+        ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(65, 440, 16, 0, Math.PI * 2); ctx.fill();
+    });
 }
 
 function pcbTexture() {
-    const c = document.createElement('canvas');
-    c.width = 512; c.height = 1024;
-    const ctx = c.getContext('2d');
-    ctx.fillStyle = '#0d5c46'; ctx.fillRect(0, 0, 512, 1024);
-    let seed = 7;                                          // fixed pattern every time
-    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    ctx.strokeStyle = '#348c6e'; ctx.lineWidth = 3;
-    for (let i = 0; i < 65; i++) {
-        const x = rnd() * 512, y = rnd() * 1024;
-        ctx.beginPath(); ctx.moveTo(x, y);
-        ctx.lineTo(x + (rnd() - 0.5) * 140, y);
-        ctx.lineTo(x + (rnd() - 0.5) * 140, y + (rnd() - 0.5) * 200);
-        ctx.stroke();
-    }
-    ctx.fillStyle = '#e5b842';
-    for (let i = 0; i < 180; i++) {
-        ctx.beginPath(); ctx.arc(rnd() * 490 + 10, rnd() * 1000 + 10, 4, 0, Math.PI * 2); ctx.fill();
-    }
-    const tex = new THREE.CanvasTexture(c);
-    tex.colorSpace = THREE.SRGBColorSpace;
-    tex.anisotropy = 8;
-    return tex;
+    const rnd = seeded(11);
+    return canvasTexture(1024, 1536, ctx => {
+        ctx.fillStyle = '#0e5a44'; ctx.fillRect(0, 0, 1024, 1536);
+        ctx.strokeStyle = '#2f8a6a'; ctx.lineWidth = 3;
+        for (let i = 0; i < 140; i++) {
+            const x = rnd() * 1024, y = rnd() * 1536;
+            ctx.beginPath(); ctx.moveTo(x, y);
+            ctx.lineTo(x + (rnd() - 0.5) * 200, y);
+            ctx.lineTo(x + (rnd() - 0.5) * 200, y + (rnd() - 0.5) * 240);
+            ctx.stroke();
+        }
+        ctx.fillStyle = '#eab308';
+        for (let i = 0; i < 380; i++) { ctx.beginPath(); ctx.arc(30 + rnd() * 964, 30 + rnd() * 1476, 4.5, 0, Math.PI * 2); ctx.fill(); }
+    });
+}
+
+// Battery label: accurate chemistry and the real "do not bin" symbol (no brand names or invented data)
+function batteryTexture() {
+    return canvasTexture(1024, 1600, ctx => {
+        const g = ctx.createLinearGradient(0, 0, 1024, 1600);
+        g.addColorStop(0, '#272a30'); g.addColorStop(0.5, '#32363e'); g.addColorStop(1, '#23262b');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, 1024, 1600);
+        ctx.fillStyle = '#10b981';                                     // easy-pull adhesive tabs
+        ctx.fillRect(18, 180, 28, 1200); ctx.fillRect(978, 180, 28, 1200);
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = FONT('bold', 50); ctx.fillText('Lithium-ion Polymer Battery', 95, 165);
+        ctx.font = FONT(600, 38); ctx.fillText('3.89 V   5000 mAh   19.5 Wh', 95, 235);
+
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.12)'; ctx.fillRect(95, 290, 834, 330);
+        ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 4; ctx.strokeRect(95, 290, 834, 330);
+        ctx.fillStyle = '#38bdf8'; ctx.font = FONT('bold', 40); ctx.fillText('WHAT IS INSIDE?', 125, 350);
+        ctx.fillStyle = '#f1f5f9'; ctx.font = FONT(500, 36);
+        ctx.fillText('+  Lithium cobalt oxide (Li, Co)', 125, 415);
+        ctx.fillText('−  Graphite (C)', 125, 470);
+        ctx.fillText('Foils: copper (Cu), aluminium (Al)', 125, 525);
+        ctx.fillText('Electrolyte: lithium salt', 125, 580);
+
+        ctx.fillStyle = '#e2e8f0';
+        ctx.font = FONT('bold', 42); ctx.fillText('Do not put in the bin!', 95, 720);
+        ctx.font = FONT(500, 34);
+        ctx.fillText('Damaged batteries can start fires.', 95, 775);
+        ctx.fillText('Recycle at an e-waste collection point.', 95, 822);
+
+        // Crossed-out wheelie bin (the real WEEE symbol)
+        ctx.strokeStyle = '#e2e8f0'; ctx.fillStyle = '#e2e8f0'; ctx.lineWidth = 10;
+        const bx = 160, by = 960;
+        ctx.fillRect(bx - 20, by - 12, 170, 14);
+        ctx.strokeRect(bx, by + 10, 130, 170);
+        ctx.beginPath(); ctx.arc(bx + 20, by + 195, 16, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(bx - 40, by - 40); ctx.lineTo(bx + 170, by + 230);
+        ctx.moveTo(bx + 170, by - 40); ctx.lineTo(bx - 40, by + 230); ctx.stroke();
+        ctx.fillRect(bx - 40, by + 250, 210, 18);
+
+        // Recycling arrows
+        ctx.save(); ctx.translate(560, 1080); ctx.lineWidth = 14;
+        for (let k = 0; k < 3; k++) {
+            ctx.rotate((2 * Math.PI) / 3);
+            ctx.beginPath(); ctx.moveTo(-60, 70); ctx.lineTo(60, 70); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(60, 70); ctx.lineTo(35, 45); ctx.lineTo(35, 95); ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+        ctx.font = FONT('bold', 46); ctx.fillText('Li-ion', 760, 1095);
+        ctx.font = FONT(500, 30); ctx.fillStyle = '#94a3b8';
+        ctx.fillText('Illustration for "Hidden Treasure in Your Pocket"', 95, 1470);
+    });
+}
+
+function coilTexture() {
+    return canvasTexture(1024, 1024, ctx => {
+        ctx.fillStyle = '#181a1f'; ctx.fillRect(0, 0, 1024, 1024);
+        for (let r = 130; r < 430; r += 7.5) {
+            ctx.beginPath(); ctx.arc(512, 512, r, 0, Math.PI * 2);
+            ctx.strokeStyle = Math.round(r / 7.5) % 2 ? '#d97706' : '#b45309';
+            ctx.lineWidth = 5.5; ctx.stroke();
+        }
+        ctx.strokeStyle = '#64748b'; ctx.lineWidth = 22; ctx.setLineDash([45, 14]);
+        ctx.beginPath(); ctx.arc(512, 512, 465, 0, Math.PI * 2); ctx.stroke();
+    });
 }
 
 // ---------------------------------------------------------------------------
-// The model: six layers (front to back). Every mesh is tagged with the app's
-// part id and the key of its name, e.g. { part: 'camera', label: 'part.cameraRear' }.
+// The model: seven layers, front to back. Every mesh is tagged with the app's
+// part id (which card opens) and the key of its hover name.
 // ---------------------------------------------------------------------------
 function buildPhone() {
     const M = {
-        bezel: new THREE.MeshStandardMaterial({ color: 0x22272b, roughness: 0.3, metalness: 0.4 }),
-        glass: new THREE.MeshPhysicalMaterial({ color: 0x323b42, roughness: 0.08, metalness: 0.1, clearcoat: 1, clearcoatRoughness: 0.05 }),
-        gold: new THREE.MeshStandardMaterial({ color: 0xd9a441, roughness: 0.22, metalness: 0.92 }),
-        flex: new THREE.MeshStandardMaterial({ color: 0xc86d28, roughness: 0.32, metalness: 0.65 }),
-        alu: new THREE.MeshStandardMaterial({ color: 0x8a9198, roughness: 0.35, metalness: 0.85 }),
-        darkMetal: new THREE.MeshStandardMaterial({ color: 0x3b4046, roughness: 0.4, metalness: 0.75 }),
-        chip: new THREE.MeshStandardMaterial({ color: 0x1e2226, roughness: 0.25, metalness: 0.3 }),
-        chrome: new THREE.MeshStandardMaterial({ color: 0xd1d5db, roughness: 0.2, metalness: 0.9 }),
-        black: new THREE.MeshStandardMaterial({ color: 0x111315, roughness: 0.4 })
+        alu: new THREE.MeshStandardMaterial({ color: 0xbec5ce, metalness: 0.88, roughness: 0.24 }),
+        darkAlu: new THREE.MeshStandardMaterial({ color: 0x262b33, metalness: 0.78, roughness: 0.32 }),
+        copper: new THREE.MeshStandardMaterial({ color: 0xc86d3b, metalness: 0.88, roughness: 0.25 }),
+        gold: new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.94, roughness: 0.18 }),
+        steel: new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.92, roughness: 0.2 }),
+        silicon: new THREE.MeshStandardMaterial({ color: 0x181b20, metalness: 0.35, roughness: 0.2 }),
+        lens: new THREE.MeshPhysicalMaterial({ color: 0x091326, metalness: 0.1, roughness: 0.05, clearcoat: 1 }),
+        backGlass: new THREE.MeshPhysicalMaterial({ color: 0x3b424c, metalness: 0.15, roughness: 0.22, clearcoat: 0.85, clearcoatRoughness: 0.12 })
     };
-    const box = (w, h, d, r, mat) => new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 3, r), mat);
+    const rbox = (w, h, d, r, mat, seg = 3) => new THREE.Mesh(new RoundedBoxGeometry(w, h, d, seg, r), mat);
     const at = (mesh, x, y, z) => { mesh.position.set(x, y, z); return mesh; };
+    const facing = mesh => { mesh.rotation.x = Math.PI / 2; return mesh; };      // cylinders face the viewer
     const tag = (obj, part, label) => {
         obj.traverse(o => { if (o.isMesh) { o.userData.part = part; o.userData.label = label; } });
         return obj;
     };
+    const add = (layer, part, label, ...meshes) => meshes.forEach(m => layer.add(tag(m, part, label)));
 
-    // Layer 0: front cover glass (display). The earpiece belongs to the speaker, the front camera to the camera.
+    // Layer 0: OLED display with cover glass, front camera hole and display flex cable
     const l0 = new THREE.Group();
-    l0.add(tag(box(PHONE_W, PHONE_H, 0.09, 0.32, M.bezel), 'screen', 'part.screen'));
-    l0.add(tag(at(box(PHONE_W + 0.03, PHONE_H + 0.03, 0.06, 0.33, M.chrome), 0, 0, -0.01), 'screen', 'part.screen'));
-    l0.add(tag(at(new THREE.Mesh(new THREE.PlaneGeometry(PHONE_W - 0.24, PHONE_H - 1.15), M.glass), 0, 0, 0.047), 'screen', 'part.screen'));
-    const ring = at(new THREE.Mesh(new THREE.RingGeometry(0.19, 0.22, 32), M.chrome), 0, -PHONE_H / 2 + 0.33, 0.048);
-    l0.add(tag(ring, 'screen', 'part.screen'));
-    l0.add(tag(at(box(0.6, 0.09, 0.03, 0.03, M.black), 0, PHONE_H / 2 - 0.28, 0.048), 'speaker', 'part.speaker'));
-    l0.add(tag(at(new THREE.Mesh(new THREE.CircleGeometry(0.07, 20), M.black), -0.48, PHONE_H / 2 - 0.28, 0.05), 'camera', 'part.cameraFront'));
+    add(l0, 'screen', 'part.screen',
+        rbox(W, H, 0.06, R, new THREE.MeshStandardMaterial({ color: 0x111317, roughness: 0.2, metalness: 0.3 }), 6),
+        at(new THREE.Mesh(new THREE.PlaneGeometry(W - 0.14, H - 0.16),
+            new THREE.MeshPhysicalMaterial({ map: displayTexture(), roughness: 0.06, metalness: 0.08, clearcoat: 1 })), 0, 0, 0.032));
+    const backing = at(new THREE.Mesh(new THREE.PlaneGeometry(W - 0.25, H - 0.55), M.copper), 0, 0, -0.032);
+    backing.rotation.y = Math.PI;
+    add(l0, 'screen', 'part.screen', backing, at(rbox(0.95, 0.55, 0.04, 0.03, M.copper, 2), 0.15, -H / 2 + 0.55, -0.04));
+    add(l0, 'camera', 'part.cameraFront', at(new THREE.Mesh(new THREE.CircleGeometry(0.085, 24), M.lens), 0, H / 2 - 0.28, 0.034));
 
-    // Layer 1: display panel with the orange flex cable carrying the front camera
+    // Layer 1: aluminium mid-frame with buttons, antenna gaps and copper vapour chamber
     const l1 = new THREE.Group();
-    l1.add(tag(box(PHONE_W - 0.06, PHONE_H - 0.06, 0.08, 0.28, M.darkMetal), 'screen', 'part.screen'));
-    l1.add(tag(at(new THREE.Mesh(new THREE.PlaneGeometry(PHONE_W - 0.24, PHONE_H - 1.2),
-        new THREE.MeshStandardMaterial({ color: 0x475059, roughness: 0.22, metalness: 0.5 })), 0, -0.22, 0.042), 'screen', 'part.screen'));
-    const flex = new THREE.Group();
-    flex.add(at(box(1.18, 0.62, 0.05, 0.04, M.flex), 0.28, PHONE_H / 2 - 0.65, 0.05));
-    const ribbon = at(new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.36, 0.03), M.flex), 1.12, PHONE_H / 2 - 0.56, 0.06);
-    ribbon.rotation.z = 0.12; flex.add(ribbon);
-    const lens = at(new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.08, 24), M.chip), 0.32, PHONE_H / 2 - 0.55, 0.08);
-    lens.rotation.x = Math.PI / 2; flex.add(lens);
-    for (let i = 0; i < 3; i++) flex.add(at(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.2, 0.05), M.chip), -0.12 + i * 0.12, PHONE_H / 2 - 0.62, 0.08));
-    l1.add(tag(flex, 'camera', 'part.cameraFront'));
+    const antenna = new THREE.MeshStandardMaterial({ color: 0x64748b, roughness: 0.6 });
+    add(l1, 'casing', 'part.frame',
+        rbox(W + 0.04, H + 0.04, 0.16, R, M.alu, 6),
+        rbox(W - 0.18, H - 0.22, 0.17, R - 0.08, M.darkAlu, 4),
+        at(rbox(0.06, 0.42, 0.07, 0.02, M.alu, 2), W / 2 + 0.03, 0.95, 0),
+        at(rbox(0.06, 0.85, 0.07, 0.02, M.alu, 2), W / 2 + 0.03, 0.1, 0),
+        ...[[-1, 1.9], [1, 1.9], [-1, -1.9], [1, -1.9]].map(([s, y]) => at(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.06, 0.17), antenna), s * (W / 2 + 0.01), y, 0)));
+    add(l1, 'casing', 'part.vapor', at(rbox(1.75, 2.85, 0.18, 0.08, M.copper), -0.2, -0.25, 0));
 
-    // Layer 2: internal mid-frame with graphite heat-spreading sheet (part of the casing & frame)
+    // Layer 2: logic board with processor, memory, shield cans, connectors and capacitors
     const l2 = new THREE.Group();
-    l2.add(box(PHONE_W - 0.04, PHONE_H - 0.04, 0.07, 0.28, M.alu));
-    l2.add(at(new THREE.Mesh(new THREE.PlaneGeometry(PHONE_W - 0.26, PHONE_H - 0.9),
-        new THREE.MeshStandardMaterial({ color: 0x4b535b, roughness: 0.45, metalness: 0.6 })), 0, 0, 0.037));
-    l2.add(at(box(0.38, 0.11, 0.08, 0.04, M.chrome), 0, -PHONE_H / 2 + 0.25, 0.01));
-    tag(l2, 'casing', 'part.casing');
+    const pcbMat = new THREE.MeshStandardMaterial({ map: pcbTexture(), roughness: 0.35, metalness: 0.35 });
+    const tantalum = new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.3, metalness: 0.5 });
+    add(l2, 'pcb', 'part.pcb',
+        at(rbox(W - 0.35, 1.85, 0.08, 0.06, pcbMat, 2), 0, 1.55, 0),
+        at(rbox(0.88, 2.85, 0.08, 0.04, pcbMat, 2), W / 2 - 0.62, -0.45, 0),
+        at(rbox(0.68, 0.68, 0.12, 0.03, new THREE.MeshStandardMaterial({ map: chipTexture(), roughness: 0.25, metalness: 0.3 }), 2), 0.62, 0.35, 0.05),
+        at(rbox(0.54, 0.62, 0.11, 0.02, M.silicon, 2), 0.62, -0.42, 0.045),
+        at(rbox(0.75, 0.92, 0.12, 0.03, M.steel, 2), 0.62, -1.32, 0.05),
+        at(rbox(0.95, 0.65, 0.12, 0.03, M.steel, 2), -0.55, 1.05, 0.05),
+        ...Array.from({ length: 6 }, (_, i) => at(new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.11, 0.11), M.gold), 0.25 + (i % 2) * 0.45, 0.9 - Math.floor(i / 2) * 0.85, 0.05)),
+        ...Array.from({ length: 36 }, (_, i) => at(new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.05, 0.09), i % 3 === 0 ? tantalum : M.gold), 0.32 + (i % 4) * 0.19, 1.3 - Math.floor(i / 4) * 0.34, 0.045)));
 
-    // Layer 3: L-shaped circuit board
+    // Layer 3: triple rear camera (ultra-wide, main with stabiliser coil, periscope zoom) and vibration motor
     const l3 = new THREE.Group();
-    const pcbMat = new THREE.MeshStandardMaterial({ map: pcbTexture(), roughness: 0.35, metalness: 0.3 });
-    l3.add(at(box(0.95, PHONE_H - 0.25, 0.08, 0.04, pcbMat), PHONE_W / 2 - 0.52, 0, 0));
-    l3.add(at(box(PHONE_W - 0.15, 1.15, 0.08, 0.04, pcbMat), 0, -PHONE_H / 2 + 0.7, 0));
-    [[PHONE_W / 2 - 0.05, PHONE_H / 2 - 0.25], [PHONE_W / 2 - 0.05, 0.4], [-PHONE_W / 2 + 0.1, -PHONE_H / 2 + 0.25], [0.2, -PHONE_H / 2 + 0.12]]
-        .forEach(([x, y]) => { const t = at(new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.09, 16), M.gold), x, y, 0); t.rotation.x = Math.PI / 2; l3.add(t); });
-    l3.add(at(box(0.72, 0.85, 0.14, 0.03, M.chrome), PHONE_W / 2 - 0.52, 1.25, 0.06));
-    [[0.82, 2.15, 0.35, 0.35, M.chip], [0.82, 0.45, 0.42, 0.48, M.chip], [0.82, -0.25, 0.32, 0.38, M.chip], [0.82, -0.9, 0.36, 0.32, M.chip],
-     [-0.35, -1.95, 0.48, 0.45, M.chip], [0.25, -2.0, 0.38, 0.38, M.chip], [0.78, -2.05, 0.42, 0.36, M.gold], [-0.92, -2.05, 0.32, 0.28, M.gold]]
-        .forEach(([x, y, w, h, m]) => l3.add(at(box(w, h, 0.12, 0.02, m), x, y, 0.055)));
-    for (let i = 0; i < 28; i++) {
-        const right = i < 18;
-        const x = right ? PHONE_W / 2 - 0.85 + (i % 3) * 0.28 : -1.0 + (i - 18) * 0.22;
-        const y = right ? -1.4 + Math.floor(i / 3) * 0.62 : -1.65 - (i % 2) * 0.55;
-        l3.add(at(new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.06, 0.09), i % 3 === 0 ? M.gold : M.chip), x, y, 0.05));
-    }
-    tag(l3, 'pcb', 'part.pcb');
+    add(l3, 'camera', 'part.cameraRear',
+        at(rbox(2.22, 0.82, 0.22, 0.12, M.darkAlu), 0, 1.68, 0),
+        facing(at(new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.28, 28), M.lens), -0.72, 1.68, -0.04)),
+        facing(at(new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.26, 32), M.copper), -0.08, 1.68, -0.02)),
+        facing(at(new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.27, 0.32, 32), M.lens), -0.08, 1.68, -0.04)),
+        at(rbox(0.62, 0.48, 0.28, 0.04, M.steel, 2), 0.64, 1.68, -0.02),
+        at(rbox(0.34, 0.34, 0.31, 0.04, M.lens, 2), 0.64, 1.68, -0.04));
+    add(l3, 'speaker', 'part.vibration',
+        at(rbox(0.95, 0.48, 0.18, 0.05, M.steel, 2), -0.52, -2.18, 0),
+        at(new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.49, 0.19), M.copper), -0.52, -2.18, 0));
 
-    // Layer 4: rear housing with rear camera, loudspeaker and vibration motor
+    // Layer 4: battery with pull tabs, protection board and flex cable
     const l4 = new THREE.Group();
-    const shell = new THREE.Group();
-    shell.add(box(PHONE_W, PHONE_H, 0.22, 0.32, M.alu));
-    shell.add(at(box(PHONE_W - 0.28, PHONE_H - 0.6, 0.14, 0.12,
-        new THREE.MeshStandardMaterial({ color: 0x42484e, roughness: 0.5, metalness: 0.6 })), -0.08, -0.15, 0.065));
-    shell.add(at(box(0.06, 0.42, 0.08, 0.02, M.alu), PHONE_W / 2 + 0.02, 1.1, 0));
-    shell.add(at(box(0.06, 0.42, 0.08, 0.02, M.alu), PHONE_W / 2 + 0.02, 0.5, 0));
-    l4.add(tag(shell, 'casing', 'part.casing'));
-    const cam = new THREE.Group();
-    cam.add(at(box(0.6, 0.6, 0.18, 0.12, M.chrome), -0.78, PHONE_H / 2 - 0.62, 0.08));
-    const rearLens = at(new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.2, 24),
-        new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.1, metalness: 0.8 })), -0.78, PHONE_H / 2 - 0.62, 0.1);
-    rearLens.rotation.x = Math.PI / 2; cam.add(rearLens);
-    l4.add(tag(cam, 'camera', 'part.cameraRear'));
-    const audio = new THREE.Group();
-    audio.add(at(box(0.8, 0.42, 0.14, 0.06, M.black), -0.78, -PHONE_H / 2 + 0.42, 0.11));       // loudspeaker box
-    for (let i = 0; i < 5; i++) {                                                                // grille holes
-        const hole = at(new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.02, 12), M.chrome), -1.05 + i * 0.14, -PHONE_H / 2 + 0.42, 0.19);
-        hole.rotation.x = Math.PI / 2;
-        audio.add(hole);
-    }
-    const motor = at(new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 0.42, 24), M.chrome), 0.7, -PHONE_H / 2 + 0.45, 0.11);
-    motor.rotation.z = Math.PI / 2; audio.add(motor);                                           // vibration motor
-    l4.add(tag(audio, 'speaker', 'part.speaker'));
+    const BW = 1.56, BH = 3.18, BD = 0.22;
+    const labelMat = new THREE.MeshStandardMaterial({ map: batteryTexture(), roughness: 0.28, metalness: 0.22 });
+    const front = at(new THREE.Mesh(new THREE.PlaneGeometry(BW - 0.06, BH - 0.08), labelMat), -0.36, -0.32, BD / 2 + 0.002);
+    const back = at(new THREE.Mesh(new THREE.PlaneGeometry(BW - 0.06, BH - 0.08), labelMat), -0.36, -0.32, -BD / 2 - 0.002);
+    back.rotation.y = Math.PI;
+    add(l4, 'battery', 'part.battery',
+        at(rbox(BW, BH, BD, 0.08, new THREE.MeshStandardMaterial({ color: 0x24282f, roughness: 0.35, metalness: 0.5 }), 4), -0.36, -0.32, 0),
+        front, back,
+        at(new THREE.Mesh(new THREE.BoxGeometry(BW - 0.1, 0.18, BD + 0.02),
+            new THREE.MeshStandardMaterial({ color: 0xd97706, roughness: 0.2, metalness: 0.1, transparent: true, opacity: 0.85 })), -0.36, BH / 2 - 0.22, 0),
+        at(new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.22, 0.04), M.copper), 0.18, BH / 2 - 0.12, 0.03));
 
-    // Layer 5: battery
+    // Layer 5: wireless charging coil on a ferrite/graphite sheet, USB-C port and loudspeaker
     const l5 = new THREE.Group();
-    const BW = 1.85, BH = 3.35, BD = 0.22;
-    l5.add(box(BW, BH, BD, 0.08, new THREE.MeshStandardMaterial({ color: 0x2b2f33, roughness: 0.35, metalness: 0.5 })));
-    l5.add(at(new THREE.Mesh(new THREE.PlaneGeometry(BW - 0.12, BH - 0.16),
-        new THREE.MeshStandardMaterial({ map: batteryLabelTexture(), roughness: 0.4, metalness: 0.15 })), 0, 0, BD / 2 + 0.002));
-    l5.add(at(box(BW - 0.1, 0.22, BD - 0.04, 0.03, M.black), 0, BH / 2 + 0.09, 0));
-    const bf = at(new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.35, 0.03), M.flex), BW / 2 - 0.32, BH / 2 + 0.26, 0.02);
-    bf.rotation.z = -0.35; l5.add(bf);
-    const bc = at(new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.16, 0.06), M.gold), BW / 2 - 0.08, BH / 2 + 0.38, 0.04);
-    bc.rotation.z = -0.35; l5.add(bc);
-    tag(l5, 'battery', 'part.battery');
+    const coil = at(new THREE.Mesh(new THREE.CircleGeometry(0.88, 48),
+        new THREE.MeshStandardMaterial({ map: coilTexture(), roughness: 0.25, metalness: 0.75, side: THREE.DoubleSide })), -0.1, -0.3, 0.026);
+    add(l5, 'battery', 'part.coil',
+        at(rbox(1.92, 2.35, 0.04, 0.14, new THREE.MeshStandardMaterial({ color: 0x1c2026, roughness: 0.45, metalness: 0.55 })), -0.1, -0.3, 0),
+        coil);
+    add(l5, 'battery', 'part.usb', at(rbox(0.42, 0.32, 0.14, 0.05, M.steel, 2), 0, -H / 2 + 0.22, 0));
+    add(l5, 'speaker', 'part.speaker', at(rbox(0.85, 0.52, 0.16, 0.05, M.darkAlu, 2), 0.65, -2.22, 0));
 
-    // Assembled positions stack the layers inside the housing; exploded positions form a
-    // diagonal staircase (front layer top-left, housing and battery bottom-right), like the photo.
+    // Layer 6: rear glass with the camera bar (lens window, three lenses, flash, sensor)
+    const l6 = new THREE.Group();
+    add(l6, 'casing', 'part.rearGlass', rbox(W, H, 0.08, R, M.backGlass, 6));
+    const ringMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.9, roughness: 0.2, side: THREE.DoubleSide });
+    add(l6, 'camera', 'part.cameraRear',
+        at(rbox(2.38, 0.92, 0.22, 0.44, M.alu, 6), 0, 1.68, -0.11),
+        at(rbox(1.72, 0.66, 0.24, 0.32, M.lens, 5), -0.22, 1.68, -0.12),
+        ...[-0.72, -0.08, 0.44].map(x => at(new THREE.Mesh(new THREE.RingGeometry(0.14, 0.19, 28), ringMat), x, 1.68, -0.245)),
+        at(new THREE.Mesh(new THREE.CircleGeometry(0.095, 24), new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1, side: THREE.DoubleSide })), 0.88, 1.52, -0.225));
+    add(l6, 'camera', 'part.flash',
+        at(new THREE.Mesh(new THREE.CircleGeometry(0.095, 24),
+            new THREE.MeshStandardMaterial({ color: 0xfef3c7, emissive: 0xfef08a, emissiveIntensity: 0.25, side: THREE.DoubleSide })), 0.88, 1.84, -0.225));
+
+    // Assembled: layers stacked inside the phone. Exploded: the layers fan out front to back
+    // (display in front, rear glass at the back); the phone is shown turned, so every layer is visible.
     const V = (x, y, z) => new THREE.Vector3(x, y, z);
-    const ASSEMBLED = [V(0, 0, 0.16), V(0, 0, 0.1), V(0, 0, 0.04), V(0, 0, -0.02), V(0, 0, -0.12), V(-0.25, -0.25, -0.04)];
-    const EXPLODED = [V(-2.35, 2.6, 1.6), V(-1.35, 1.75, 1.0), V(-0.35, 0.9, 0.4), V(0.75, 0.05, -0.2), V(2.0, -0.8, -0.8), V(2.55, -3.6, 0.35)];
-    const layers = [l0, l1, l2, l3, l4, l5].map((mesh, i) => ({ mesh, assembled: ASSEMBLED[i], exploded: EXPLODED[i] }));
+    const ASSEMBLED = [V(0, 0, 0.15), V(0, 0, 0.05), V(0, 0, 0.01), V(0, 0, -0.02), V(0, 0, -0.03), V(0, 0, -0.09), V(0, 0, -0.15)];
+    const EXPLODED = [0, 1, 2, 3, 4, 5, 6].map(i => V(0, -0.3 * (i - 3), -1.9 * (i - 3)));
+    const layers = [l0, l1, l2, l3, l4, l5, l6].map((mesh, i) => ({ mesh, assembled: ASSEMBLED[i], exploded: EXPLODED[i] }));
 
     // Each mesh gets its own material copy so it can glow on its own
     const group = new THREE.Group();
@@ -237,6 +274,7 @@ function buildPhone() {
             if (o.isMesh) {
                 o.material = o.material.clone();
                 o.userData.baseEmissive = o.material.emissive ? o.material.emissive.clone() : null;
+                o.userData.baseIntensity = o.material.emissiveIntensity;
                 o.castShadow = true; o.receiveShadow = true;
             }
         });
@@ -274,14 +312,18 @@ function create(container, opts) {
     const fill = new THREE.DirectionalLight(0xdbeafe, 0.7);
     fill.position.set(-8, -4, 6);
     scene.add(fill);
+    const backLight = new THREE.DirectionalLight(0xffffff, 1.4);   // lights the back for the back view
+    backLight.position.set(-4, 6, -14);
+    scene.add(backLight);
 
     const { group, layers } = buildPhone();
-    group.rotation.set(-0.1, 0.3, 0.02);
+    group.rotation.set(-0.12, -0.6, 0.0);
     scene.add(group);
 
     const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-    const HOME = { pos: new THREE.Vector3(0.2, 0.9, 22.5), target: new THREE.Vector3(0.2, 0.1, 0) };
-    const DIAGONAL = { pos: new THREE.Vector3(-8.5, 4.8, 19.5), target: new THREE.Vector3(0.2, 0.1, 0) };
+    const HOME = { pos: new THREE.Vector3(-0.9, 2.0, 23.5), target: new THREE.Vector3(-0.9, 0.9, 0) };
+    const DIAGONAL = { pos: new THREE.Vector3(9.5, 10, 25), target: new THREE.Vector3(-0.6, -0.2, 0) };
+    const BACK = { pos: new THREE.Vector3(14, 5, -23), target: new THREE.Vector3(0.6, -0.5, 0) };
     camera.position.copy(HOME.pos);
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -290,10 +332,8 @@ function create(container, opts) {
     controls.dampingFactor = 0.08;
     controls.enableZoom = false;      // keep the mouse wheel for scrolling the page
     controls.enablePan = false;
-    controls.minPolarAngle = 0.55;    // no turning the phone upside down
+    controls.minPolarAngle = 0.55;    // no turning the phone upside down (turning all the way round is fine)
     controls.maxPolarAngle = 2.2;
-    controls.minAzimuthAngle = -1.4;
-    controls.maxAzimuthAngle = 1.4;
     renderer.domElement.style.touchAction = 'pan-y';   // vertical swipes scroll the page, sideways swipes turn the phone
 
     // ---- size & framing ----
@@ -334,7 +374,7 @@ function create(container, opts) {
             if (!m.material.emissive) return;
             if (m.userData.part === selected) { m.material.emissive.setHex(0xe74c3c); m.material.emissiveIntensity = pulse; }
             else if (m.userData.part === hovered) { m.material.emissive.setHex(0xffc400); m.material.emissiveIntensity = 0.35; }
-            else { m.material.emissive.copy(m.userData.baseEmissive); m.material.emissiveIntensity = 1; }
+            else { m.material.emissive.copy(m.userData.baseEmissive); m.material.emissiveIntensity = m.userData.baseIntensity; }
         });
     }
 
@@ -416,6 +456,7 @@ function create(container, opts) {
         toggle() { setExplode(target < 0.5 ? 1 : 0, true); return target; },
         isExploded: () => target >= 0.5,
         diagonalView() { setExplode(1, true); flyTo(DIAGONAL); },
+        backView() { flyTo(BACK); },
         resetView() { flyTo(HOME); }
     };
 }

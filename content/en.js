@@ -39,6 +39,13 @@ window.SITE_CONTENT.en = (function () {
             'part.speaker': 'Speaker & Magnets',
             'part.battery': 'Li-Ion Battery',
             'part.casing': 'Casing',
+            'part.frame': 'Mid-frame',
+            'part.vapor': 'Vapour chamber',
+            'part.rearGlass': 'Rear glass',
+            'part.coil': 'Wireless charging coil',
+            'part.usb': 'USB-C port',
+            'part.vibration': 'Vibration motor',
+            'part.flash': 'Camera flash',
             'short.screen': 'Display',
             'short.camera': 'Camera',
             'short.pcb': 'Circuit board',
@@ -54,6 +61,7 @@ window.SITE_CONTENT.en = (function () {
             '3d.exploded': 'Exploded',
             '3d.slider': 'Take the phone apart',
             '3d.diagonal': 'Diagonal view',
+            '3d.back': 'Back view',
             '3d.reset': 'Reset view',
             '3d.photo': 'Photo',
             '3d.model': '3D model',
@@ -164,7 +172,7 @@ window.SITE_CONTENT.en = (function () {
             'sources.mainNote': 'Component values, weights and metal contents on this page come from this study: 15 phones made between 2002 and 2015, with metal prices from 2021. Batteries were not analysed in the study.',
             'sources.other': 'Other sources',
             'sources.illustration': 'Phone illustration and 3D model',
-            'sources.illustrationText': 'Exploded-view phone illustration and interactive 3D phone model created by Peter Nockemann using Google Gemini (AI generation), adapted for this resource. The 3D graphics use three.js (© 2010–2023 three.js authors, MIT licence).',
+            'sources.illustrationText': 'Exploded-view phone illustration and interactive 3D phone model (a generic modern smartphone) created by Peter Nockemann using Google Gemini (AI generation), adapted for this resource. The 3D graphics use three.js (© 2010–2023 three.js authors, MIT licence).',
             'sources.photos': 'Element photos',
             'sources.photosText': 'From Wikimedia Commons, resized and cropped for display. Click a name to see the original file and its licence.',
 
@@ -292,11 +300,12 @@ window.SITE_CONTENT.en = (function () {
                 facts: ['💡 <strong>Rare earth power:</strong> Neodymium, praseodymium and dysprosium make up 53% of the metal value of a speaker. Yet only about 1% of the world\'s rare earth demand is met by recycling e-waste.']
             },
             {
-                id: 'battery', title: '🔋 Li-Ion Battery',
+                id: 'battery', title: '🔋 Battery & Charging',
                 elements: [
                     ['Li', '🪶 The Lightweight Champion', `<strong>Lithium</strong> is the lightest metal. Your battery holds no lithium metal, though: lithium <em>ions</em> shuttle from the graphite side to the cobalt-oxide side as the battery powers your phone, and back again when you charge it.<br><br><strong>Fun fact:</strong> Lithium is so light it floats on water (while fizzing as it reacts!), and lithium compounds give some fireworks a bright crimson-red colour.<br><br><strong>Where from?</strong> In 2025 about a third of mined lithium came from Australia, followed by China and Chile.`],
                     ['Co', '⚙️ The Stabiliser', `Lithium cobalt oxide forms the positive side of most phone batteries. <strong>Cobalt</strong> helps it keep its layered structure as lithium moves in and out, so a lot of energy fits into a small space. A phone battery contains a few grams of cobalt.<br><br><strong>Fun fact:</strong> Cobalt is named after the <em>kobold</em>, a goblin of German folklore. Miners blamed kobolds for ores that gave off poisonous arsenic fumes when smelted.<br><br><strong>Where from?</strong> DR Congo mined 73% of the world's cobalt in 2025. Some is dug by hand in dangerous conditions, sometimes by children.`],
-                    ['C', '🅿️ The Ion Parking Garage', `The negative side of the battery is <strong>graphite</strong>, the same form of carbon as pencil "lead". Lithium ions park between its flat layers of carbon atoms when you charge.<br><br><strong>Fun fact:</strong> Battery graphite must be over 99.95% pure. Synthetic graphite is baked at around 3,000 °C.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025 and makes most battery graphite.`]
+                    ['C', '🅿️ The Ion Parking Garage', `The negative side of the battery is <strong>graphite</strong>, the same form of carbon as pencil "lead". Lithium ions park between its flat layers of carbon atoms when you charge.<br><br><strong>Fun fact:</strong> Battery graphite must be over 99.95% pure. Synthetic graphite is baked at around 3,000 °C.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025 and makes most battery graphite.`],
+                    ['Cu', '🌀 The Wireless Charger', `Phones that charge wirelessly have a flat coil of fine <strong>copper</strong> wire inside. In the charging pad, a current in another coil makes a changing magnetic field, and this makes a current flow in the phone's coil, which charges the battery. A thin sheet of ferrite (a ceramic made from iron oxide) behind the coil guides the magnetic field.<br><br><strong>Fun fact:</strong> Making electricity with a changing magnetic field is called electromagnetic induction. Michael Faraday discovered it in London in 1831.<br><br><strong>Where from?</strong> Chile mines about a quarter of the world's copper; China refines nearly half of it.`]
                 ],
                 stats: [['~24%', 'of phone weight'], ['73%', 'of mined cobalt came from DR Congo (2025)']],
                 facts: ['🔋 <strong>Inside the battery:</strong> The two sides of the battery are coated onto very thin metal foils: copper on the graphite side and aluminium on the cobalt-oxide side.',
@@ -309,6 +318,7 @@ window.SITE_CONTENT.en = (function () {
                     ['Ti', '🛡️ The Featherweight Armour', `Some recent top-of-the-range phones have frames made of <strong>titanium</strong>, for example the iPhone 15 Pro and 16 Pro and Samsung's Galaxy S24 and S25 Ultra. Newer models of both brands switched back to aluminium, but the slim iPhone Air (2025) still uses titanium.<br><br><strong>Fun fact:</strong> Titanium is about 40% lighter than steel, and titanium alloys can be as strong as many steels. Bone grows tightly against it, so it is used for hip and knee replacements and dental implants.<br><br><strong>Where from?</strong> China made about 70% of the world's titanium metal in 2025.`],
                     ['Mg', '🪶 The Lightest Structural Metal', `<strong>Magnesium</strong> is about one-third less dense than aluminium, and its alloys are strong for their weight. It is used in some phones' internal frames, as well as in laptops, cars and aircraft.<br><br><strong>Fun fact:</strong> Magnesium burns with a dazzling white light, and is used in flares, fireworks and sparklers.<br><br><strong>Where from?</strong> China produced about 86% of the world's magnesium metal in 2025.`],
                     ['C', '🌡️ The Heat Spreader', `Many phones have thin sheets of <strong>graphite</strong> behind the screen and on the frame. Heat travels along these sheets up to several times better than along copper, spreading the heat from the busy processor so the phone does not get hot spots.<br><br><strong>Fun fact:</strong> A single layer of graphite, just one atom thick, is called graphene. It was first isolated in 2004 at the University of Manchester using sticky tape, and won the 2010 Nobel Prize in Physics.<br><br><strong>Where from?</strong> China mined about 80% of the world's natural graphite in 2025. Heat-spreading sheets are usually made of synthetic graphite.`],
+                    ['Cu', '💧 The Vapour Chamber', `Some powerful phones cool their processor with a vapour chamber: a flat, sealed <strong>copper</strong> pocket with a few drops of water inside. The water evaporates at the hot chip, the vapour spreads to cooler parts of the chamber and turns back into water, which flows back through a sponge-like copper wick. This carries heat away very quickly.<br><br><strong>Fun fact:</strong> Most of the air is pumped out of the chamber before it is sealed, so the water inside boils at well below 100 °C.<br><br><strong>Where from?</strong> Chile mines about a quarter of the world's copper; China refines nearly half of it.`],
                     ['Sb', '🔥 The Fire Fighter', `Plastics in electronics must not catch fire easily. <strong>Antimony</strong> oxide is added to some plastics together with bromine-containing flame retardants, and the two work as a team to slow down flames.<br><br><strong>Fun fact:</strong> In ancient Egypt, a black antimony mineral (stibnite) was used as eye make-up (kohl).<br><br><strong>Where from?</strong> China, Russia and Tajikistan mined about 85% of the world's antimony in 2025.`],
                     ['Plastic', '🛢️ Made from Oil and Gas', `<strong>Plastics</strong> are long chains of mostly carbon and hydrogen atoms, made mostly from oil and natural gas. The phone casings in the study were mainly polycarbonate/ABS blends.<br><br><strong>Fun fact:</strong> Plastics make up about 40% of a phone's weight, metals about 35% and glass and ceramics about 25%.<br><br><strong>Where from?</strong> Plastics are made in chemical plants from oil and natural gas. About a third of the world's plastics are made in China.`]
                 ],
@@ -409,6 +419,11 @@ window.SITE_CONTENT.en = (function () {
                 img: ['element-C-graphite.jpg', 'A shiny grey mineral specimen', 'Photo: <a href="https://commons.wikimedia.org/wiki/File:Graphite-233436.jpg" target="_blank" rel="noopener">Robert M. Lavinsky</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>'],
                 options: ['The battery', 'The camera', 'The speaker', 'The cover glass'],
                 explain: 'Graphite forms the negative side of the battery. Lithium ions park between its flat layers of carbon atoms when you charge.'
+            },
+            {
+                q: 'Wireless charging uses electromagnetic induction. Which scientist discovered it, in London in 1831?',
+                options: ['Michael Faraday', 'Isaac Newton', 'Marie Curie', 'Charles Darwin'],
+                explain: 'Faraday showed that a changing magnetic field makes electricity flow in a coil of wire. The copper coils in a charging pad and a phone work the same way.'
             },
             {
                 q: 'Graphene, a single layer of the graphite that spreads heat in phones, was first isolated in 2004 at which UK university?',
