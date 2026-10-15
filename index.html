@@ -133,7 +133,7 @@
         /* --- MAIN LAYOUT --- */
         .main-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.22fr 1fr;   /* the phone gets a little more room than the cards */
             gap: 30px;
             padding: 30px;
         }
@@ -148,7 +148,7 @@
         .interactive-container {
             position: relative;
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
@@ -226,7 +226,7 @@
         .interactive-container.hint .hotspot:focus-visible { fill: rgba(255, 215, 0, 0.18); stroke: #ffd700; stroke-dasharray: none; animation: none; }
 
         /* --- 3D VIEWER --- */
-        .viewer { width: 100%; max-width: 520px; margin: 0 auto; }
+        .viewer { width: 100%; max-width: 624px; margin: 0 auto; }
         .phone3d {
             position: relative;
             width: 100%;
@@ -308,7 +308,7 @@
         /* --- EXPLORATION PROGRESS --- */
         .progress {
             width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             margin-top: 20px;
             text-align: center;
         }
