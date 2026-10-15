@@ -254,6 +254,23 @@
             transition: opacity 0.15s;
         }
         .phone3d-label.visible { opacity: 1; }
+        .phone3d-tags { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .phone3d-tag {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            font-size: 0.7em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.92);
+            color: #1e293b;
+            border: 1px solid rgba(30, 60, 114, 0.25);
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+            white-space: nowrap;
+            transition: opacity 0.2s;
+        }
+        .phone3d-tag.below { transform: translate(-50%, 0); }
+        .phone3d-tags.small .phone3d-tag { font-size: 0.54em; padding: 1px 5px; letter-spacing: -0.01em; }
         .viewer-controls {
             display: flex;
             flex-wrap: wrap;
@@ -1438,6 +1455,7 @@
                                     toggleBtn.textContent = t(f >= 0.5 ? '3d.together' : '3d.apart');
                                 }
                             });
+                            box3d.viewer = viewer;   // lets the automatic tests ask which part is where
                             modeBtn.hidden = false;
                             setMode('3d');
                             if (selectedHotspot) viewer.select(selectedHotspot.dataset.layer);
