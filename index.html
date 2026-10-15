@@ -230,14 +230,27 @@
         .phone3d {
             position: relative;
             width: 100%;
-            aspect-ratio: 1 / 1;
+            aspect-ratio: 1 / 1.15;
             border-radius: 16px;
             overflow: hidden;
             /* light "studio" backdrop in both themes, like the photo */
             background: radial-gradient(circle at 50% 40%, #ffffff 0%, #eef2f6 60%, #dce4ee 100%);
             border: 1px solid var(--border);
         }
-        .phone3d[hidden], .interactive-container[hidden] { display: none; }
+        .phone3d[hidden], .photo-frame[hidden] { display: none; }
+        /* The photo sits in a frame the same size as the 3D view, so switching views keeps the layout steady */
+        .photo-frame {
+            width: 100%;
+            aspect-ratio: 1 / 1.15;
+            display: flex;
+            justify-content: center;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #fdfdfb;   /* matches the photo's own backdrop */
+            border: 1px solid var(--border);
+        }
+        .photo-frame .interactive-container { height: 100%; width: auto; max-width: 100%; aspect-ratio: 1200 / 1789; margin: 0; }
+        .photo-frame .main-phone-img { width: 100%; height: 100%; border-radius: 0; filter: none; }
         .phone3d-canvas { width: 100%; height: 100%; display: block; cursor: grab; }
         .phone3d-canvas:active { cursor: grabbing; }
         .phone3d-label {
@@ -543,6 +556,62 @@
         .big-num { display: block; font-size: 2em; font-weight: 800; color: var(--accent-strong); margin-bottom: 4px; letter-spacing: -0.02em; }
         .how-steps { list-style: none; display: grid; gap: 10px; max-width: 360px; margin: 0 auto 5px; text-align: left; }
         .how-steps li { display: flex; align-items: center; gap: 12px; color: var(--heading); }
+
+        /* Element of the day + game teaser, below the welcome text */
+        .spotlight {
+            margin: 26px 0 0;
+            padding: 16px 18px 18px;
+            text-align: left;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+        .spot-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+        .spot-head h3 { font-size: 1.05em; color: var(--heading); margin: 0; }
+        .spot-next {
+            font: inherit; font-size: 0.82em; font-weight: 600;
+            padding: 5px 12px; border-radius: 20px; cursor: pointer;
+            border: 1px solid var(--border); background: var(--surface); color: var(--text);
+            white-space: nowrap;
+        }
+        .spot-next:hover { border-color: var(--accent); }
+        .spot-body { display: flex; gap: 16px; align-items: flex-start; animation: fadeIn 0.3s ease; }
+        .spot-media { position: relative; flex-shrink: 0; }
+        .spot-media .element-img { width: 104px; height: 104px; }
+        .spot-tile {
+            position: absolute; right: -10px; bottom: -10px;
+            width: 44px; height: 46px; border-radius: 7px; padding: 3px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.18); overflow: hidden;
+        }
+        .spot-tile .atomic-number { font-size: 0.6em; margin: 0; align-self: flex-start; line-height: 1; }
+        .spot-tile .symbol { font-size: 1.15em; margin: 0; line-height: 1.1; }
+        .spot-tile.is-critical::after { border-top-width: 10px; border-left-width: 10px; }
+        .spot-name { font-weight: 800; color: var(--heading); font-size: 1.1em; margin-bottom: 4px; }
+        .spot-fact { color: var(--text-2); line-height: 1.5; font-size: 0.92em; margin-bottom: 10px; }
+        .spot-go {
+            font: inherit; font-size: 0.88em; font-weight: 700;
+            padding: 7px 14px; border-radius: 20px; cursor: pointer;
+            border: none; background: #2a5298; color: #fff;
+        }
+        .spot-go:hover { filter: brightness(1.1); }
+        .spot-next:focus-visible, .spot-go:focus-visible, .welcome-game button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .welcome-game {
+            display: flex; align-items: center; gap: 14px;
+            margin-top: 14px; padding: 14px 18px;
+            text-align: left; border-radius: 14px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+        }
+        .welcome-game .wg-icon { font-size: 2em; line-height: 1; }
+        .welcome-game .wg-text { flex: 1; font-size: 0.9em; line-height: 1.4; color: #dbe6ff; }
+        .welcome-game .wg-text strong { display: block; color: #fff; font-size: 1.08em; }
+        .welcome-game button {
+            font: inherit; font-weight: 800; font-size: 0.92em;
+            padding: 9px 18px; border-radius: 22px; cursor: pointer;
+            border: none; background: #ffd76a; color: #1e3c72; white-space: nowrap;
+        }
+        .welcome-game button:hover { filter: brightness(1.06); }
 
         /* --- LEGEND --- */
         .legend {
@@ -955,9 +1024,11 @@
             .drawer { padding: 20px 14px; }
             .sources { padding: 20px 16px; }
             .big-stats { grid-template-columns: 1fr; }
+            .spot-head { flex-wrap: wrap; justify-content: center; }
+            .spot-body { flex-direction: column; align-items: center; text-align: center; }
+            .welcome-game { flex-wrap: wrap; justify-content: center; text-align: center; }
             .detail-layout { flex-direction: column; align-items: center; text-align: center; }
             .element-detail h4 { justify-content: center; }
-            .phone3d { aspect-ratio: 1 / 1.05; }
             .v-slider input { width: 90px; }
         }
     </style>
@@ -997,6 +1068,7 @@
                 <div class="viewer">
                 <div class="phone3d" id="phone3d" role="img" data-i18n-aria="3d.label" aria-label="Interactive 3D model of a smartphone" hidden></div>
 
+                <div class="photo-frame" hidden>
                 <div class="interactive-container hint">
                     <img src="phone_parts_exploded_view.jpg" data-i18n-alt="img.alt" alt="Exploded view of a smartphone: display, camera, circuit board, casing and battery" class="main-phone-img" width="1200" height="1789">
 
@@ -1019,6 +1091,7 @@
                             points="1120,668 1335,652 1340,738 1125,752"/>
                     </svg>
                     <div class="hotspot-label" aria-hidden="true"></div>
+                </div>
                 </div>
 
                 <div class="viewer-controls">
@@ -1071,6 +1144,20 @@
                             <li><span class="step-num" aria-hidden="true">3</span><span data-i18n-html="welcome.step3"><strong>Take the quiz</strong> to test yourself</span></li>
                         </ol>
                         <a class="quiz-cta" href="quiz.html"><span aria-hidden="true">🧠</span> <span data-i18n="nav.quiz">Take the quiz</span></a>
+
+                        <section class="spotlight" aria-labelledby="spot-title">
+                            <div class="spot-head">
+                                <h3 id="spot-title"><span aria-hidden="true">✨</span> <span data-i18n="spot.title">Element of the day</span></h3>
+                                <button type="button" class="spot-next" data-i18n-aria="spot.anotherLabel" aria-label="Show another element"><span aria-hidden="true">🔀</span> <span data-i18n="spot.another">Another one</span></button>
+                            </div>
+                            <div class="spot-body" aria-live="polite"></div>
+                        </section>
+
+                        <div class="welcome-game">
+                            <span class="wg-icon" aria-hidden="true">🎮</span>
+                            <p class="wg-text"><strong data-i18n="game.teaser.title">Run your own repair shop</strong> <span data-i18n="game.teaser.text">Fix, sell or recycle old phones in a 2½-minute game.</span></p>
+                            <button type="button" class="game-open" data-i18n="game.teaser.button">Play</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1562,7 +1649,7 @@
                     const is3d = mode === '3d' && viewer;
                     viewerEl.classList.toggle('photo-mode', !is3d);
                     box3d.hidden = !is3d;
-                    container.hidden = !!is3d;
+                    container.parentNode.hidden = !!is3d;
                     modeBtn.innerHTML = is3d ? `<span aria-hidden="true">📷</span> ${t('3d.photo')}` : `<span aria-hidden="true">🧊</span> ${t('3d.model')}`;
                     hintEl.textContent = t(is3d ? '3d.hint' : '3d.hintPhoto');
                     try { localStorage.setItem('viewMode', is3d ? '3d' : 'photo'); } catch (e) { /* ignore */ }
@@ -1778,6 +1865,33 @@
                     card.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     if (tile) tile.focus({ preventScroll: true });
                 }
+
+                // -----------------------------------------------------------
+                // ELEMENT OF THE DAY (welcome card): a fun fact with a link to the element
+                // -----------------------------------------------------------
+                const spotSyms = Object.keys(ELEMENTS).filter(sym => ELEMENTS[sym].z && partsFor(sym).length);
+                const spotBody = document.querySelector('.spot-body');
+                let spotIndex = Math.floor(Date.now() / 864e5) % spotSyms.length;   // changes every day
+                function renderSpot() {
+                    const sym = spotSyms[spotIndex], el = ELEMENTS[sym], part = partsFor(sym)[0];
+                    const text = LAYERS.find(l => l.id === part).elements.find(([s]) => s === sym)[2];
+                    const fact = (text.match(/<strong>Fun fact:<\/strong>\s*(.*?)(?:<br>|$)/) || [, ''])[1];
+                    spotBody.innerHTML = `<div class="spot-media">
+                            <img src="${el.photo[0]}" alt="" class="element-img" width="104" height="104">
+                            <span class="spot-tile ${TILE_CLASS[el.type]}${isCritical(el) ? ' is-critical' : ''}" aria-hidden="true"><span class="atomic-number">${el.z}</span><span class="symbol">${el.symbol || sym}</span></span>
+                        </div>
+                        <div>
+                            <p class="spot-name">${name(sym)}</p>
+                            <p class="spot-fact">${fact}</p>
+                            <button type="button" class="spot-go">${t('spot.go', { name: name(sym) })} <span aria-hidden="true">→</span></button>
+                        </div>`;
+                    spotBody.querySelector('.spot-go').addEventListener('click', () => goToElement(part, sym));
+                }
+                document.querySelector('.spot-next').addEventListener('click', () => {
+                    spotIndex = (spotIndex + 1 + Math.floor(Math.random() * (spotSyms.length - 1))) % spotSyms.length;
+                    renderSpot();
+                });
+                renderSpot();
 
                 // Pop-up: open from the header button (whole table) or a mini table (that element selected)
                 const dialog = document.getElementById('pt-dialog');

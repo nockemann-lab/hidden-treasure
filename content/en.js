@@ -161,6 +161,13 @@ window.SITE_CONTENT.en = (function () {
             // Recycling game ("Urban Mine: Repair Rush")
             'nav.game': 'Recycling game',
             'game.title': 'Urban Mine: Repair Rush',
+            'spot.title': 'Element of the day',
+            'spot.another': 'Another one',
+            'spot.anotherLabel': 'Show another element',
+            'spot.go': 'Explore {name}',
+            'game.teaser.title': 'Run your own repair shop',
+            'game.teaser.text': 'Fix, sell or recycle old phones in a 2½-minute game.',
+            'game.teaser.button': 'Play',
             'game.cta.title': 'Can you run a repair and recycling shop?',
             'game.cta.text': 'Play Urban Mine: old phones come down the conveyor belt. Repair them, sell them or recycle them before they end up in landfill, and watch out for swollen batteries!',
             'game.cta.button': 'Play the recycling game',
