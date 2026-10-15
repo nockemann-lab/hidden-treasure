@@ -321,9 +321,9 @@ function create(container, opts) {
     scene.add(group);
 
     const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-    const HOME = { pos: new THREE.Vector3(-0.9, 2.0, 23.5), target: new THREE.Vector3(-0.9, 0.9, 0) };
-    const DIAGONAL = { pos: new THREE.Vector3(9.5, 10, 25), target: new THREE.Vector3(-0.6, -0.2, 0) };
-    const BACK = { pos: new THREE.Vector3(14, 5, -23), target: new THREE.Vector3(0.6, -0.5, 0) };
+    const HOME = { pos: new THREE.Vector3(-1.1, 1.85, 17.4), target: new THREE.Vector3(-1.1, 0.95, 0) };
+    const DIAGONAL = { pos: new THREE.Vector3(7.6, 8, 20), target: new THREE.Vector3(-0.6, -0.2, 0) };
+    const BACK = { pos: new THREE.Vector3(11.2, 4, -18.4), target: new THREE.Vector3(0.6, -0.5, 0) };
     camera.position.copy(HOME.pos);
 
     const controls = new OrbitControls(camera, renderer.domElement);

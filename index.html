@@ -230,7 +230,7 @@
         .phone3d {
             position: relative;
             width: 100%;
-            aspect-ratio: 4 / 5;
+            aspect-ratio: 1 / 1;
             border-radius: 16px;
             overflow: hidden;
             /* light "studio" backdrop in both themes, like the photo */
@@ -830,7 +830,7 @@
             .big-stats { grid-template-columns: 1fr; }
             .detail-layout { flex-direction: column; align-items: center; text-align: center; }
             .element-detail h4 { justify-content: center; }
-            .phone3d { aspect-ratio: 1 / 1.15; }
+            .phone3d { aspect-ratio: 1 / 1.05; }
             .v-slider input { width: 90px; }
         }
     </style>
@@ -1463,9 +1463,14 @@
                 document.getElementById('v-back').addEventListener('click', () => viewer && viewer.backView());
                 document.getElementById('v-reset').addEventListener('click', () => viewer && viewer.resetView());
 
+                // Offer the 3D model only where the device can show 3D graphics (WebGL)
+                const canDo3d = (() => {
+                    try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); }
+                    catch (e) { return false; }
+                })();
                 setMode('photo');
-                modeBtn.hidden = false;
-                if (savedMode !== 'photo') start3d();
+                modeBtn.hidden = !canDo3d;
+                if (canDo3d && savedMode === '3d') start3d();   // the photo is the default; 3D only if chosen before
 
                 // -----------------------------------------------------------
                 // EXPLORATION PROGRESS (remembered for this visit only)

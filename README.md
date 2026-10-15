@@ -35,14 +35,14 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 
 ## 3D model
 
-The phone on the main page is an interactive 3D model (take apart / put together, turn it, tap a part). It is built with three.js; the source is `src/phone3d.js` and the page loads the bundled file `phone3d.min.js`. The website itself needs no build step; only after editing `src/phone3d.js`, rebuild the bundle:
+The main page starts with the exploded-view photo; the "3D model" button switches to an interactive 3D model (take apart / put together, turn it, tap a part). A visitor's choice is remembered on their device. It is built with three.js; the source is `src/phone3d.js` and the page loads the bundled file `phone3d.min.js`. The website itself needs no build step; only after editing `src/phone3d.js`, rebuild the bundle:
 
 ```
 npm install
 npm run build:3d
 ```
 
-The "Photo" button switches to the exploded-view photo with clickable outlines. The photo is also shown automatically on devices that cannot display 3D graphics.
+The "Photo" button switches back to the photo with clickable outlines. On devices that cannot display 3D graphics, only the photo is offered.
 
 ## Hotspots
 
