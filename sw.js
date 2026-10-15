@@ -5,7 +5,7 @@
  * IMPORTANT: when you change any file, increase the version number below so visitors get the
  * new version. When you add a file (e.g. a new language in content/), add it to FILES too.
  */
-const VERSION = 'v11';
+const VERSION = 'v12';
 const CACHE = 'phone-elements-' + VERSION;
 
 const FILES = [
@@ -48,6 +48,7 @@ const FILES = [
     'icons/icon-192.png',
     'icons/icon-512.png',
     'index.html',
+    'game.js',
     'manifest.webmanifest',
     'material-plastic.jpg',
     'og-image.jpg',

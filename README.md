@@ -8,6 +8,7 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 ## Pages
 
 - `index.html`: the interactive phone (start here), with exploration progress, previous/next navigation (buttons, swipe, arrow keys) and a periodic-table view
+- Recycling game "Urban Mine" (`game.js`): opens as a pop-up from the main page; run a phone recycling centre for 8 weeks (refurbish, repair or recycle; battery fires; random events; score and stars)
 - `quiz.html`: a scored multiple-choice quiz with a printable certificate (10 random questions per round; `quiz.html?n=all` asks all of them, `?n=5` five)
 - `teachers.html`: teacher guide: learning objectives, lesson plan, discussion questions, extension tasks, printable worksheet and quiz answer key
 
@@ -35,7 +36,7 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 
 ## 3D model
 
-The main page starts with the exploded-view photo; the "3D model" button switches to an interactive 3D model (take apart / put together, turn it, tap a part). A visitor's choice is remembered on their device. It is built with three.js; the source is `src/phone3d.js` and the page loads the bundled file `phone3d.min.js`. The website itself needs no build step; only after editing `src/phone3d.js`, rebuild the bundle:
+The main page starts with an interactive 3D model (take apart / put together, turn it, tap a part); the "Photo" button switches to the exploded-view photo. A visitor's choice is remembered on their device. It is built with three.js; the source is `src/phone3d.js` and the page loads the bundled file `phone3d.min.js`. The website itself needs no build step; only after editing `src/phone3d.js`, rebuild the bundle:
 
 ```
 npm install

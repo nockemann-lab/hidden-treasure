@@ -600,6 +600,94 @@
         .pt-close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
         .pt-dialog-body { padding: 18px 20px 25px; }
 
+        /* --- RECYCLING GAME --- */
+        .game-dialog {
+            border: none; border-radius: 16px; padding: 0;
+            width: min(1100px, 96vw); max-height: 94vh; margin: auto;
+            background: var(--surface); color: var(--text);
+            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4);
+        }
+        .game-dialog::backdrop { background: rgba(11, 18, 32, 0.65); }
+        .game-dialog[open] { animation: fadeIn 0.2s ease; }
+        .game-body { padding: 18px 20px 24px; }
+        .game-body h3 { color: var(--heading); font-size: 1.35em; margin-bottom: 10px; }
+        .game-body h4 { color: var(--heading); font-size: 0.95em; margin: 14px 0 6px; }
+        .game-body h3.g-side-h { font-size: 0.95em; margin: 14px 0 6px; }
+        .g-btn {
+            font: inherit; font-weight: 700; padding: 10px 22px; border-radius: 999px;
+            border: 1px solid var(--border); background: var(--chip); color: var(--heading); cursor: pointer;
+        }
+        .g-btn.primary { background: linear-gradient(135deg, #1e8449 0%, #166534 100%); border-color: #166534; color: white; }
+        .g-btn.small { padding: 5px 12px; font-size: 0.82em; white-space: nowrap; }
+        .g-btn:disabled { opacity: 0.45; cursor: default; }
+        .g-btn:focus-visible, .g-act:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        .g-intro, .g-summary, .g-end { text-align: center; max-width: 640px; margin: 0 auto; }
+        .g-big-icon { font-size: 3em; margin-bottom: 6px; }
+        .g-rules { text-align: left; margin: 0 auto 14px; padding-left: 22px; line-height: 1.55; color: var(--text-2); }
+        .g-rules li { margin-bottom: 6px; }
+        .g-note { font-size: 0.85em; color: var(--muted); margin-bottom: 14px; }
+        .g-best { color: var(--good-text); font-weight: 700; margin-bottom: 12px; }
+        .g-stats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .g-stat { background: var(--chip); border: 1px solid var(--border); border-radius: 999px; padding: 5px 12px; font-weight: 700; color: var(--heading); font-size: 0.9em; }
+        .g-event { background: var(--crit-bg); border-left: 5px solid #e74c3c; border-radius: 8px; padding: 10px 14px; margin-bottom: 12px; line-height: 1.45; }
+        .g-event strong { color: var(--heading); }
+        .g-main { display: grid; grid-template-columns: 1fr 280px; gap: 16px; align-items: start; }
+        .g-phones { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 12px; }
+        .g-card { border: 1px solid var(--border); border-radius: 12px; padding: 12px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; }
+        .g-card.done { opacity: 0.85; }
+        .g-card-head { display: flex; gap: 10px; align-items: flex-start; }
+        .g-card-head strong { color: var(--heading); }
+        .g-card-head small { display: block; color: var(--muted); font-size: 0.82em; margin-top: 2px; }
+        .g-icon { font-size: 1.8em; line-height: 1; }
+        .g-carried { font-size: 0.72em; font-style: normal; background: #fff3c4; color: #7a5a00; border-radius: 999px; padding: 1px 7px; }
+        .g-actions { display: flex; flex-direction: column; gap: 6px; }
+        .g-act {
+            font: inherit; text-align: left; cursor: pointer; padding: 7px 10px; border-radius: 8px;
+            border: 1px solid var(--border); background: var(--surface); color: var(--text);
+        }
+        .g-act:hover:not(:disabled) { border-color: var(--accent); }
+        .g-act span { display: block; font-weight: 700; font-size: 0.88em; color: var(--heading); }
+        .g-act small { display: block; font-size: 0.76em; color: var(--muted); }
+        .g-act.risky span { color: var(--crit-text); }
+        .g-act:disabled { opacity: 0.5; cursor: default; }
+        .g-act .g-why { font-weight: 600; font-size: 0.74em; color: var(--muted); font-style: italic; }
+        .g-result { font-size: 0.88em; line-height: 1.4; padding: 8px 10px; border-radius: 8px; background: var(--chip); }
+        .g-result.sold { background: var(--good-bg); color: var(--good-text); font-weight: 700; }
+        .g-result.fire { background: var(--crit-bg); color: var(--crit-text); font-weight: 700; }
+        .g-side { border: 1px solid var(--border); border-radius: 12px; padding: 4px 14px 12px; background: var(--surface-2); }
+        .g-shop, .g-metals { list-style: none; display: grid; gap: 6px; }
+        .g-shop li { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 0.86em; }
+        .g-shop small { display: block; color: var(--muted); font-size: 0.85em; }
+        .g-owned { color: var(--good-text); font-weight: 700; font-size: 0.85em; }
+        .g-metals li { display: flex; justify-content: space-between; font-size: 0.86em; border-bottom: 1px dashed var(--border); padding-bottom: 3px; }
+        .g-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; margin-top: 16px; color: var(--muted); font-size: 0.9em; }
+        .g-sum-list, .g-lessons { list-style: none; text-align: left; display: grid; gap: 8px; margin: 10px auto 16px; max-width: 520px; }
+        .g-sum-list li, .g-lessons li { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; line-height: 1.45; }
+        .g-tip { background: var(--safe-bg); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; line-height: 1.45; text-align: left; }
+        .g-stars { font-size: 3em; letter-spacing: 6px; color: var(--border); }
+        .g-stars .on { color: #f5b301; text-shadow: 0 2px 6px rgba(245, 179, 1, 0.4); }
+        .g-total { font-size: 1.2em; font-weight: 700; color: var(--heading); margin-bottom: 10px; }
+        .g-new { background: #f5b301; color: #2c3e50; border-radius: 999px; padding: 2px 10px; font-size: 0.75em; margin-left: 6px; }
+        .g-table { width: 100%; max-width: 460px; margin: 0 auto 6px; border-collapse: collapse; font-size: 0.9em; }
+        .g-table td { padding: 6px 4px; border-bottom: 1px solid var(--border); text-align: left; }
+        .g-table td:last-child { text-align: right; font-weight: 700; }
+        .g-end .g-metals { max-width: 460px; margin: 0 auto; text-align: left; }
+        .g-end-btns { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+        .game-cta {
+            display: flex; align-items: center; gap: 18px; text-align: left;
+            max-width: 760px; margin: 0 auto 34px; padding: 18px 22px; border-radius: 16px;
+            background: rgba(0, 0, 0, 0.22); border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .game-cta h3 { font-size: 1.2em; margin-bottom: 4px; }
+        .game-cta p { font-size: 0.92em; line-height: 1.45; }
+        .game-cta-icon { font-size: 2.6em; }
+        .game-cta-btn {
+            font: inherit; font-weight: 700; white-space: nowrap; cursor: pointer;
+            padding: 10px 18px; border-radius: 999px; border: none; background: white; color: #166534;
+        }
+        .game-cta-btn:focus-visible { outline: 3px solid #ffd76a; outline-offset: 2px; }
+
         /* Mini periodic table next to an element's photo */
         .detail-media { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
         .pt-mini {
@@ -823,6 +911,7 @@
         }
 
         @media (max-width: 900px) {
+            .g-main { grid-template-columns: 1fr; }
             .action-grid { grid-template-columns: repeat(2, 1fr); }
             .main-content { grid-template-columns: 1fr; }
             .phone-section { margin-bottom: 20px; }
@@ -839,6 +928,8 @@
             .header-links { margin-top: 14px; }
             .main-content { padding: 20px 16px; }
             .pt-dialog-head, .pt-dialog-body { padding-left: 14px; padding-right: 14px; }
+            .game-body { padding: 14px 12px 20px; }
+            .game-cta { flex-direction: column; text-align: center; }
             .pt-row-label { font-size: 0.55em; padding-right: 3px; }
             .action-section { padding: 30px 16px; }
             .action-grid { grid-template-columns: 1fr; }
@@ -874,6 +965,7 @@
             <nav class="header-links">
                 <a href="quiz.html"><span aria-hidden="true">🧠</span> <span data-i18n="nav.quiz">Take the quiz</span></a>
                 <button type="button" class="pt-open"><span aria-hidden="true">🧪</span> <span data-i18n="nav.ptable">Periodic table</span></button>
+                <button type="button" class="game-open"><span aria-hidden="true">🎮</span> <span data-i18n="nav.game">Recycling game</span></button>
                 <a href="teachers.html" class="hide-in-kiosk"><span aria-hidden="true">📘</span> <span data-i18n="nav.teachers">For teachers</span></a>
             </nav>
         </header>
@@ -1026,6 +1118,15 @@
                 <p class="drawer-note" data-i18n="drawer.note">Estimate based on up to 53 kg of copper, 270 g of silver, 141 g of gold, 18 g of palladium and 3.3 kg of rare earth elements per tonne of old phones (Gómez et al., 2023), with about 100 g per phone. Never take phones or batteries apart yourself!</p>
             </div>
 
+            <div class="game-cta">
+                <div class="game-cta-icon" aria-hidden="true">🏭</div>
+                <div>
+                    <h3 data-i18n="game.cta.title">Can you run a recycling centre?</h3>
+                    <p data-i18n="game.cta.text">Play Urban Mine: decide what happens to the old phones that arrive at your centre, keep the batteries safe and recover as much treasure as you can.</p>
+                </div>
+                <button type="button" class="game-open game-cta-btn"><span aria-hidden="true">🎮</span> <span data-i18n="game.cta.button">Play the recycling game</span></button>
+            </div>
+
             <h3 class="big-title" data-i18n="big.title">The bigger picture</h3>
             <div class="big-picture">
                 <div class="big-tile"><span class="big-tile-num" data-i18n="big.homes.num">880 million</span><span data-i18n="big.homes">unused electrical items are kept in UK homes, about 30 per home</span><small data-i18n="big.homes.src">Material Focus, 2025</small></div>
@@ -1101,9 +1202,19 @@
         </div>
     </dialog>
 
+    <!-- Recycling game pop-up -->
+    <dialog class="game-dialog" id="game-dialog" aria-labelledby="game-title">
+        <div class="pt-dialog-head">
+            <h2 id="game-title"><span aria-hidden="true">🎮</span> <span data-i18n="game.title">Urban Mine</span></h2>
+            <button type="button" class="pt-close game-close" data-i18n-aria="pt.close" aria-label="Close">✕</button>
+        </div>
+        <div class="game-body" id="game-root" aria-live="polite"></div>
+    </dialog>
+
     <script src="content/languages.js"></script>
     <script src="content/en.js"></script>
     <script src="site.js"></script>
+    <script src="game.js"></script>
     <script>
         (function() {
             'use strict';
@@ -1488,7 +1599,7 @@
                 })();
                 setMode('photo');
                 modeBtn.hidden = !canDo3d;
-                if (canDo3d && savedMode === '3d') start3d();   // the photo is the default; 3D only if chosen before
+                if (canDo3d && savedMode !== 'photo') start3d();   // 3D is the default; the photo if chosen before (or without 3D support)
 
                 // -----------------------------------------------------------
                 // EXPLORATION PROGRESS (remembered for this visit only)
@@ -1661,6 +1772,17 @@
                     }
                 }
                 document.querySelector('.pt-open').addEventListener('click', () => openTable());
+
+                // Recycling game pop-up
+                const gameDialog = document.getElementById('game-dialog');
+                let gameReady = false;
+                document.querySelectorAll('.game-open').forEach(b => b.addEventListener('click', () => {
+                    if (!gameReady) { UrbanMine.mount(document.getElementById('game-root'), t); gameReady = true; }
+                    else UrbanMine.reset();
+                    gameDialog.showModal();
+                }));
+                gameDialog.querySelector('.game-close').addEventListener('click', () => gameDialog.close());
+                gameDialog.addEventListener('click', e => { if (e.target === gameDialog) gameDialog.close(); });
                 document.querySelectorAll('.pt-mini').forEach(b => b.addEventListener('click', () => openTable(b.dataset.sym)));
                 dialog.querySelector('.pt-close').addEventListener('click', () => dialog.close());
                 dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });  // click on the backdrop
