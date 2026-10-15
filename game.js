@@ -44,8 +44,109 @@
     const STAGES = [ // [from second, spawn interval, belt speed]
         [0, 3.0, 48], [50, 2.3, 62], [100, 1.75, 76]
     ];
+    // Daily challenge: one per day, the same for everyone on that day
+    const CHALLENGES = [
+        { id: 'noFire', stat: 'fires', max: 0 }, { id: 'repair', stat: 'repaired', min: 8 }, { id: 'noLandfill', stat: 'landfill', max: 0 },
+        { id: 'safe', stat: 'safe', min: 6 }, { id: 'sell', stat: 'sold', min: 10 }, { id: 'recycle', stat: 'recycled', min: 8 }, { id: 'money', stat: 'money', min: 600 }
+    ];
+    const CH_KEY = 'urbanMineChallenge', TUT_KEY = 'urbanMineTutorialDone', CH_BONUS = 200;
+    const today = () => Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
+    const challenge = () => CHALLENGES[today() % CHALLENGES.length];
+    const TARGET = { working: 'sell', screen: 'repair', battery: 'repair', water: 'recycle', old: 'recycle', swollen: 'safety' };
+    const MAX_FIRES = 4, SPREAD_AFTER = 10;
     const EMOJI = s => `${s}px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif`;
     const FONT = (w, s) => `${w} ${s}px system-ui,-apple-system,"Segoe UI",Arial,sans-serif`;
+
+    // ---------------------------------------------------------------------
+    // Sound effects and music, made with the Web Audio API (no sound files)
+    // ---------------------------------------------------------------------
+    const Sound = (() => {
+        const PREF = 'urbanMineAudio';
+        let ac = null, master, sfxBus, musicBus, timer = null, step = 0, nextAt = 0, bpm = 112;
+        let prefs = { sfx: true, music: true };
+        try { Object.assign(prefs, JSON.parse(localStorage.getItem(PREF)) || {}); } catch (e) { /* ignore */ }
+        const save = () => { try { localStorage.setItem(PREF, JSON.stringify(prefs)); } catch (e) { /* ignore */ } };
+        function ctx() {
+            if (!ac) {
+                const AC = window.AudioContext || window.webkitAudioContext;
+                if (!AC) return null;
+                ac = new AC();
+                master = ac.createGain(); master.gain.value = 0.55; master.connect(ac.destination);
+                sfxBus = ac.createGain(); sfxBus.connect(master);
+                musicBus = ac.createGain(); musicBus.gain.value = 0.16; musicBus.connect(master);
+            }
+            if (ac.state === 'suspended') ac.resume();
+            return ac;
+        }
+        function tone(freq, dur, type, vol, when, slideTo, bus) {
+            const t0 = ac.currentTime + (when || 0);
+            const o = ac.createOscillator(), gn = ac.createGain();
+            o.type = type || 'sine';
+            o.frequency.setValueAtTime(freq, t0);
+            if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t0 + dur);
+            gn.gain.setValueAtTime(0.0001, t0);
+            gn.gain.exponentialRampToValueAtTime(vol || 0.2, t0 + 0.01);
+            gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+            o.connect(gn); gn.connect(bus || sfxBus);
+            o.start(t0); o.stop(t0 + dur + 0.02);
+        }
+        function noise(dur, vol, freq, when) {
+            const t0 = ac.currentTime + (when || 0);
+            const buf = ac.createBuffer(1, Math.floor(ac.sampleRate * dur), ac.sampleRate);
+            const d = buf.getChannelData(0);
+            for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
+            const src = ac.createBufferSource(), f = ac.createBiquadFilter(), gn = ac.createGain();
+            src.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq; gn.gain.value = vol;
+            src.connect(f); f.connect(gn); gn.connect(sfxBus); src.start(t0);
+        }
+        const FX = {
+            pick: () => tone(660, 0.06, 'square', 0.08),
+            drop: () => tone(440, 0.08, 'triangle', 0.15),
+            no: () => tone(190, 0.18, 'sawtooth', 0.12, 0, 120),
+            sold: () => { tone(1047, 0.07, 'square', 0.1); tone(1568, 0.16, 'square', 0.1, 0.08); },
+            repaired: () => { tone(523, 0.08, 'triangle', 0.2); tone(659, 0.08, 'triangle', 0.2, 0.07); tone(784, 0.14, 'triangle', 0.2, 0.14); },
+            recycle: () => [784, 988, 1175, 1568].forEach((f, i) => tone(f, 0.09, 'triangle', 0.12, i * 0.05)),
+            safe: () => { tone(392, 0.1, 'sine', 0.2); tone(523, 0.16, 'sine', 0.2, 0.08); },
+            fire: () => { noise(0.7, 0.5, 700); tone(120, 0.5, 'sawtooth', 0.12, 0, 55); },
+            splash: () => noise(0.16, 0.35, 2600),
+            out: () => [880, 698, 523].forEach((f, i) => tone(f, 0.12, 'triangle', 0.18, i * 0.07)),
+            landfill: () => tone(150, 0.3, 'sine', 0.35, 0, 60),
+            event: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.1, 'square', 0.08, i * 0.08)),
+            end: () => [523, 659, 784, 659, 784, 1047].forEach((f, i) => tone(f, 0.16, 'triangle', 0.18, i * 0.13))
+        };
+        // music: a cheerful loop (bass, chords and a little tune) that speeds up with the belt
+        const BASS = [48, 48, 55, 48, 46, 46, 53, 55, 45, 45, 52, 45, 43, 43, 50, 47];
+        const TUNE = [72, 0, 74, 76, 0, 79, 76, 74, 72, 0, 69, 72, 0, 67, 69, 71, 72, 0, 74, 76, 79, 0, 81, 79, 76, 74, 72, 0, 74, 0, 71, 0];
+        const hz = n => 440 * Math.pow(2, (n - 69) / 12);
+        function schedule() {
+            const beat = 60 / bpm / 2;
+            while (nextAt < ac.currentTime + 0.15) {
+                const when = nextAt - ac.currentTime;
+                const b = BASS[Math.floor(step / 2) % BASS.length];
+                if (step % 2 === 0) tone(hz(b - 12), beat * 1.6, 'triangle', 0.5, when, 0, musicBus);
+                const n = TUNE[step % TUNE.length];
+                if (n) tone(hz(n), beat * 0.9, 'square', 0.18, when, 0, musicBus);
+                if (step % 4 === 2) tone(hz(b + 7), beat * 0.6, 'sine', 0.2, when, 0, musicBus);
+                nextAt += beat; step++;
+            }
+        }
+        return {
+            prefs,
+            play(name) { if (prefs.sfx && ctx() && FX[name]) FX[name](); },
+            startMusic() {
+                if (!prefs.music || timer || !ctx()) return;
+                nextAt = ac.currentTime + 0.05;
+                timer = setInterval(schedule, 50);
+            },
+            stopMusic() { clearInterval(timer); timer = null; },
+            tempo(n) { bpm = n; },
+            toggle(kind) {
+                prefs[kind] = !prefs[kind]; save();
+                if (kind === 'music') { if (prefs.music && g && !g.paused && !g.over) this.startMusic(); else this.stopMusic(); }
+                return prefs[kind];
+            }
+        };
+    })();
 
     let root, t = k => k, canvas, ctx, L, g = null, raf = 0, last = 0, timeScale = 1;
     let pointer = null, nextId = 1, hudCache = {};
@@ -71,8 +172,9 @@
     // ---------------------------------------------------------------------
     // Game state
     // ---------------------------------------------------------------------
-    function newGame() {
+    function newGame(tutorial) {
         g = {
+            tutorial: !!tutorial, hinted: {}, challenge: challenge(),
             t: 0, running: true, paused: false, over: false, score: 0, money: 30,
             parts: { screen: 1, battery: 1 }, orders: [], phones: [], selId: null, spawnIn: 0.5, burst: 0,
             jobs: { repair: [], sell: [], recycle: [], safety: [] }, fires: [], particles: [], texts: [],
@@ -81,11 +183,30 @@
         };
         root.querySelector('.rr-toasts').innerHTML = '';
         showOverlay(null);
+        hudCache = {};
+        Sound.tempo(112);
+        Sound.startMusic();
         canvas.focus({ preventScroll: true });
     }
 
+    // Stop the current shift without a score (Exit) or start again (Restart)
+    function quit(close) {
+        Sound.stopMusic();
+        g = null; hudCache = {};
+        showOverlay(introHtml());
+        if (close) { const d = root.closest('dialog'); if (d && d.open) d.close(); }
+    }
+
+    function challengeProgress() {
+        const c = g.challenge, v = c.stat === 'money' ? Math.round(g.money) : g.stats[c.stat];
+        if (c.max !== undefined) return { done: v <= c.max, text: v <= c.max ? '✓' : '✗' };
+        return { done: v >= c.min, text: (c.stat === 'money' ? money(Math.min(v, c.min)) : Math.min(v, c.min)) + '/' + (c.stat === 'money' ? money(c.min) : c.min) };
+    }
+    const challengeText = c => t('game.ch.' + c.id, { n: c.stat === 'money' ? money(c.min) : (c.min || c.max) });
+    const readCh = () => { try { return JSON.parse(localStorage.getItem(CH_KEY)) || {}; } catch (e) { return {}; } };
+
     const stage = () => STAGES.reduce((s, st) => (g.t >= st[0] ? st : s), STAGES[0]);
-    const speed = () => stage()[2];
+    const speed = () => stage()[2] * (g.phones.some(p => p.hint) ? 0.45 : 1);
     const igniteAfter = () => (g && g.t < g.heatUntil ? 5 : 8.5);
     const partPrice = p => Math.round(PRICES[p] * (g && g.t < g.saleUntil ? 0.5 : 1));
 
@@ -95,7 +216,9 @@
         const total = ids.reduce((n, id) => n + TYPES[id].weight[si], 0);
         let r = Math.random() * total;
         const type = ids.find(id => (r -= TYPES[id].weight[si]) < 0) || 'working';
-        g.phones.push({ id: nextId++, type, x: L.belt.x0 + 4, age: 0, held: false, wobble: Math.random() * 6 });
+        const hint = g.tutorial && !g.hinted[type];
+        if (hint) g.hinted[type] = true;
+        g.phones.push({ id: nextId++, type, x: L.belt.x0 + 4, age: 0, held: false, wobble: Math.random() * 6, hint });
     }
 
     function stationRect(id) { return L.stations[STATIONS.findIndex(s => s.id === id)]; }
@@ -120,7 +243,8 @@
     function firstTime(what) { if (g.seen[what]) return; g.seen[what] = true; toast('game.fact.' + what); }
 
     function startFire(x, y, station) {
-        if (g.fires.length >= 6) return;
+        if (g.fires.length >= MAX_FIRES) return;
+        Sound.play('fire');
         g.fires.push({ id: nextId++, x, y, hp: 3, age: 0, station: station || null, spread: false });
         g.stats.fires++;
         if (station) {                       // everything on a burning station is lost
@@ -134,7 +258,7 @@
     function send(phone, stId) {
         if (!phone || g.over || g.paused) return;
         const c = stationCenter(stId);
-        const reject = key => { g.texts.push({ x: c.x, y: c.y - 20, text: t(key), color: '#b45309', age: 0 }); };
+        const reject = key => { Sound.play('no'); g.texts.push({ x: c.x, y: c.y - 20, text: t(key), color: '#b45309', age: 0 }); };
         if (burning(stId)) return reject('game.msg.burning');
         const st = STATIONS.find(s => s.id === stId);
         if (g.jobs[stId].length >= st.slots) return reject('game.msg.busy');
@@ -154,6 +278,7 @@
         }
         if (stId === 'safety' && ty !== 'swollen') return reject('game.msg.safetyOnly');
         removePhone(phone);
+        Sound.play('drop');
         g.jobs[stId].push({ phone, t: 0, total: st.time });
     }
 
@@ -167,15 +292,18 @@
         if (stId === 'repair') {
             g.money += 55; g.stats.repaired++;
             addScore(40, c.x, y, t('game.msg.repaired', { amount: money(55) }));
+            Sound.play('repaired');
             firstTime('repair');
         } else if (stId === 'sell') {
             if (ty === 'working') {
                 g.money += 40; g.stats.sold++;
                 addScore(30, c.x, y, t('game.msg.sold', { amount: money(40) }));
+                Sound.play('sold');
                 firstTime('sell');
             } else {
                 g.stats.returned++;
                 addScore(-10, c.x, y, t('game.msg.returned'));
+                Sound.play('no');
                 g.phones.push(Object.assign(job.phone, { x: L.belt.x0 + 4, held: false }));
                 firstTime('returned');
             }
@@ -190,9 +318,11 @@
             else if (ty === 'screen' || ty === 'battery') { g.stats.wasted++; addScore(8, c.x, y, t('game.msg.couldRepair'), '#b45309'); }
             else { g.stats.recycled++; addScore(15, c.x, y, t('game.msg.recycled')); }
             firstTime('recycle');
+            Sound.play('recycle');
         } else if (stId === 'safety') {
             g.stats.safe++;
             addScore(25, c.x, y, t('game.msg.safe'));
+            Sound.play('safe');
             firstTime('safe');
         }
     }
@@ -200,10 +330,12 @@
     function extinguish(fire) {
         if (!fire || g.over || g.paused) return;
         fire.hp--;
+        Sound.play('splash');
         for (let i = 0; i < 8; i++) g.particles.push({ x: fire.x, y: fire.y - 10, vx: (Math.random() - 0.5) * 140, vy: -60 - Math.random() * 80, col: '#7cc4f5', age: 0, life: 0.6 });
         if (fire.hp <= 0) {
             g.fires = g.fires.filter(f => f !== fire);
             addScore(5, fire.x, fire.y - 40, t('game.msg.fireOut'));
+            Sound.play('out');
         }
     }
 
@@ -216,11 +348,11 @@
     }
 
     function events() {
-        const ev = (at, id, fn) => { if (g.t >= at && !g.events[id]) { g.events[id] = true; fn(); toast('game.ev.' + id); } };
+        const ev = (at, id, fn) => { if (g.t >= at && !g.events[id]) { g.events[id] = true; fn(); toast('game.ev.' + id); Sound.play('event'); } };
         ev(32, 'drive', () => { g.burst = 5; });
-        ev(50, 'rush1', () => {});
+        ev(50, 'rush1', () => Sound.tempo(126));
         ev(72, 'heat', () => { g.heatUntil = g.t + 20; });
-        ev(100, 'rush2', () => {});
+        ev(100, 'rush2', () => Sound.tempo(142));
         ev(112, 'sale', () => { g.saleUntil = g.t + 15; });
     }
 
@@ -252,6 +384,7 @@
                 removePhone(p);
                 g.stats.landfill++;
                 addScore(-15, L.bin.x + L.bin.w / 2, L.bin.y - 10, t('game.msg.landfill'));
+                Sound.play('landfill');
                 firstTime('landfill');
                 continue;
             }
@@ -277,7 +410,7 @@
         for (const f of [...g.fires]) {
             f.age += dt;
             g.score -= 3 * dt;
-            if (f.age > 7 && !f.spread) {
+            if (f.age > SPREAD_AFTER && !f.spread) {
                 f.spread = true;
                 if (f.station) {
                     const i = STATIONS.findIndex(s => s.id === f.station);
@@ -416,12 +549,43 @@
             if (p.id === g.selId) { ctx.strokeStyle = '#ffd76a'; ctx.lineWidth = 3; rr(p.x - 24, belt.y - 38, 48, 76, 9); ctx.stroke(); }
         }
         for (const f of g.fires) {
-            const fl = 1 + 0.12 * Math.sin(f.age * 18) + 0.06 * Math.sin(f.age * 31);
+            const fl = (0.55 + 0.15 * f.hp) * (1 + 0.12 * Math.sin(f.age * 18) + 0.06 * Math.sin(f.age * 31));
             const glow = ctx.createRadialGradient(f.x, f.y, 4, f.x, f.y, 70);
             glow.addColorStop(0, 'rgba(255,140,40,0.55)'); glow.addColorStop(1, 'rgba(255,140,40,0)');
             ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(f.x, f.y, 70, 0, Math.PI * 2); ctx.fill();
             ctx.font = EMOJI(54 * fl); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('🔥', f.x, f.y - 6);
-            for (let k = 0; k < 3; k++) { ctx.fillStyle = k < f.hp ? '#ef4444' : '#cbd5e1'; ctx.beginPath(); ctx.arc(f.x - 12 + k * 12, f.y + 34, 4, 0, Math.PI * 2); ctx.fill(); }
+            // "tap me" label with the number of taps still needed
+            const pulse = 1 + 0.08 * Math.sin(g.t * 9);
+            ctx.save(); ctx.translate(f.x, f.y + 40); ctx.scale(pulse, pulse);
+            rr(-38, -12, 76, 24, 12); ctx.fillStyle = '#ffffff'; ctx.fill(); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2; ctx.stroke();
+            ctx.fillStyle = '#c0392b'; ctx.font = FONT(800, 13); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(t('game.tapFire', { n: f.hp }), 0, 1);
+            ctx.restore();
+        }
+        if (g.fires.length && Math.sin(g.t * 6) > -0.4) {          // flashing banner
+            const by = L.belt.y - L.belt.h / 2 - 24;   // above the belt, clear of the fact pop-ups
+            ctx.font = FONT(800, 16); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            const msg = t('game.fireBanner'), w = ctx.measureText(msg).width + 30;
+            rr(L.W / 2 - w / 2, by - 15, w, 30, 15); ctx.fillStyle = '#c0392b'; ctx.fill();
+            ctx.fillStyle = 'white'; ctx.fillText(msg, L.W / 2, by + 1);
+        }
+        // tutorial hints: bubble above a new kind of phone and a dashed arrow to its station
+        for (const p of g.phones) {
+            if (!p.hint || (pointer && pointer.moved && pointer.dragId === p.id)) continue;
+            const r = stationRect(TARGET[p.type]), tx = r.x + r.w / 2, ty = r.y - 6;
+            ctx.save();
+            ctx.setLineDash([8, 6]); ctx.lineDashOffset = -g.t * 30;
+            ctx.strokeStyle = '#f59e0b'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(p.x, L.belt.y + 40); ctx.quadraticCurveTo(p.x, ty - 20, tx, ty); ctx.stroke();
+            ctx.setLineDash([]);
+            rr(r.x - 4, r.y - 4, r.w + 8, r.h + 8, 16); ctx.strokeStyle = `rgba(245, 158, 11, ${0.5 + 0.5 * Math.sin(g.t * 6)})`; ctx.lineWidth = 4; ctx.stroke();
+            const label = t('game.hint.' + p.type);
+            ctx.font = FONT(800, 13); const w = ctx.measureText(label).width + 22;
+            const bx = Math.min(Math.max(p.x, w / 2 + 6), L.W - w / 2 - 6), by = L.belt.y - 62;
+            rr(bx - w / 2, by - 15, w, 30, 10); ctx.fillStyle = '#f59e0b'; ctx.fill();
+            ctx.beginPath(); ctx.moveTo(p.x - 7, by + 14); ctx.lineTo(p.x + 7, by + 14); ctx.lineTo(p.x, by + 22); ctx.fill();
+            ctx.fillStyle = '#1f2937'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, bx, by + 1);
+            ctx.restore();
         }
         for (const p of g.particles) { ctx.globalAlpha = Math.max(0, 1 - p.age / p.life); ctx.fillStyle = p.col; ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fill(); }
         ctx.globalAlpha = 1;
@@ -460,6 +624,9 @@
         set('.rr-screens', String(g.parts.screen) + (g.orders.some(o => o.part === 'screen') ? ' +' : ''));
         set('.rr-batteries', String(g.parts.battery) + (g.orders.some(o => o.part === 'battery') ? ' +' : ''));
         set('.rr-time-num', Math.max(0, Math.ceil(SHIFT - g.t)) + ' s');
+        const cp = challengeProgress();
+        set('.rr-ch-val', cp.text);
+        root.querySelector('.rr-ch').classList.toggle('done', cp.done && g.challenge.min !== undefined);
         root.querySelector('.rr-time-bar span').style.width = (100 * Math.max(0, 1 - g.t / SHIFT)) + '%';
         ['screen', 'battery'].forEach(p => {
             const b = root.querySelector(`[data-order="${p}"]`);
@@ -467,6 +634,18 @@
             if (b.dataset.label !== label) { b.dataset.label = label; b.firstChild.textContent = label; }
             b.disabled = g.money < partPrice(p);
         });
+    }
+
+    function audioButtons() {
+        const sfx = root.querySelector('.rr-sfx'), mus = root.querySelector('.rr-music');
+        sfx.textContent = Sound.prefs.sfx ? '🔊' : '🔇';
+        sfx.setAttribute('aria-pressed', String(Sound.prefs.sfx)); sfx.setAttribute('aria-label', t('game.sfx')); sfx.title = t('game.sfx');
+        mus.textContent = '🎵';
+        mus.classList.toggle('off', !Sound.prefs.music);
+        mus.setAttribute('aria-pressed', String(Sound.prefs.music)); mus.setAttribute('aria-label', t('game.music')); mus.title = t('game.music');
+        const ch = root.querySelector('.rr-ch');
+        ch.title = t('game.ch.today') + ' ' + challengeText(challenge());
+        ch.setAttribute('aria-label', ch.title);
     }
 
     function showOverlay(html) {
@@ -479,6 +658,8 @@
 
     function introHtml() {
         const best = readBest();
+        let tutDone = false;
+        try { tutDone = !!localStorage.getItem(TUT_KEY); } catch (e) { /* ignore */ }
         return `<div class="rr-card">
             <h3>${esc(t('game.intro.title'))}</h3>
             <p>${t('game.intro.text')}</p>
@@ -487,6 +668,8 @@
                     <strong>${esc(t('game.st.' + st.id))}</strong><span>${esc(t('game.st.' + st.id + '.guide'))}</span></li>`).join('')}
             </ul>
             <p class="rr-warn"><span aria-hidden="true">🔥</span> ${t('game.intro.fire')}</p>
+            <p class="rr-challenge"><span aria-hidden="true">🎯</span> <strong>${esc(t('game.ch.today'))}</strong> ${esc(challengeText(challenge()))}${readCh().day === today() ? ` <span class="g-new">✓ ${esc(t('game.ch.doneToday'))}</span>` : ''}<br><span class="rr-small">${esc(t('game.ch.bonus', { n: CH_BONUS }))}</span></p>
+            <label class="rr-tut"><input type="checkbox" id="rr-tut" ${tutDone ? '' : 'checked'}> ${esc(t('game.tutorial'))}</label>
             <p class="rr-small">${esc(t('game.intro.controls'))}</p>
             ${best ? `<p class="g-best">⭐ ${esc(t('game.best', { score: best.score }))}</p>` : ''}
             <button type="button" class="g-btn primary" data-go="start">${esc(t('game.start'))} <span aria-hidden="true">▶</span></button>
@@ -497,6 +680,10 @@
     function endGame() {
         g.over = true; g.running = false;
         hud();
+        Sound.stopMusic(); Sound.play('end');
+        const ch = challengeProgress().done;
+        if (ch) { g.score += CH_BONUS; try { localStorage.setItem(CH_KEY, JSON.stringify({ day: today() })); } catch (e) { /* ignore */ } }
+        if (g.tutorial) { try { localStorage.setItem(TUT_KEY, '1'); } catch (e) { /* ignore */ } }
         const s = g.stats, score = Math.max(0, Math.round(g.score));   // no negative final scores
         const stars = score >= 1400 ? 3 : score >= 800 ? 2 : score >= 300 ? 1 : 0;
         const best = readBest();
@@ -515,6 +702,7 @@
             <div class="g-stars" role="img" aria-label="${esc(t('game.starsLabel', { n: stars }))}">${[1, 2, 3].map(i => `<span class="${i <= stars ? 'on' : ''}">★</span>`).join('')}</div>
             <h3>${esc(t('game.end.title' + stars))}</h3>
             <p class="g-total">${esc(t('game.end.score', { n: score }))}${isBest ? ` <span class="g-new">${esc(t('game.newBest'))}</span>` : ''}</p>
+            <p class="rr-challenge ${ch ? 'done' : ''}"><span aria-hidden="true">🎯</span> ${esc(challengeText(g.challenge))}: <strong>${esc(ch ? t('game.ch.won', { n: CH_BONUS }) : t('game.ch.lost'))}</strong></p>
             <div class="rr-end-grid">
                 <table class="g-table"><tbody>
                     ${row('sold', s.sold)}${row('repaired', s.repaired)}${row('recycled', s.recycled + s.wasted)}${row('safe', s.safe)}
@@ -543,8 +731,13 @@
         const b = root.querySelector('.rr-pause');
         b.textContent = on ? '▶' : '⏸';
         b.setAttribute('aria-label', t(on ? 'game.resume' : 'game.pause'));
+        if (on) Sound.stopMusic(); else Sound.startMusic();
         showOverlay(on ? `<div class="rr-card"><h3>${esc(t('game.paused'))}</h3>
-            <button type="button" class="g-btn primary" data-go="resume">${esc(t('game.resume'))} <span aria-hidden="true">▶</span></button></div>` : null);
+            <div class="g-end-btns">
+                <button type="button" class="g-btn primary" data-go="resume">${esc(t('game.resume'))} <span aria-hidden="true">▶</span></button>
+                <button type="button" class="g-btn" data-go="restart">↻ ${esc(t('game.restart'))}</button>
+                <button type="button" class="g-btn" data-go="exit">⏏ ${esc(t('game.exit'))}</button>
+            </div></div>` : null);
         if (!on) canvas.focus({ preventScroll: true });
     }
 
@@ -556,7 +749,7 @@
         const r = canvas.getBoundingClientRect();
         return { x: (ev.clientX - r.left) / r.width * L.W, y: (ev.clientY - r.top) / r.height * L.H };
     }
-    const fireAt = (x, y) => g.fires.find(f => Math.hypot(f.x - x, f.y - y) < 48);
+    const fireAt = (x, y) => g.fires.find(f => Math.hypot(f.x - x, f.y - y) < 64);
     const phoneAt = (x, y) => g.phones.slice().reverse().find(p => Math.abs(p.x - x) < 28 && Math.abs(L.belt.y - y) < 44);
     const stationAt = (x, y) => { const i = L.stations.findIndex(r => inRect(x, y, r)); return i < 0 ? null : STATIONS[i].id; };
 
@@ -568,6 +761,7 @@
         const ph = phoneAt(p.x, p.y);
         if (ph) {
             g.selId = ph.id; ph.held = true;
+            Sound.play('pick');
             pointer = { x: p.x, y: p.y, sx: p.x, sy: p.y, dragId: ph.id, moved: false };
             try { canvas.setPointerCapture(ev.pointerId); } catch (e) { /* ignore */ }
             ev.preventDefault();
@@ -637,7 +831,14 @@
                         <button type="button" class="g-btn small" data-order="screen" aria-label="${esc(t('game.order.screen'))}"><span>+ £15</span></button></span>
                     <span class="rr-stat">${esc(t('game.batteries'))} <b class="rr-batteries">1</b>
                         <button type="button" class="g-btn small" data-order="battery" aria-label="${esc(t('game.order.battery'))}"><span>+ £10</span></button></span>
-                    <button type="button" class="g-btn small rr-pause" aria-label="${esc(t('game.pause'))}">⏸</button>
+                    <span class="rr-stat rr-ch" title=""><span aria-hidden="true">🎯</span> <b class="rr-ch-val">–</b></span>
+                    <span class="rr-controls">
+                        <button type="button" class="g-btn small rr-sfx" aria-pressed="true"></button>
+                        <button type="button" class="g-btn small rr-music" aria-pressed="true"></button>
+                        <button type="button" class="g-btn small rr-pause" aria-label="${esc(t('game.pause'))}">⏸</button>
+                        <button type="button" class="g-btn small" data-go="restart" aria-label="${esc(t('game.restart'))}" title="${esc(t('game.restart'))}">↻ <span class="rr-lbl">${esc(t('game.restart'))}</span></button>
+                        <button type="button" class="g-btn small" data-go="exit" aria-label="${esc(t('game.exit'))}" title="${esc(t('game.exit'))}">⏏ <span class="rr-lbl">${esc(t('game.exit'))}</span></button>
+                    </span>
                 </div>
                 <div class="rr-stage">
                     <canvas class="rr-canvas" tabindex="0" role="application" aria-label="${esc(t('game.canvasLabel'))}"></canvas>
@@ -659,11 +860,16 @@
                 if (!b || b.disabled) return;
                 if (b.dataset.order) order(b.dataset.order);
                 else if (b.classList.contains('rr-pause')) pause(!(g && g.paused));
-                else if (b.dataset.go === 'start') newGame();
+                else if (b.classList.contains('rr-sfx')) { Sound.toggle('sfx'); audioButtons(); }
+                else if (b.classList.contains('rr-music')) { Sound.toggle('music'); audioButtons(); }
+                else if (b.dataset.go === 'start') { const c = root.querySelector('#rr-tut'); newGame(c ? c.checked : false); }
+                else if (b.dataset.go === 'restart') { if (g) newGame(g.tutorial); else { const c = root.querySelector('#rr-tut'); newGame(c ? c.checked : false); } }
+                else if (b.dataset.go === 'exit') quit(true);
                 else if (b.dataset.go === 'resume') pause(false);
                 else if (b.dataset.go === 'close') { const d = root.closest('dialog'); if (d) d.close(); }
             });
             document.addEventListener('visibilitychange', () => { if (document.hidden) pause(true); });
+            audioButtons();
             showOverlay(introHtml());
             last = performance.now();
             raf = requestAnimationFrame(frame);
@@ -672,7 +878,7 @@
             if (!g || g.over) { g = null; showOverlay(introHtml()); }
             resize();
         },
-        pause() { pause(true); },
+        pause() { pause(true); Sound.stopMusic(); },
         // used by the automatic tests
         _debug: {
             state: () => g, layout: () => L,
