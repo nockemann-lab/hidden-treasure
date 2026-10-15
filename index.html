@@ -623,13 +623,31 @@
         .g-best { color: var(--good-text); font-weight: 700; margin-bottom: 12px; }
         .g-metals li { display: flex; justify-content: space-between; font-size: 0.86em; border-bottom: 1px dashed var(--border); padding-bottom: 3px; }
         /* real-time game: HUD, shop stage, overlays */
-        .rr-hud { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .rr-top { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+        .rr-status { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px auto 0; }
+        .rr-shop { position: absolute; inset: 0; pointer-events: none; }
+        .rr-part {
+            position: absolute; pointer-events: auto; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 1px; text-align: center; line-height: 1.1; color: #2c3e50; border-radius: 10px; background: #f1f5f9; border: 1px solid #d5dce4;
+        }
+        .rr-part.empty { background: #fdecea; border-color: #f5b5ad; }
+        .rr-part.flash { animation: part-flash 0.4s ease 3; }
+        @keyframes part-flash { 50% { transform: scale(1.12); box-shadow: 0 0 0 4px #f59e0b; } }
+        .rr-part-icon { font-size: 1.6em; line-height: 1; }
+        .rr-part-n { font-size: 1.15em; }
+        .rr-part-lbl { font-size: 0.78em; color: #5f6b76; }
+        .rr-buy {
+            font: inherit; font-size: 0.85em; font-weight: 800; margin-top: 2px; padding: 2px 8px; border-radius: 999px;
+            border: none; background: #1e8449; color: white; cursor: pointer; white-space: nowrap;
+        }
+        .rr-buy:disabled { background: #9aa3ad; cursor: default; }
+        .rr-buy:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
         .rr-time { display: flex; align-items: center; gap: 8px; flex: 1 1 220px; font-weight: 700; color: var(--heading); }
         .rr-time-bar { flex: 1; height: 10px; border-radius: 5px; background: var(--chip); overflow: hidden; }
         .rr-time-bar span { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #e74c3c, #f5b301 40%, #1e8449); }
         .rr-stat { display: inline-flex; align-items: center; gap: 6px; background: var(--chip); border: 1px solid var(--border); border-radius: 999px; padding: 4px 6px 4px 12px; font-weight: 700; color: var(--heading); font-size: 0.9em; }
         .rr-stat:not(:has(button)) { padding-right: 12px; }
-        .rr-controls { display: inline-flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+        .rr-controls { display: inline-flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
         .rr-controls .g-btn.small { padding: 5px 10px; }
         .rr-music.off { opacity: 0.4; text-decoration: line-through; }
         .rr-ch.done { background: var(--good-bg); border-color: var(--good-text); color: var(--good-text); }
@@ -637,7 +655,7 @@
         .rr-challenge.done { background: var(--good-bg); }
         .rr-tut { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 10px; font-weight: 600; color: var(--heading); cursor: pointer; }
         .rr-tut input { width: 18px; height: 18px; accent-color: #1e8449; }
-        .rr-stage { position: relative; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+        .rr-stage { position: relative; margin: 0 auto; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
         .rr-canvas { display: block; width: 100%; touch-action: none; cursor: pointer; }
         .rr-canvas:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
         .rr-toasts { position: absolute; top: 38%; left: 50%; transform: translateX(-50%); width: min(560px, 92%); display: grid; gap: 6px; pointer-events: none; }
@@ -927,7 +945,9 @@
             .rr-guide li > span:last-child { grid-column: 3; font-size: 0.92em; }
             .rr-end-grid { grid-template-columns: 1fr; }
             .rr-lbl { display: none; }
-            .rr-controls { margin-left: 0; }
+            .rr-toast { font-size: 0.74em; padding: 6px 10px; }
+            .rr-keys { display: none; }
+            .rr-top { justify-content: center; }
             .game-cta { flex-direction: column; text-align: center; }
             .pt-row-label { font-size: 0.55em; padding-right: 3px; }
             .action-section { padding: 30px 16px; }

@@ -258,7 +258,8 @@
     function send(phone, stId) {
         if (!phone || g.over || g.paused) return;
         const c = stationCenter(stId);
-        const reject = key => { Sound.play('no'); g.texts.push({ x: c.x, y: c.y - 20, text: t(key), color: '#b45309', age: 0 }); };
+        const top = stationRect(stId).y - 14;
+        const reject = key => { Sound.play('no'); g.texts.push({ x: c.x, y: top, text: t(key), color: '#b45309', age: 0 }); };
         if (burning(stId)) return reject('game.msg.burning');
         const st = STATIONS.find(s => s.id === stId);
         if (g.jobs[stId].length >= st.slots) return reject('game.msg.busy');
@@ -273,7 +274,12 @@
             if (ty === 'working') return reject('game.msg.nothingToFix');
             if (ty === 'water' || ty === 'old') return reject('game.msg.cantRepair');
             const part = ty === 'screen' ? 'screen' : 'battery';
-            if (g.parts[part] < 1) { firstTime('parts'); return reject('game.msg.noPart.' + part); }
+            if (g.parts[part] < 1) {
+                firstTime('parts');
+                const b = root.querySelector(`[data-part="${part}"]`);
+                b.classList.remove('flash'); void b.offsetWidth; b.classList.add('flash');
+                return reject('game.msg.noPart.' + part);
+            }
             g.parts[part]--;
         }
         if (stId === 'safety' && ty !== 'swollen') return reject('game.msg.safetyOnly');
@@ -288,7 +294,7 @@
     }
 
     function finishJob(stId, job) {
-        const c = stationCenter(stId), ty = job.phone.type, y = c.y - 40;
+        const c = stationCenter(stId), ty = job.phone.type, y = stationRect(stId).y - 14;
         if (stId === 'repair') {
             g.money += 55; g.stats.repaired++;
             addScore(40, c.x, y, t('game.msg.repaired', { amount: money(55) }));
@@ -621,8 +627,11 @@
         const set = (sel, val) => { if (hudCache[sel] !== val) { hudCache[sel] = val; const el = root.querySelector(sel); if (el) el.textContent = val; } };
         set('.rr-score', String(Math.max(0, Math.round(g.score))));
         set('.rr-money', money(g.money));
-        set('.rr-screens', String(g.parts.screen) + (g.orders.some(o => o.part === 'screen') ? ' +' : ''));
-        set('.rr-batteries', String(g.parts.battery) + (g.orders.some(o => o.part === 'battery') ? ' +' : ''));
+        ['screen', 'battery'].forEach(p => {
+            const coming = g.orders.filter(o => o.part === p).length;
+            set(`[data-part="${p}"] .rr-part-n`, '×' + g.parts[p] + (coming ? ` (+${coming})` : ''));
+            root.querySelector(`[data-part="${p}"]`).classList.toggle('empty', g.parts[p] < 1 && !coming);
+        });
         set('.rr-time-num', Math.max(0, Math.ceil(SHIFT - g.t)) + ' s');
         const cp = challengeProgress();
         set('.rr-ch-val', cp.text);
@@ -630,8 +639,12 @@
         root.querySelector('.rr-time-bar span').style.width = (100 * Math.max(0, 1 - g.t / SHIFT)) + '%';
         ['screen', 'battery'].forEach(p => {
             const b = root.querySelector(`[data-order="${p}"]`);
-            const label = '+ ' + money(partPrice(p));
-            if (b.dataset.label !== label) { b.dataset.label = label; b.firstChild.textContent = label; }
+            const label = t('game.buy', { price: money(partPrice(p)) });
+            if (b.dataset.label !== label) {
+                b.dataset.label = label; b.firstChild.textContent = label;
+                b.setAttribute('aria-label', t('game.order.' + p, { price: money(partPrice(p)) }));
+                b.title = b.getAttribute('aria-label');
+            }
             b.disabled = g.money < partPrice(p);
         });
     }
@@ -807,14 +820,28 @@
 
     function resize() {
         if (!root.clientWidth) return;
-        const portrait = root.clientWidth < 640;
+        const portrait = root.clientWidth < 660;
         if (!L || L.portrait !== portrait) L = layout(portrait);
-        const w = canvas.clientWidth, h = w * L.H / L.W, dpr = Math.min(window.devicePixelRatio || 1, 2);
+        // fit the whole game on screen: leave room for the title, controls and status line
+        const stage = root.querySelector('.rr-stage');
+        const spare = window.innerHeight * 0.94 - 225;
+        const cs = getComputedStyle(root), inner = root.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+        const w = Math.max(260, Math.min(inner, spare * L.W / L.H));
+        stage.style.width = w + 'px';
+        root.querySelector('.rr-status').style.maxWidth = w + 'px';
+        const h = w * L.H / L.W, dpr = Math.min(window.devicePixelRatio || 1, 2);
         canvas.style.height = h + 'px';
         canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
         ctx.setTransform(canvas.width / L.W, 0, 0, canvas.height / L.H, 0, 0);
         // fact pop-ups go in the gap between the belt and the stations
         root.querySelector('.rr-toasts').style.top = ((L.belt.y + L.belt.h / 2 + 12) / L.H * 100) + '%';
+        // spare parts sit on the repair bench, either side of its repair slot
+        const r = stationRect('repair'), slotY = r.y + (L.portrait ? 125 : 112), cx = r.x + r.w / 2, pct = (v, of) => (v / of * 100) + '%';
+        const shop = root.querySelector('.rr-shop');
+        shop.style.fontSize = Math.max(9, 12.5 * w / L.W) + 'px';
+        const [sc, bt] = shop.children;
+        Object.assign(sc.style, { left: pct(r.x + 6, L.W), width: pct(cx - 31 - r.x - 6, L.W), top: pct(slotY - 42, L.H), height: pct(84, L.H) });
+        Object.assign(bt.style, { left: pct(cx + 31, L.W), width: pct(r.x + r.w - 6 - cx - 31, L.W), top: pct(slotY - 42, L.H), height: pct(84, L.H) });
     }
 
     // ---------------------------------------------------------------------
@@ -823,15 +850,13 @@
     window.UrbanMine = {
         mount(el, translate) {
             root = el; t = translate || t;
-            root.innerHTML = `<div class="rr-hud">
-                    <div class="rr-time" title="${esc(t('game.timeLeft'))}"><span aria-hidden="true">⏱️</span><div class="rr-time-bar"><span></span></div><b class="rr-time-num">${SHIFT} s</b></div>
-                    <span class="rr-stat"><span aria-hidden="true">⭐</span> <b class="rr-score">0</b></span>
-                    <span class="rr-stat"><span aria-hidden="true">💷</span> <b class="rr-money">£30</b></span>
-                    <span class="rr-stat">${esc(t('game.screens'))} <b class="rr-screens">1</b>
-                        <button type="button" class="g-btn small" data-order="screen" aria-label="${esc(t('game.order.screen'))}"><span>+ £15</span></button></span>
-                    <span class="rr-stat">${esc(t('game.batteries'))} <b class="rr-batteries">1</b>
-                        <button type="button" class="g-btn small" data-order="battery" aria-label="${esc(t('game.order.battery'))}"><span>+ £10</span></button></span>
-                    <span class="rr-stat rr-ch" title=""><span aria-hidden="true">🎯</span> <b class="rr-ch-val">–</b></span>
+            const part = p => `<div class="rr-part" data-part="${p}">
+                        <span class="rr-part-icon" aria-hidden="true">${p === 'screen' ? '📱' : '🔋'}</span>
+                        <b class="rr-part-n">×1</b>
+                        <span class="rr-part-lbl">${esc(t('game.part.' + p))}</span>
+                        <button type="button" class="rr-buy" data-order="${p}"><span>${esc(t('game.buy', { price: money(PRICES[p]) }))}</span></button>
+                    </div>`;
+            root.innerHTML = `<div class="rr-top">
                     <span class="rr-controls">
                         <button type="button" class="g-btn small rr-sfx" aria-pressed="true"></button>
                         <button type="button" class="g-btn small rr-music" aria-pressed="true"></button>
@@ -842,13 +867,21 @@
                 </div>
                 <div class="rr-stage">
                     <canvas class="rr-canvas" tabindex="0" role="application" aria-label="${esc(t('game.canvasLabel'))}"></canvas>
+                    <div class="rr-shop">${part('screen')}${part('battery')}</div>
                     <div class="rr-toasts" aria-live="polite"></div>
                     <div class="rr-overlay"></div>
+                </div>
+                <div class="rr-status">
+                    <div class="rr-time" title="${esc(t('game.timeLeft'))}"><span aria-hidden="true">⏱️</span><div class="rr-time-bar"><span></span></div><b class="rr-time-num">${SHIFT} s</b></div>
+                    <span class="rr-stat"><span aria-hidden="true">⭐</span> <b class="rr-score">0</b></span>
+                    <span class="rr-stat"><span aria-hidden="true">💷</span> <b class="rr-money">£30</b></span>
+                    <span class="rr-stat rr-ch" title=""><span aria-hidden="true">🎯</span> <b class="rr-ch-val">–</b></span>
                 </div>
                 <p class="rr-small rr-keys">${esc(t('game.keys'))}</p>`;
             canvas = root.querySelector('canvas');
             ctx = canvas.getContext('2d');
             new ResizeObserver(resize).observe(root);
+            window.addEventListener('resize', resize);
             resize();
             canvas.addEventListener('pointerdown', onDown);
             canvas.addEventListener('pointermove', onMove);
