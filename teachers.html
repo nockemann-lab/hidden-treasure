@@ -110,6 +110,53 @@
         .name-line { display: flex; gap: 20px; margin-bottom: 15px; }
         .name-line span { flex: 1; border-bottom: 1px solid var(--muted); padding-bottom: 4px; }
 
+        /* Feedback survey */
+        .fb-info { margin-bottom: 20px; }
+        .fb-info h3 { font-size: 1em; margin: 14px 0 4px; }
+        .fb-info p { font-size: 0.95em; margin-bottom: 6px; }
+        .fb-form { display: grid; gap: 18px; }
+        .fb-form[hidden] { display: none; }
+        .fb-group { border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px 18px; background: var(--surface); min-width: 0; }
+        .fb-group > legend { font-weight: 800; color: var(--heading); font-size: 1.1em; padding: 0 6px; }
+        .fb-consent { background: var(--safe-bg); }
+        .fb-intro { color: var(--text-2); font-size: 0.95em; margin: 4px 0 10px; }
+        .fb-q { border: none; margin: 12px 0 0; padding: 0; min-width: 0; }
+        .fb-q > legend, .fb-q > label { display: block; font-weight: 700; color: var(--heading); margin-bottom: 6px; padding: 0; }
+        .fb-hint { font-weight: 400; color: var(--muted); font-size: 0.9em; }
+        .fb-opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px 14px; }
+        .fb-check { display: flex; gap: 8px; align-items: flex-start; line-height: 1.4; padding: 3px 0; cursor: pointer; }
+        .fb-check input { margin-top: 3px; width: 17px; height: 17px; flex-shrink: 0; accent-color: #1e8449; }
+        .fb-req { color: var(--crit-text); font-style: normal; font-size: 0.9em; }
+        .fb-form input[type="text"], .fb-form input[type="number"], .fb-form input[type="month"], .fb-form textarea {
+            width: 100%; font: inherit; color: var(--text); background: var(--surface-2);
+            border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px;
+        }
+        .fb-short input { max-width: 220px; }
+        .fb-form textarea { resize: vertical; min-height: 70px; }
+        .fb-form input:focus-visible, .fb-form textarea:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+        /* rating scales: one row per item, the numbers in columns */
+        .fb-scale { margin-top: 6px; }
+        .fb-scale-head, .fb-scale-opts { display: grid; grid-template-columns: repeat(5, 1fr) 1.5fr; gap: 4px; text-align: center; }
+        .fb-scale-head { margin-left: 42%; font-weight: 700; color: var(--heading); font-size: 0.85em; }
+        .fb-scale-head small { display: block; font-weight: 400; color: var(--muted); font-size: 0.85em; line-height: 1.2; }
+        .fb-scale-head span:first-child { display: none; }
+        .fb-scale-row { border: none; border-top: 1px solid var(--border); margin: 0; padding: 6px 0; display: flex; align-items: center; min-width: 0; }
+        .fb-scale-row > legend { float: left; width: 42%; padding: 0 10px 0 0; font-size: 0.95em; }
+        .fb-scale-opts { flex: 1; }
+        .fb-scale-row label { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; font-size: 0.8em; color: var(--muted); }
+        .fb-scale-row input { width: 18px; height: 18px; accent-color: #1e8449; margin: 0; }
+        .fb-scale-row .fb-n { display: none; }
+        .fb-scale-row .fb-na { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* the column header says it */
+        .fb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+        .fb-trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+        .fb-error { background: var(--crit-bg); border-left: 6px solid #e74c3c; border-radius: 8px; padding: 10px 14px; font-weight: 700; }
+        .fb-error[hidden], .fb-thanks[hidden] { display: none; }
+        .fb-submit-row { text-align: center; margin: 0; }
+        .fb-status { text-align: center; color: var(--text-2); }
+        .fb-preview { text-align: left; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px; font-size: 0.8em; max-height: 260px; overflow: auto; margin-top: 8px; white-space: pre-wrap; }
+        .fb-thanks { background: var(--good-bg); border-radius: 12px; padding: 18px 20px; text-align: center; }
+        .fb-thanks h3 { margin-top: 0; }
+
         footer { background: #2c3e50; color: white; padding: 18px 20px; text-align: center; font-size: 0.9em; }
         footer a { color: inherit; }
 
@@ -119,6 +166,11 @@
             header { padding: 58px 16px 24px; }
             header h1 { font-size: 1.7em; }
             nav.toc ol { columns: 1; }
+            .fb-scale-head { display: none; }
+            .fb-scale-row { display: block; }
+            .fb-scale-row > legend { float: none; width: auto; margin-bottom: 6px; }
+            .fb-scale-row .fb-n { display: block; font-weight: 700; color: var(--heading); }
+            .fb-scale-row .fb-na { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; }
         }
 
         @media print {
@@ -148,6 +200,7 @@
             <div class="top-links">
                 <a href="index.html"><span aria-hidden="true">🔍</span> Open the interactive phone</a>
                 <a href="quiz.html"><span aria-hidden="true">🧠</span> Open the quiz</a>
+                <a href="#feedback"><span aria-hidden="true">📝</span> Give feedback</a>
             </div>
         </header>
 
@@ -168,6 +221,7 @@
                     <li><a href="#data">About the data</a></li>
                     <li><a href="#quiz">The quiz &amp; answer key</a></li>
                     <li><a href="#worksheet-section">Student worksheet</a></li>
+                    <li><a href="#feedback">Share your feedback (survey)</a></li>
                     <li><a href="#cite">Licence &amp; how to cite</a></li>
                 </ol>
             </nav>
@@ -398,7 +452,7 @@
             <section id="privacy">
                 <h2>10. Privacy &amp; troubleshooting</h2>
                 <h3>Privacy</h3>
-                <p>There are no accounts, cookies, adverts, analytics or tracking, and the pages load nothing from other websites. Nothing pupils do is sent anywhere. The pages only remember a few things <strong>on the device itself</strong> (in the browser's local storage): light or dark mode, 3D or photo view, the best quiz score, the game's best scores, difficulty, sound settings and the daily-challenge result. The "Parts explored" ticks last only until the browser tab is closed. The name typed for a quiz certificate is only used for printing and is not saved. To clear everything, clear the browser's data for this site.</p>
+                <p>There are no accounts, cookies, adverts, analytics or tracking, and the pages load nothing from other websites. Nothing pupils do is sent anywhere. The only exception is the optional, anonymous teacher survey in <a href="#feedback">section 14</a>, which sends the answers a teacher chooses to submit. The pages only remember a few things <strong>on the device itself</strong> (in the browser's local storage): light or dark mode, 3D or photo view, the best quiz score, the game's best scores, difficulty, sound settings and the daily-challenge result. The "Parts explored" ticks last only until the browser tab is closed. The name typed for a quiz certificate is only used for printing and is not saved. To clear everything, clear the browser's data for this site.</p>
                 <h3>Troubleshooting</h3>
                 <ul>
                     <li><strong>No 3D model?</strong> Older devices that cannot show 3D graphics automatically get the exploded-view photo, which works in the same way.</li>
@@ -462,8 +516,58 @@
                 </div>
             </section>
 
+            <section id="feedback" class="no-print">
+                <h2>14. Share your feedback (anonymous survey)</h2>
+                <p>Have you used this resource with learners? Please tell us how it went. The survey takes about 10 minutes, and every question except the consent boxes is optional. Your answers help to improve the resource and, with your consent, may be used in anonymised form in educational research publications (for example in the <em>Journal of Chemical Education</em>).</p>
+
+                <details class="fb-info" open>
+                    <summary>Information for participants (please read before you start)</summary>
+                    <h3>Who is running this survey?</h3>
+                    <p>Prof. Peter Nockemann, Queen's University Belfast, the author of this resource. <span data-fb="contact"></span></p>
+                    <h3>What is it for?</h3>
+                    <p>To find out how teachers and educators use the resource, how their learners engage with it and what they learn, and what should be improved. Anonymised, combined results may be presented at conferences and published in educational research journals.</p>
+                    <h3>What will I be asked?</h3>
+                    <p>About your teaching setting (in general terms only), your learners as a group (for example their age range, how many took part and an average quiz score), how you used the resource, and your views. You are <strong>not</strong> asked for your name, email address, school or anything about individual learners.</p>
+                    <h3>Is it anonymous?</h3>
+                    <p>Yes. Please do not include names or any details that could identify you, your school, colleagues or learners in your answers. This website uses no cookies or tracking. Your answers are sent to <span data-fb="processor">a secure online form service</span> used by the research team. Like most websites, that service may briefly record technical data such as your IP address for security; this is not used in the research and is not linked to your answers in the analysis.</p>
+                    <h3>Do I have to take part?</h3>
+                    <p>No, taking part is voluntary, and you can skip any question or close the page at any time before you submit. Because your answers are anonymous, they cannot be identified, changed or withdrawn after you have submitted them.</p>
+                    <h3>What about my learners?</h3>
+                    <p>Please only report your own observations and class-level summaries (for example "about 25 learners" or "average quiz score 7 out of 10"). Do not collect new information from learners for this survey, and do not report anything about individual learners. Learners' comments may be shared only as short, anonymous paraphrases.</p>
+                    <h3>How is the data stored and used?</h3>
+                    <p>Responses are stored securely, accessible only to the research team, and kept <span data-fb="retention">in line with Queen's University Belfast's research data management policy</span>. Results are reported in combined form. Short anonymous quotes from your written answers are only used if you tick the box for this below.</p>
+                    <h3>Data protection and ethics</h3>
+                    <p>The answers are designed to be anonymous. Where any personal data is processed (for example technical data recorded by the form service), Queen's University Belfast is the data controller and the lawful basis is a task carried out in the public interest (research), under Article 6(1)(e) of the UK GDPR. You can contact the University's Information Compliance Unit (<span data-fb="dpo"></span>) with questions about data protection, and you have the right to complain to the <a href="https://ico.org.uk/make-a-complaint/">Information Commissioner's Office</a>. <span data-fb="ethics"></span></p>
+                </details>
+
+                <form id="fb-form" class="fb-form" novalidate>
+                    <div class="fb-error" id="fb-error" role="alert" tabindex="-1" hidden></div>
+
+                    <fieldset class="fb-group fb-consent">
+                        <legend>Consent</legend>
+                        <label class="fb-check"><input type="checkbox" name="consent_read" required> <span>I have read the information for participants above. <em class="fb-req">(required)</em></span></label>
+                        <label class="fb-check"><input type="checkbox" name="consent_adult" required> <span>I am 18 or over and used the resource as a teacher or educator. <em class="fb-req">(required)</em></span></label>
+                        <label class="fb-check"><input type="checkbox" name="consent_use" required> <span>I agree that my anonymous answers can be used to improve the resource and in research publications and presentations. <em class="fb-req">(required)</em></span></label>
+                        <label class="fb-check"><input type="checkbox" name="consent_noid" required> <span>I will not include names or other details that could identify me, my school or any learner. <em class="fb-req">(required)</em></span></label>
+                        <label class="fb-check"><input type="checkbox" name="consent_quotes"> <span>I agree that short anonymous quotes from my written answers may be published. (optional)</span></label>
+                    </fieldset>
+
+                    <div id="fb-questions"></div>
+
+                    <!-- spam trap: hidden from people, bots tend to fill it in -->
+                    <div class="fb-trap" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+                    <p class="fb-submit-row"><button type="submit" class="btn" id="fb-submit">📨 Send my anonymous feedback</button></p>
+                    <p class="fb-status" id="fb-status" role="status" aria-live="polite"></p>
+                </form>
+                <div class="fb-thanks" id="fb-thanks" tabindex="-1" hidden>
+                    <h3>🙏 Thank you!</h3>
+                    <p>Your anonymous feedback has been sent. It really helps to improve the resource.</p>
+                </div>
+            </section>
+
             <section id="cite">
-                <h2>14. Licence &amp; how to cite</h2>
+                <h2>15. Licence &amp; how to cite</h2>
                 <p>© 2025–2026 Prof. Peter Nockemann, Queen's University Belfast (<a href="https://orcid.org/0000-0001-9864-9702">ORCID 0000-0001-9864-9702</a>).</p>
                 <p>This resource is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 (CC BY 4.0)</a>: you may use, share and adapt it, including in teaching materials, as long as you credit the author. The element photos are third-party images under their own licences (see credits on the main page). The exploded-view phone illustration and the interactive 3D phone model were created by the author using Google Gemini (AI generation) and adapted for this resource; the 3D graphics use three.js (MIT licence).</p>
                 <p><strong>Suggested citation:</strong><br>
@@ -499,6 +603,187 @@
                 key.appendChild(li);
             });
             document.getElementById('key-count').textContent = QUESTIONS.length;
+
+            // -----------------------------------------------------------
+            // ANONYMOUS FEEDBACK SURVEY
+            // Settings: fill these in before the survey goes live (see README, "Feedback survey").
+            // Until 'endpoint' is set, the form only shows a preview of what would be sent.
+            // -----------------------------------------------------------
+            const FEEDBACK = {
+                endpoint: '',          // web address of the form service that receives the answers (HTTPS, accepts JSON)
+                processor: '',         // name of that service, shown to participants, e.g. 'Formspree'
+                contactEmail: '',      // researcher's contact address, shown to participants
+                dpoEmail: 'info.compliance@qub.ac.uk',   // Queen's University Belfast Information Compliance Unit
+                ethicsCommittee: '',   // e.g. 'the Faculty Research Ethics Committee'
+                ethicsRef: '',         // ethics approval reference
+                retention: ''          // e.g. 'for 10 years after publication'; empty = the University's policy
+            };
+            const FORM_VERSION = '1.0';
+
+            // The questions. Every answer is optional; the keys become the column names of the data.
+            const SCALE_ENGAGE = ['very low', 'low', 'medium', 'high', 'very high'];
+            const SCALE_LEARN = ['not at all', 'a little', 'partly', 'mostly', 'fully'];
+            const SCALE_AGREE = ['strongly disagree', 'disagree', 'neutral', 'agree', 'strongly agree'];
+            const FB_QUESTIONS = [
+                { title: 'A. You and your setting', items: [
+                    { key: 'role', type: 'radio', label: 'Your role', options: ['Secondary school teacher', 'Primary school teacher', 'Post-16 / college teacher', 'Teaching assistant or technician', 'Outreach, STEM ambassador or museum educator', 'University staff or student', 'Other'] },
+                    { key: 'subjects', type: 'checks', label: 'Subject(s) in which you used it', options: ['Chemistry', 'General science', 'Physics', 'Geography', 'Design & technology', 'Citizenship / sustainability', 'Other'] },
+                    { key: 'experience', type: 'radio', label: 'Your teaching experience', options: ['Less than 3 years', '3–10 years', 'More than 10 years'] },
+                    { key: 'region', type: 'radio', label: 'Where you teach', options: ['Northern Ireland', 'England', 'Scotland', 'Wales', 'Republic of Ireland', 'Another European country', 'Outside Europe'] },
+                    { key: 'setting', type: 'radio', label: 'Setting', options: ['State-funded school', 'Independent school', 'Further education or sixth-form college', 'Outreach event, science festival or museum', 'Home education', 'Other'] },
+                    { key: 'month_used', type: 'month', label: 'When did you use it? (month and year)' }
+                ] },
+                { title: 'B. Your learners', items: [
+                    { key: 'age_groups', type: 'checks', label: 'Age group(s) of the learners', options: ['Under 11', '11–12', '12–14', '14–16', '16–18', 'Adults'] },
+                    { key: 'level', type: 'text', label: 'Year group, level or course (e.g. Year 9, S2, GCSE Chemistry)', max: 80 },
+                    { key: 'n_learners', type: 'number', label: 'About how many learners took part in total?', min: 1, max: 5000 },
+                    { key: 'n_groups', type: 'number', label: 'In how many classes or groups?', min: 1, max: 200 },
+                    { key: 'prior', type: 'radio', label: 'How much had the learners already learned about the periodic table?', options: ['Very little', 'Some', 'A lot'] }
+                ] },
+                { title: 'C. How you used the resource', items: [
+                    { key: 'minutes', type: 'number', label: 'About how many minutes did learners spend on it in total?', min: 1, max: 1000 },
+                    { key: 'format', type: 'checks', label: 'How was it used?', options: ['Whole class, shown on a board or screen', 'Individually on devices', 'In pairs or small groups', 'As homework', 'At an event or exhibition (kiosk mode)', 'Other'] },
+                    { key: 'devices', type: 'checks', label: 'Devices', options: ['Desktop computers or laptops', 'Chromebooks', 'Tablets', 'Phones', 'Interactive whiteboard or projector'] },
+                    { key: 'sections_used', type: 'checks', label: 'Which parts did learners use?', options: ['3D phone / exploded-view photo', 'Element cards', 'Periodic table', 'Element of the day / Quick question', 'Quiz', 'Recycling game', 'Drawer challenge / What Can YOU Do?', 'Printed worksheet', 'Lesson plan or discussion questions from this guide'] },
+                    { key: 'plan', type: 'radio', label: 'Which best describes your lesson?', options: ['I followed the suggested lesson plan', 'I adapted the suggested lesson plan', 'I used my own lesson plan', 'Learners explored freely with little instruction'] },
+                    { key: 'instructions', type: 'textarea', label: 'Briefly describe the instructions or tasks you gave the learners.' }
+                ] },
+                { title: 'D. Engagement', intro: 'How engaged were your learners with each part? (1 = very low, 5 = very high)', items: [
+                    { key: 'eng', type: 'scale', scale: SCALE_ENGAGE, na: 'Not used', rows: [
+                        ['explorer', '3D phone / photo'], ['cards', 'Element cards'], ['ptable', 'Periodic table'], ['welcome', 'Element of the day / Quick question'],
+                        ['quiz', 'Quiz'], ['game', 'Recycling game'], ['drawer', 'Drawer challenge / What Can YOU Do?'], ['worksheet', 'Worksheet'], ['overall', 'Overall']
+                    ] },
+                    { key: 'eng_best', type: 'textarea', label: 'Which part worked best with your learners, and why?' }
+                ] },
+                { title: 'E. Learning', intro: 'In your judgement, how well did learners achieve these learning objectives? (1 = not at all, 5 = fully)', items: [
+                    { key: 'lo', type: 'scale', scale: SCALE_LEARN, na: 'Not observed', rows: [
+                        ['parts', 'Name the main parts of a phone and some elements in each'],
+                        ['properties', 'Link properties of elements to their uses'],
+                        ['critical', 'Explain what makes a raw material "critical"'],
+                        ['ethics', 'Describe environmental, social and ethical issues of mining'],
+                        ['urbanmine', 'Explain the "urban mine" and why reuse, repair and recycling matter'],
+                        ['data', 'Interpret and compare data']
+                    ] },
+                    { key: 'quiz_taken', type: 'radio', label: 'Did learners take the quiz?', options: ['All of them', 'Most of them', 'Some of them', 'No'] },
+                    { key: 'quiz_avg', type: 'number', label: 'If known: average quiz score', min: 0, max: 60, step: 0.1 },
+                    { key: 'quiz_out_of', type: 'number', label: 'out of (10 unless you changed it)', min: 1, max: 60, value: 10 },
+                    { key: 'prepost', type: 'radio', label: 'Did you check learners\' knowledge before and after (e.g. a short test or show of hands)?', options: ['Yes', 'No'] },
+                    { key: 'prepost_results', type: 'textarea', label: 'If yes: what did it show? (class-level results only)' },
+                    { key: 'evidence', type: 'textarea', label: 'What evidence of learning did you notice (e.g. questions asked, discussions, worksheet answers)?' }
+                ] },
+                { title: 'F. Using the resource', intro: 'How far do you agree? (1 = strongly disagree, 5 = strongly agree)', items: [
+                    { key: 'use', type: 'scale', scale: SCALE_AGREE, na: 'Not sure', rows: [
+                        ['easy', 'It was easy to set up and use in class'], ['level', 'The content was at the right level for my learners'],
+                        ['curriculum', 'It fits my curriculum'], ['clear', 'The information is clear and accurate'], ['devices', 'It worked well on our devices'],
+                        ['again', 'I would use it again'], ['recommend', 'I would recommend it to colleagues']
+                    ] },
+                    { key: 'problems', type: 'textarea', label: 'Did you have any technical or practical problems?' }
+                ] },
+                { title: 'G. Your views', items: [
+                    { key: 'improve', type: 'textarea', label: 'What should be improved, added or changed?' },
+                    { key: 'learner_voice', type: 'textarea', label: 'Comments, questions or ideas from your learners worth sharing (anonymous paraphrases, no names)' },
+                    { key: 'general', type: 'textarea', label: 'Any other feedback' }
+                ] }
+            ];
+
+            const fbForm = document.getElementById('fb-form');
+            const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+            // Participant information: fill in the settings
+            const fill = (name, html) => document.querySelectorAll(`[data-fb="${name}"]`).forEach(el => { if (html !== null) el.innerHTML = html; });
+            fill('contact', FEEDBACK.contactEmail ? `Contact: <a href="mailto:${esc(FEEDBACK.contactEmail)}">${esc(FEEDBACK.contactEmail)}</a>.` : '');
+            fill('processor', FEEDBACK.processor ? esc(FEEDBACK.processor) : null);
+            fill('retention', FEEDBACK.retention ? esc(FEEDBACK.retention) : null);
+            fill('dpo', `<a href="mailto:${esc(FEEDBACK.dpoEmail)}">${esc(FEEDBACK.dpoEmail)}</a>`);
+            fill('ethics', FEEDBACK.ethicsRef
+                ? `This study has been approved by ${esc(FEEDBACK.ethicsCommittee || 'the Research Ethics Committee')} of Queen's University Belfast (reference ${esc(FEEDBACK.ethicsRef)}).`
+                : 'Research ethics approval for using the answers in publications is being sought from Queen\'s University Belfast.');
+
+            // Build the questions
+            let uid = 0;
+            function field(it) {
+                const id = 'fb-' + it.key;
+                if (it.type === 'radio' || it.type === 'checks') {
+                    const type = it.type === 'radio' ? 'radio' : 'checkbox';
+                    return `<fieldset class="fb-q"><legend>${esc(it.label)}${it.type === 'checks' ? ' <span class="fb-hint">(tick all that apply)</span>' : ''}</legend><div class="fb-opts">` +
+                        it.options.map(o => `<label class="fb-check"><input type="${type}" name="${it.key}" value="${esc(o)}"> <span>${esc(o)}</span></label>`).join('') + '</div></fieldset>';
+                }
+                if (it.type === 'scale') {
+                    const head = `<div class="fb-scale-head" aria-hidden="true"><span></span>${it.scale.map((s, i) => `<span>${i + 1}<small>${esc(s)}</small></span>`).join('')}<span>${esc(it.na)}</span></div>`;
+                    return `<div class="fb-scale">${head}` + it.rows.map(([k, label]) => {
+                        const name = it.key + '_' + k;
+                        const opts = it.scale.map((s, i) => `<label><input type="radio" name="${name}" value="${i + 1}"><span class="fb-n">${i + 1}</span><span class="fb-sr"> (${esc(s)})</span></label>`).join('') +
+                            `<label><input type="radio" name="${name}" value="${esc(it.na)}"><span class="fb-na">${esc(it.na)}</span></label>`;
+                        return `<fieldset class="fb-scale-row"><legend>${esc(label)}</legend><div class="fb-scale-opts">${opts}</div></fieldset>`;
+                    }).join('') + '</div>';
+                }
+                const lab = `<label for="${id}">${esc(it.label)}</label>`;
+                if (it.type === 'textarea') return `<div class="fb-q">${lab}<textarea id="${id}" name="${it.key}" rows="3" maxlength="2000"></textarea></div>`;
+                if (it.type === 'number') return `<div class="fb-q fb-short">${lab}<input id="${id}" type="number" name="${it.key}" inputmode="decimal" min="${it.min}" max="${it.max}" step="${it.step || 1}"${it.value ? ` value="${it.value}"` : ''}></div>`;
+                if (it.type === 'month') return `<div class="fb-q fb-short">${lab}<input id="${id}" type="month" name="${it.key}" min="2025-01"></div>`;
+                return `<div class="fb-q">${lab}<input id="${id}" type="text" name="${it.key}" maxlength="${it.max || 200}"></div>`;
+            }
+            document.getElementById('fb-questions').innerHTML = FB_QUESTIONS.map(g =>
+                `<fieldset class="fb-group"><legend>${esc(g.title)}</legend>${g.intro ? `<p class="fb-intro">${esc(g.intro)}</p>` : ''}${g.items.map(field).join('')}</fieldset>`).join('');
+
+            // Collect the answers as flat key/value pairs (multiple choices joined with "; ")
+            function collect() {
+                const data = { form_version: FORM_VERSION, consent_quotes: fbForm.consent_quotes.checked ? 'yes' : 'no' };
+                const fd = new FormData(fbForm);
+                for (const [k, v] of fd.entries()) {
+                    if (k.startsWith('consent_') || k === 'website') continue;
+                    const val = String(v).trim();
+                    if (!val) continue;
+                    data[k] = data[k] ? data[k] + '; ' + val : val;
+                }
+                if (!data.quiz_avg) delete data.quiz_out_of;   // only meaningful with an average score
+                return data;
+            }
+
+            const loadedAt = Date.now();
+            const status = document.getElementById('fb-status');
+            const errBox = document.getElementById('fb-error');
+            fbForm.addEventListener('submit', async e => {
+                e.preventDefault();
+                errBox.hidden = true;
+                const missing = [...fbForm.querySelectorAll('.fb-consent input[required]')].filter(c => !c.checked);
+                if (missing.length) {
+                    errBox.textContent = 'Please tick the four required consent boxes at the top of the form before sending.';
+                    errBox.hidden = false; errBox.focus();
+                    return;
+                }
+                if (!fbForm.checkValidity()) { fbForm.reportValidity(); return; }
+                if (fbForm.website.value || Date.now() - loadedAt < 5000) return;   // spam trap
+
+                const data = collect();
+                if (!FEEDBACK.endpoint) {      // not set up yet: show what would be sent
+                    status.innerHTML = '<strong>Preview only:</strong> the survey is not collecting answers yet. This is what would be sent:<pre class="fb-preview"></pre>';
+                    status.querySelector('pre').textContent = JSON.stringify(data, null, 2);
+                    return;
+                }
+                const btn = document.getElementById('fb-submit');
+                btn.disabled = true;
+                status.textContent = 'Sending…';
+                try {
+                    const res = await fetch(FEEDBACK.endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                        body: JSON.stringify(data),
+                        credentials: 'omit',
+                        referrerPolicy: 'no-referrer'
+                    });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    fbForm.reset();
+                    fbForm.hidden = true;
+                    status.textContent = '';
+                    const thanks = document.getElementById('fb-thanks');
+                    thanks.hidden = false; thanks.focus();
+                } catch (err) {
+                    status.textContent = 'Sorry, your feedback could not be sent. Please check your internet connection and try again.';
+                } finally {
+                    btn.disabled = false;
+                }
+            });
 
             // Print only the worksheet
             document.getElementById('print-worksheet').addEventListener('click', () => {

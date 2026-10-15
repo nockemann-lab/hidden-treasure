@@ -19,7 +19,8 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 - **Dark mode:** follows the device setting; the 🌙/☀️ button switches manually (remembered per device).
 - **Languages:** all text of the interactive phone and the quiz is in `content/<language>.js`. See `content/languages.js` for how to add a language; a language menu appears automatically when there is more than one.
 - **Accessibility:** keyboard and screen-reader support, WCAG AA colour contrast in light and dark mode, reduced motion when requested.
-- **Privacy:** no accounts, cookies, analytics or third-party requests. Only a few settings and best scores are kept in the browser's local storage on the device.
+- **Privacy:** no accounts, cookies, analytics or third-party requests. Only a few settings and best scores are kept in the browser's local storage on the device. The one exception is the optional teacher survey (below), which sends the answers a teacher submits.
+- **Teacher feedback survey:** an anonymous survey at the end of `teachers.html` (see "Feedback survey" below and `FEEDBACK-SURVEY.md`).
 
 ## Files
 
@@ -51,6 +52,19 @@ The "Photo" button switches back to the photo with clickable outlines. On device
 ## Hotspots
 
 The clickable areas are SVG polygons traced over `phone_parts_exploded_view.jpg`, using the image's original 1696×2528 pixel grid as the `viewBox`. If the image is replaced, the polygon `points` need re-tracing.
+
+## Feedback survey
+
+`teachers.html` contains an anonymous survey for teachers (section 14), designed so that the results can be used in an education research paper. The questions, the data they produce and the ethics and GDPR checklist are in [FEEDBACK-SURVEY.md](FEEDBACK-SURVEY.md).
+
+The site has no server, so the answers are sent as JSON to an online form service. Until that is set up, the form only shows a preview of what would be sent. To switch it on, fill in the `FEEDBACK` settings near the bottom of `teachers.html`:
+
+- `endpoint`: the address that receives the answers (any service that accepts a JSON `POST`, e.g. Formspree or Basin, or a University-hosted endpoint)
+- `processor`: the name of that service (shown to participants)
+- `contactEmail`, `ethicsCommittee`, `ethicsRef`, `retention`: shown in the information for participants
+- `dpoEmail`: the University's data protection contact (default: the Information Compliance Unit)
+
+Only switch it on once research ethics approval is in place. Then increase `VERSION` in `sw.js`.
 
 ## After publishing
 
