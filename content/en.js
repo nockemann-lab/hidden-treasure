@@ -459,7 +459,7 @@ window.SITE_CONTENT.en = (function () {
                 ],
                 stats: [['~24%', 'of phone weight'], ['73%', 'of mined cobalt came from DR Congo (2025)']],
                 facts: ['🔋 <strong>Inside the battery:</strong> The two sides of the battery are coated onto very thin metal foils: copper on the graphite side and aluminium on the cobalt-oxide side.',
-                    '💡 <strong>Handle with care:</strong> Batteries are removed before phones are recycled (and were not part of the study above). Never put phones or batteries in the household bin: damaged lithium-ion batteries can start fires in bin lorries and recycling plants.']
+                    '💡 <strong>Handle with care:</strong> Batteries are removed before phones are recycled (and were not part of the study above). Never put phones or batteries in the household bin: damaged lithium-ion batteries can start fires in bin lorries and recycling plants. If a phone\'s battery swells up, stop using and charging the phone and take it to a phone shop or recycling centre.']
             },
             {
                 id: 'casing', title: '📦 Casing & Frame',
@@ -500,7 +500,7 @@ window.SITE_CONTENT.en = (function () {
             },
             {
                 q: 'Gold is NOT on the EU, US or UK critical-materials lists. Why is it still important to recycle phones for gold?',
-                options: ['Old phones are far richer in gold than gold ore', 'Gold is radioactive', 'Gold makes the battery work', 'Gold is the heaviest part of the phone'],
+                options: ['Old phones are far richer in gold than gold ore', 'Gold slowly becomes radioactive inside old phones', 'Gold is what lets the battery store its energy', 'Gold makes up most of the weight of a phone'],
                 explain: 'A tonne of phone circuit boards can hold hundreds of times more gold than a tonne of typical gold ore (1–3 g per tonne).'
             },
             {
@@ -525,7 +525,7 @@ window.SITE_CONTENT.en = (function () {
             },
             {
                 q: 'Where in a phone would you find neodymium magnets?',
-                options: ['In the speakers and the camera focus motor', 'In the battery', 'In the cover glass', 'In the plastic casing'],
+                options: ['In the speakers and the camera focus motor', 'In the battery, between its two sides', 'In the cover glass, to make it tougher', 'In the plastic casing, to make it stiffer'],
                 explain: 'Neodymium-iron-boron magnets are the strongest permanent magnets. They drive the speakers and move the camera lens to focus.'
             },
             {
@@ -535,12 +535,12 @@ window.SITE_CONTENT.en = (function () {
             },
             {
                 q: 'What makes your phone vibrate?',
-                options: ['A tiny motor shaking a heavy tungsten weight', 'A magnesium spring', 'Liquid gallium sloshing around', 'The battery expanding and shrinking'],
+                options: ['A tiny motor shaking a heavy tungsten weight', 'A magnesium spring that bounces up and down', 'Liquid gallium sloshing around inside a tube', 'The battery quickly expanding and shrinking'],
                 explain: 'Tungsten is one of the densest metals, so a tiny weight made of it gives a strong buzz.'
             },
             {
                 q: 'Tantalum is named after Tantalus from Greek myth. Why?',
-                options: ['It sits in acid without absorbing any, like Tantalus, who could never drink', 'It is tantalisingly hard to find', 'It glows in the dark', 'It was discovered in Greece'],
+                options: ['It sits in acid without absorbing any, like Tantalus, who could never drink', 'It is tantalisingly hard to find, like treasure in a Greek story', 'It glows in the dark, like the fruit Tantalus could never reach', 'It was first discovered on a Greek island near Mount Olympus'],
                 explain: 'Anders Ekeberg named it in 1802 because tantalum could be dipped in acid without taking up any of it.'
             },
             {
@@ -587,7 +587,7 @@ window.SITE_CONTENT.en = (function () {
             },
             {
                 q: 'What should you do before passing on an old phone?',
-                options: ['Back it up, do a factory reset and remove the SIM and memory card', 'Nothing: the next owner will delete your data', 'Take the battery out with a screwdriver', 'Put it in the freezer for a day'],
+                options: ['Back it up, do a factory reset and remove the SIM and memory card', 'Nothing: the next owner will delete your data', 'Take the battery out with a screwdriver so it is safe', 'Put it in the freezer for a day to wipe the memory'],
                 explain: 'A factory reset wipes your personal data. Never open a phone or its battery yourself.'
             },
             {
@@ -622,13 +622,179 @@ window.SITE_CONTENT.en = (function () {
             },
             {
                 q: 'Why are many of the elements in a phone called "critical"?',
-                options: ['They are important for technology and their supply could be disrupted', 'They are radioactive', 'They are poisonous', 'They are the most common elements on Earth'],
+                options: ['They are important for technology and their supply could be disrupted', 'They are all radioactive and must be handled very carefully', 'They are poisonous, so phones must be kept away from food', 'They are the most common elements in the Earth\'s crust'],
                 explain: 'Critical raw materials are economically important, and their supply is at risk, often because one or a few countries produce most of them.'
             },
             {
                 q: 'What should you do with an old phone you no longer use?',
-                options: ['Reuse, repair or take it to an e-waste collection point', 'Put it in the household bin', 'Put it in the plastic recycling bin', 'Take the battery out with a screwdriver'],
+                options: ['Reuse, repair or take it to an e-waste collection point', 'Put it in the household bin with the general rubbish', 'Put it in the plastic recycling bin at home', 'Take the battery out yourself with a screwdriver'],
                 explain: 'Never put phones or batteries in the bin: damaged lithium-ion batteries can start fires. Pass working phones on, and recycle the rest properly.'
+            },
+
+            // ---- Display ----
+            {
+                q: 'The cover glass is toughened in a hot bath of molten potassium nitrate. What happens to the surface of the glass?',
+                options: ['Big potassium ions swap places with smaller sodium ions and squeeze it together', 'The surface melts slightly and sets again as a layer twice as thick', 'It gets a thin coating of shiny potassium metal that stops scratches', 'It soaks up water from the bath and becomes bendy instead of brittle'],
+                explain: 'Potassium ions are bigger than the sodium ions they replace, so they squeeze the surface together. This makes it much harder for cracks to start.'
+            },
+            {
+                q: 'Many white LEDs, like the camera flash, are really blue LEDs coated with a phosphor. What colour does the phosphor glow, so that the light looks white?',
+                options: ['Yellow', 'Red', 'Green', 'Purple'],
+                explain: 'Blue plus yellow looks white to our eyes. The yellow-glowing phosphor is yttrium aluminium garnet with a little cerium (YAG:Ce).'
+            },
+            {
+                q: 'Stone Age artists painted animals on cave walls with a black oxide of which metal? Today it is also used in some screens and batteries.',
+                options: ['Manganese', 'Lithium', 'Gold', 'Tin'],
+                explain: 'Black manganese oxide was used for cave paintings such as those at Lascaux in France, about 17,000 years ago. Today manganese is in a red-glowing screen phosphor and in many larger batteries.'
+            },
+            {
+                q: 'Indium is usually extracted from zinc ores that contain 20–50 g of indium per tonne. How do old phone screens compare?',
+                options: ['They contain more: 65–263 g per tonne', 'They contain much less: under 1 g per tonne', 'They contain about the same: 20–50 g per tonne', 'They contain no indium at all'],
+                explain: 'Old phone screens are richer in indium than the ores it normally comes from, which makes them a valuable "urban mine".'
+            },
+
+            // ---- Camera ----
+            {
+                q: "Your phone camera's image sensor is a chip covered in millions of light-sensitive pixels. Which element is the chip made of?",
+                options: ['Silicon', 'Gold', 'Neodymium', 'Lanthanum'],
+                explain: 'When light hits the silicon it frees electrons, and the chip counts them to build up your photo. Silicon for chips is purified to 99.9999999% or better.'
+            },
+            {
+                q: 'Why is lanthanum oxide added to high-quality glass camera lenses?',
+                options: ['It bends light strongly without splitting it into colour fringes', 'It makes the lens glow faintly, so you can take photos in the dark', 'It makes the lens magnetic, so the focus motor can move it', 'It stops water and fingerprints from sticking to the lens'],
+                explain: 'Lanthanum glass bends (refracts) light strongly without spreading it into a rainbow at the edges, so photos stay sharp.'
+            },
+
+            // ---- Circuit board ----
+            {
+                q: 'Which metal conducts electricity better than any other?',
+                options: ['Silver', 'Copper', 'Gold', 'Aluminium'],
+                explain: 'Silver is the best conductor of all metals, but it is expensive, so copper is used for most wiring. Silver is in the solder that holds the chips in place.'
+            },
+            {
+                q: 'Since 2006, EU rules have restricted lead in new electronics. What is the solder that holds chips on the circuit board now mostly made of?',
+                options: ['Tin, with a little silver and copper', 'Lead, with a little mercury', 'Pure gold, so it never corrodes', 'Iron and nickel, which are magnetic'],
+                explain: 'A common lead-free solder is 96.5% tin, 3% silver and 0.5% copper. The RoHS rules also restrict mercury, cadmium and other hazardous substances.'
+            },
+            {
+                q: 'Palladium, used on some circuit boards, can soak up to 900 times its own volume of which gas, like a metal sponge?',
+                options: ['Hydrogen', 'Oxygen', 'Carbon dioxide', 'Helium'],
+                explain: 'Hydrogen atoms are so small that they slip in between the palladium atoms. Palladium is named after the asteroid Pallas.'
+            },
+            {
+                q: 'Before a stomach X-ray, patients drink a "barium meal" of barium sulfate. Why is it safe, when other barium compounds are poisonous?',
+                options: ['It does not dissolve, so the body does not absorb it', 'It is boiled first, which destroys the poisonous part of it', 'It is mixed with sugar, which cancels out the poison', 'It turns into a harmless gas as soon as it reaches the stomach'],
+                explain: 'Barium sulfate is insoluble, so it passes through the body. In phones, another barium compound, barium titanate, is the ceramic inside the tiny capacitors.'
+            },
+            {
+                q: "Gallium's partner in the chips that boost your phone's radio signal is famous as a poison. Which element is it?",
+                options: ['Arsenic', 'Mercury', 'Lead', 'Chlorine'],
+                explain: 'Gallium arsenide chips amplify the radio signal so it can reach the mobile mast. Tiny traces of arsenic are also added to silicon chips.'
+            },
+            {
+                q: 'Tin and tantalum are called "conflict minerals". What must companies that use them do?',
+                options: ['Check that buying them does not fund armed groups', 'Stop using them completely and find other materials instead', 'Buy them only from mines in the UK and the rest of Europe', 'Pay a special tax on them to help the countries they come from'],
+                explain: 'Some of these minerals come from areas where their sale can pay for armed conflict, so companies must check their supply chains.'
+            },
+
+            // ---- Speakers, magnets & vibration ----
+            {
+                q: 'Praseodymium\'s name means "green twin". Which element is its twin, used together with it in magnets as "NdPr"?',
+                options: ['Neodymium', 'Nickel', 'Nitrogen', 'Sodium'],
+                explain: 'Praseodymium and neodymium are chemically so alike that they are usually mined, sold and used together.'
+            },
+            {
+                q: 'A neodymium magnet (Nd2Fe14B) is mostly made of which element, by weight?',
+                options: ['Iron', 'Neodymium', 'Boron', 'Copper'],
+                explain: 'About two-thirds to three-quarters of the magnet\'s weight is iron. The neodymium is what makes it so strong.'
+            },
+            {
+                q: 'Tungsten, used for the small weight in the vibration motor, holds which record?',
+                options: ['The highest melting point of any metal', 'The lowest density of any metal', 'The best electrical conductor of any metal', 'The most reactive of all the metals'],
+                explain: 'Tungsten melts at 3,422 °C. It is also one of the densest metals, so a tiny piece makes a good heavy weight.'
+            },
+            {
+                q: "About how much of the world's demand for rare earth elements is met by recycling e-waste?",
+                options: ['About 1%', 'About 25%', 'About 50%', 'About 90%'],
+                explain: 'Only about 1%, even though speakers and other magnets are full of rare earths. That is a huge untapped urban mine.'
+            },
+
+            // ---- Battery ----
+            {
+                q: 'Cobalt is named after the kobold. What is a kobold?',
+                options: ['A goblin from German folklore', 'A Danish king', 'A blue gemstone', 'A Greek god of the underworld'],
+                explain: 'Miners blamed kobolds for ores that gave off poisonous arsenic fumes when they were smelted.'
+            },
+            {
+                q: 'What happens when a small piece of lithium is dropped into water?',
+                options: ['It floats and fizzes as it reacts', 'It sinks to the bottom and nothing happens', 'It bursts into a bright lilac flame', 'It dissolves completely without a sound'],
+                explain: 'Lithium is the lightest metal, so it floats, and it reacts with the water, giving off hydrogen gas. A lilac flame is what potassium makes.'
+            },
+            {
+                q: 'In the year to March 2026, UK waste companies recorded 1,518 fires at their sites. Roughly how many were caused by lithium-ion batteries?',
+                options: ['More than 700', 'About 10', 'About 50', 'None'],
+                explain: 'Phones, vapes and batteries thrown in the bin can be crushed in bin lorries and recycling plants and catch fire. Always recycle them separately.'
+            },
+            {
+                q: 'The battery of an old phone has swollen up and the case is bulging. What should you do?',
+                options: ['Stop using and charging it, and take it to a phone shop or recycling centre', 'Press it flat again carefully, then carry on using the phone', 'Keep charging it overnight until it goes back to its normal shape', 'Put it in the household bin, wrapped in a plastic bag'],
+                explain: 'A swollen lithium-ion battery is damaged and can catch fire. Do not press it, charge it or bin it: let the experts deal with it.'
+            },
+
+            // ---- Casing & frame ----
+            {
+                q: "What makes up the biggest share of a phone's weight?",
+                options: ['Plastics', 'Metals', 'Glass and ceramics', 'Gold'],
+                explain: 'Plastics make up about 40% of a phone\'s weight, metals about 35%, and glass and ceramics about 25%.'
+            },
+            {
+                q: 'This metal is about 40% lighter than steel and has been used for the frames of some top phones. Bone grows tightly against it, so it is also used for hip replacements. What is it?',
+                img: ['element-Ti.jpg', 'A silvery metal crystal bar', 'Photo: <a href="https://commons.wikimedia.org/wiki/File:Titan-crystal_bar.JPG" target="_blank" rel="noopener">Alchemist-hp (www.pse-mendelejew.de)</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>'],
+                options: ['Titanium', 'Aluminium', 'Magnesium', 'Tungsten'],
+                explain: 'Titanium alloys are light, strong and do not corrode. China made about 70% of the world\'s titanium metal in 2025.'
+            },
+            {
+                q: 'This light metal is used in some phones\' internal frames. It burns with a dazzling white light, so it is used in flares and sparklers. What is it?',
+                img: ['element-Mg.jpg', 'Shiny metal crystals', 'Photo: <a href="https://commons.wikimedia.org/wiki/File:Magnesium_crystals.jpg" target="_blank" rel="noopener">Warut Roonguthai</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a>'],
+                options: ['Magnesium', 'Copper', 'Gold', 'Tin'],
+                explain: 'Magnesium is about one-third less dense than aluminium. China produced about 86% of the world\'s magnesium metal in 2025.'
+            },
+            {
+                q: 'Antimony oxide is added to some plastics in electronics. What is its job?',
+                options: ['To help slow down flames', 'To make the plastic shiny', 'To make the plastic magnetic', 'To make the plastic rot away faster'],
+                explain: 'Antimony oxide works as a team with bromine-containing flame retardants, so the plastic does not catch fire easily.'
+            },
+            {
+                q: 'Some powerful phones cool their processor with a vapour chamber. How does it work?',
+                options: ['Water evaporates at the hot chip and condenses again in cooler parts', 'A tiny fan inside it blows cool air over the hot chip', 'Ice inside it slowly melts and soaks up the heat from the chip', 'It turns the heat from the chip into light that shines out'],
+                explain: 'Evaporating water takes in a lot of heat, and gives it out again where it condenses. The water then flows back through a copper wick to the chip.'
+            },
+
+            // ---- What can YOU do? ----
+            {
+                q: 'Since June 2025, new phones sold in the EU and Northern Ireland must have spare parts available for how long?',
+                options: ['7 years', '6 months', '2 years', '20 years'],
+                explain: 'The new rules also require a repair score from A to E on the label, so it is easier to choose a phone that can be fixed.'
+            },
+            {
+                q: 'For the Fairphone 5, about how much of its carbon footprint comes from making the phone, rather than using it?',
+                options: ['About three-quarters', 'Almost none', 'About a tenth', 'About a quarter'],
+                explain: 'Most of a phone\'s carbon footprint comes from making it, so keeping a phone for longer is one of the best things you can do.'
+            },
+            {
+                q: 'About how many unused electrical items are kept in UK homes?',
+                options: ['About 880 million', 'About 8 million', 'About 88,000', 'About 8 billion'],
+                explain: 'That is about 30 items per home (Material Focus, 2025). Check the drawers at home!'
+            },
+            {
+                q: 'About how many old phones would you need to collect just 1 g of gold?',
+                options: ['About 70', 'About 2', 'About 7,000', 'About a million'],
+                explain: 'An old phone can contain up to about 14 mg of gold, so it takes about 70 phones to collect 1 g. Every phone counts!'
+            },
+            {
+                q: 'Which order is best for an old phone, starting with the best option?',
+                options: ['Keep it longer, repair it, pass it on, recycle it', 'Recycle it, repair it, pass it on, keep it longer', 'Pass it on, recycle it, keep it longer, repair it', 'Repair it, recycle it, keep it longer, pass it on'],
+                explain: 'Keeping, repairing and reusing a phone saves all the materials and energy that went into making it. Recycling recovers some of the metals, so it comes last, but it is far better than the bin.'
             }
         ]
     };
