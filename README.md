@@ -65,10 +65,11 @@ The survey runs in **Microsoft Forms** through the University's Microsoft 365 an
 
 After changing them, increase `VERSION` in `sw.js`.
 
-## After publishing
+## Website and DOI
 
-- Link previews: some apps need the full address of the preview image. Change `og:image` in the three HTML files to e.g. `https://<account>.github.io/<repository>/og-image.jpg`.
-- Add the repository URL and the DOI to `CITATION.cff`, this README and the "how to cite" section of `teachers.html`.
+- Website: https://nockemann-lab.github.io/hidden-treasure/ (GitHub Pages, from the `main` branch)
+- Source: https://github.com/nockemann-lab/hidden-treasure
+- After the first Zenodo release, add the DOI to `CITATION.cff`, this README and the "how to cite" section of `teachers.html`. If the address changes, update `og:image` in the three HTML files and the URLs in `CITATION.cff`.
 
 ## Sources
 
