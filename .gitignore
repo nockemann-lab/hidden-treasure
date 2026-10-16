@@ -3,3 +3,6 @@ _originals/
 
 .DS_Store
 node_modules/
+
+# Personal Claude Code settings
+.claude/settings.local.json
