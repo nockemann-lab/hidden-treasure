@@ -19,7 +19,7 @@ It is a static website with no build step. Open `index.html` in a browser, or se
 - **Dark mode:** follows the device setting; the 🌙/☀️ button switches manually (remembered per device).
 - **Languages:** all text of the interactive phone and the quiz is in `content/<language>.js`. See `content/languages.js` for how to add a language; a language menu appears automatically when there is more than one.
 - **Accessibility:** keyboard and screen-reader support, WCAG AA colour contrast in light and dark mode, reduced motion when requested.
-- **Privacy:** no accounts, cookies, analytics or third-party requests. Only a few settings and best scores are kept in the browser's local storage on the device. The one exception is the optional teacher survey (below), which sends the answers a teacher submits.
+- **Privacy:** no accounts, cookies, analytics or third-party requests. Only a few settings and best scores are kept in the browser's local storage on the device. The one exception is the optional teacher survey at the end of `teachers.html` (below): it is embedded from Microsoft Forms, which loads from Microsoft and uses its own cookies, and it sends the answers a teacher submits.
 - **Teacher feedback survey:** an anonymous survey at the end of `teachers.html` (see "Feedback survey" below and `FEEDBACK-SURVEY.md`).
 
 ## Files
