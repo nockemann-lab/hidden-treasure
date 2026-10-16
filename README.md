@@ -1,5 +1,7 @@
 # Hidden Treasure in Your Pocket
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23421480.svg)](https://doi.org/10.5281/zenodo.23421480)
+
 An interactive educational resource about the critical and strategic elements inside a smartphone, for classrooms (ages 11–16), outreach events and self-guided learning.
 Take a 3D phone apart, tap one of its six parts (display, camera, circuit board, speaker, battery, casing) to see which elements it contains, then tap an element for a photo, what it does, a fun fact, where it comes from and whether it is on the EU, US or UK critical list.
 
@@ -69,7 +71,9 @@ After changing them, increase `VERSION` in `sw.js`.
 
 - Website: https://nockemann-lab.github.io/hidden-treasure/ (GitHub Pages, from the `main` branch)
 - Source: https://github.com/nockemann-lab/hidden-treasure
-- After the first Zenodo release, add the DOI to `CITATION.cff`, this README and the "how to cite" section of `teachers.html`. If the address changes, update `og:image` in the three HTML files and the URLs in `CITATION.cff`.
+- DOI: https://doi.org/10.5281/zenodo.23421480 (Zenodo). This "concept" DOI always points to the latest version; each GitHub release is archived by Zenodo automatically and also gets its own version DOI (v1.0.0: 10.5281/zenodo.23421481).
+- For a new version: update `version` and `date-released` in `CITATION.cff`, then create a GitHub release with a new tag (e.g. `v1.1.0`).
+- If the address changes, update `og:image` in the three HTML files and the URLs in `CITATION.cff`.
 
 ## Sources
 
@@ -87,4 +91,4 @@ The exploded-view phone illustration (`phone_parts_exploded_view.jpg`) was creat
 
 © 2025–2026 Prof. Peter Nockemann. Text, design, code and data compilation are licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/); see [LICENSE](LICENSE). Element photos are third-party material and keep their own licences (listed on the page).
 
-To cite this resource, see [CITATION.cff](CITATION.cff).
+To cite this resource: Nockemann, P. (2026). *Hidden Treasure in Your Pocket: An Interactive Guide to Critical Elements in Smartphones*. Zenodo. https://doi.org/10.5281/zenodo.23421480 (see also [CITATION.cff](CITATION.cff)).
