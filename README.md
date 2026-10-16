@@ -57,14 +57,13 @@ The clickable areas are SVG polygons traced over `phone_parts_exploded_view.jpg`
 
 `teachers.html` contains an anonymous survey for teachers (section 14), designed so that the results can be used in an education research paper. The questions, the data they produce and the ethics and GDPR checklist are in [FEEDBACK-SURVEY.md](FEEDBACK-SURVEY.md).
 
-The site has no server, so the answers are sent as JSON to an online form service. Until that is set up, the form only shows a preview of what would be sent. To switch it on, fill in the `FEEDBACK` settings near the bottom of `teachers.html`:
+The survey runs in **Microsoft Forms** through the University's Microsoft 365 and is embedded in section 14, with a button to open it in a new tab and a QR code (`survey-qr.png`) for phones and tablets. `survey/Teacher-survey-for-Microsoft-Forms.docx` contains all the questions. The `FEEDBACK` settings near the bottom of `teachers.html` fill in the information for participants:
 
-- `endpoint`: the address that receives the answers (any service that accepts a JSON `POST`, e.g. Formspree or Basin, or a University-hosted endpoint)
-- `processor`: the name of that service (shown to participants)
-- `contactEmail`, `ethicsCommittee`, `ethicsRef`, `retention`: shown in the information for participants
-- `dpoEmail`: the University's data protection contact (default: the Information Compliance Unit)
+- `contactEmail`: the contact address shown to participants
+- `ethicsCommittee`, `ethicsRef`: once research ethics approval is in place
+- `retention`: how long the responses are kept (empty = the University's policy)
 
-Only switch it on once research ethics approval is in place. Then increase `VERSION` in `sw.js`.
+After changing them, increase `VERSION` in `sw.js`.
 
 ## After publishing
 
